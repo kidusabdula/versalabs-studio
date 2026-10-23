@@ -1,6 +1,14 @@
 import { getAllProjects, type ProjectEntry } from '@/config/project-database';
 import { getMockupImages, getScreenshotImages } from '@/lib/image-discovery';
 import StudioClient from '@/components/studio/StudioClient';
+import { pageMetadata } from '@/lib/site';
+
+export const metadata = pageMetadata({
+  title: 'Studio',
+  description:
+    'Platforms VersaLabs Studio has designed, built and shipped: ERP systems, e-commerce stores, sports media, AI tools and websites.',
+  path: '/studio',
+});
 
 export interface StudioProjectData extends ProjectEntry {
   mockupImages: string[];

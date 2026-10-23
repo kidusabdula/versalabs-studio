@@ -5,6 +5,7 @@ import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { MotionConfigProvider } from "@/components/ui/motion";
+import { SITE_URL, SITE_NAME, DEFAULT_DESCRIPTION } from "@/lib/site";
 
 const outfit = Outfit({
   variable: "--font-outfit",
@@ -22,9 +23,31 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const DEFAULT_TITLE = `${SITE_NAME} | Custom Software & Business Platforms`;
+
+// Pages override title, description, canonical and social cards through
+// pageMetadata() in src/lib/site.ts; these are the home page and fallbacks.
 export const metadata: Metadata = {
-  title: "VersaLabs Studio | Custom Software & Business Platforms",
-  description: "VersaLabs Studio designs and builds enterprise software — ERP systems, AI platforms, e-commerce stores, and custom business tools. Based in Addis Ababa, building for the world.",
+  metadataBase: new URL(SITE_URL),
+  title: { default: DEFAULT_TITLE, template: `%s | ${SITE_NAME}` },
+  description: DEFAULT_DESCRIPTION,
+  applicationName: SITE_NAME,
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    siteName: SITE_NAME,
+    locale: "en_US",
+    url: "/",
+    title: DEFAULT_TITLE,
+    description: DEFAULT_DESCRIPTION,
+    images: [{ url: "/versalabs-logo.png", width: 1000, height: 1000, alt: SITE_NAME }],
+  },
+  twitter: {
+    card: "summary",
+    title: DEFAULT_TITLE,
+    description: DEFAULT_DESCRIPTION,
+    images: ["/versalabs-logo.png"],
+  },
 };
 
 export default function RootLayout({

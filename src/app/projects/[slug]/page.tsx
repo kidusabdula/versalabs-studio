@@ -1,6 +1,8 @@
+import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getProjectBySlug, getAllSlugs, getAllProjects, type ProjectEntry } from '@/config/project-database';
 import { getMockupImages, getScreenshotImages } from '@/lib/image-discovery';
+import { pageMetadata } from '@/lib/site';
 import ProjectDetailClient from '@/components/studio/ProjectDetailClient';
 
 export interface DetailProjectData extends ProjectEntry {
@@ -17,14 +19,33 @@ export interface SimilarProject {
   thumbnail?: string;
 }
 
+type PageProps = { params: Promise<{ slug: string }> };
+
+// Only slugs from generateStaticParams exist. Anything else, hidden projects
+// included, is a hard 404 instead of a streamed not-found page with status 200.
+export const dynamicParams = false;
+
 export async function generateStaticParams() {
   const slugs = getAllSlugs();
   return slugs.map((slug) => ({ slug }));
 }
 
-export default async function ProjectDetailPage({ params }: { params: { slug: string } }) {
-  const resolvedParams = await Promise.resolve(params);
-  const project = getProjectBySlug(resolvedParams.slug);
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const project = getProjectBySlug(slug);
+  if (!project) return {};
+
+  return pageMetadata({
+    title: project.title,
+    description: project.summary,
+    path: `/projects/${project.slug}`,
+    image: { url: project.thumbnail, alt: `${project.title}: ${project.subtitle}` },
+  });
+}
+
+export default async function ProjectDetailPage({ params }: PageProps) {
+  const { slug } = await params;
+  const project = getProjectBySlug(slug);
 
   if (!project) {
     notFound();

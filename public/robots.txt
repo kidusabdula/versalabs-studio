@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://versalabs.dev/sitemap.xml

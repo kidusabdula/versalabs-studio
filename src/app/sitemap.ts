@@ -1,18 +1,14 @@
-import { MetadataRoute } from 'next';
-import { getAllSlugs } from '@/lib/catalog-parser';
+import type { MetadataRoute } from 'next';
+import { getAllSlugs } from '@/config/project-database';
+import { SITE_URL } from '@/lib/site';
 
+// Generated from the project database, so it lists exactly the visible
+// projects. Hidden entries and the /projects redirect never appear.
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://versalabs.dev';
-  const slugs = getAllSlugs();
+  const pages = ['', '/studio', '/services', '/about', '/contact'];
 
   return [
-    { url: baseUrl, lastModified: new Date() },
-    { url: `${baseUrl}/studio`, lastModified: new Date() },
-    { url: `${baseUrl}/about`, lastModified: new Date() },
-    { url: `${baseUrl}/contact`, lastModified: new Date() },
-    ...slugs.map((slug) => ({
-      url: `${baseUrl}/projects/${slug}`,
-      lastModified: new Date(),
-    })),
+    ...pages.map((path) => ({ url: `${SITE_URL}${path}` })),
+    ...getAllSlugs().map((slug) => ({ url: `${SITE_URL}/projects/${slug}` })),
   ];
 }
