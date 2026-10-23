@@ -2,7 +2,9 @@
 // VERSALABS STUDIO — COMPLETE PROJECT DATABASE
 // ============================================================================
 // This file is the single source of truth for all project content displayed
-// on the /studio listing page and /projects/[slug] detail pages.
+// on the /studio listing page, the /projects/[slug] detail pages and the
+// sitemap. Entries with `visibility: 'hide'` are excluded everywhere: the
+// helpers below never return them, so they have no route, card or sitemap URL.
 // Every field is crafted from the original project README and architected
 // for a premium portfolio showcase. The UI agent should consume this data
 // directly — no parsing or transformation needed.
@@ -48,6 +50,8 @@ export interface ADRRecord {
   rationale: string;
 }
 
+export type ProjectStatus = "Production" | "Beta" | "MVP" | "Prototype" | "Demo" | "Development";
+
 export interface ProjectEntry {
   // ── Card-level fields (studio listing page) ──
   slug: string;
@@ -57,14 +61,15 @@ export interface ProjectEntry {
   category: string; // Primary vertical — "ERP", "Fintech", "AI/ML" …
   tags: string[];
   year: string;
-  status: "Production" | "Beta" | "MVP" | "Development";
+  status: ProjectStatus;
   client?: string; // End client name if applicable
   liveUrl?: string;
   githubUrl?: string;
   heroGradient: string; // CSS gradient classes for card accent
   thumbnail?: string; // Specific image path for studio card display
   imageDir?: string; // Override directory name in public/ for image discovery (e.g. 'Oskaz Import' for oskaz-ecommerce)
-  productType: 'saas' | 'client-project' | 'internal'; // Controls CTA messaging: SaaS = "Deploy Now", Client = "We can build this for you", Internal = studio tool
+  productType: 'saas' | 'client-project' | 'internal' | 'research'; // Controls badge and CTA messaging: SaaS = product, Client = "We can build this for you", Internal = studio build, Research = university/research project
+  visibility?: 'show' | 'hide'; // Defaults to 'show'. Hidden entries never render, route or appear in the sitemap
 
   // ── Detail page fields ──
   description: string; // Full 3-5 sentence project description
@@ -106,23 +111,21 @@ export const PROJECT_DATABASE: ProjectEntry[] = [
   {
     slug: "threatmatrix-ai",
     title: "ThreatMatrix AI",
-    subtitle: "AI-Powered Cybersecurity Command Center",
+    subtitle: "Network Security Command Center — University Senior Project",
     summary:
-      "A security platform that watches your network 24/7, detects threats in real time, and alerts your team before damage is done — powered by three AI models working together.",
+      "A network security platform that spots unusual traffic and explains each alert in plain language. Built as a university senior project by a team of four.",
     category: "Cybersecurity",
-    tags: ["AI/ML", "Cybersecurity", "Real-Time", "Enterprise"],
+    tags: ["AI/ML", "Cybersecurity", "Research"],
     year: "2026",
-    status: "Production",
-    liveUrl: "https://threatmatrix-ai.vercel.app",
-    githubUrl: "https://github.com/VersaLabs-Studio",
+    status: "MVP",
     heroGradient: "from-red-500/20 via-transparent to-orange-500/10",
     thumbnail: "/ThreatMatrix AI/Mockups/threatmatrix-ai-4.png",
-    productType: "saas",
+    productType: "research",
 
     description:
-      "ThreatMatrix AI is a proprietary cyber-security command center delivering real-time network threat detection and automated intelligence enrichment. Designed for government agencies, financial institutions, and telecom operators, it provides enterprise-grade protection with an immersive war-room interface that enables security teams to detect, investigate, and neutralize threats before they cause damage.",
+      "ThreatMatrix AI is a network security command center built as a university senior project by a team of four, between February and April 2026. It reads network traffic, scores each connection with three machine-learning models, and plots alerts on a live threat map. An AI analyst explains each alert and writes briefings in English or Amharic. Version 1.0 ran against a live server in April 2026; today it is an MVP, not a hosted product.",
     businessProblem:
-      "Rapid digitisation across emerging markets has outpaced local security tooling, leaving critical government and financial infrastructure reliant on prohibitively expensive global SIEM solutions that lack local context and language support.",
+      "Security teams in emerging markets often rely on costly global tools that lack local context and local-language support.",
     architecturalSolution:
       "A three-tier, event-driven architecture separating Capture, Intelligence, and Interaction bounded contexts. Python/Scapy ingests live traffic, a FastAPI Intelligence Engine runs an ensemble of three ML models in parallel, and a Next.js Command Center renders real-time maps and dashboards via WebSocket. Redis Pub/Sub decouples all tiers for independent scaling.",
     systemFlow:
@@ -132,38 +135,36 @@ export const PROJECT_DATABASE: ProjectEntry[] = [
       {
         label: "Frontend",
         items: [
-          { name: "Next.js", version: "16.x", purpose: "SSR/SSG full-stack React framework" },
+          { name: "Next.js", version: "16.1", purpose: "SSR/SSG full-stack React framework" },
           { name: "TypeScript", version: "5.x", purpose: "Strict type safety across the UI" },
+          { name: "next-intl", version: "4.x", purpose: "English/Amharic interface" },
           { name: "CSS Variables + Vanilla CSS", purpose: "Glass-morphism design system" },
-          { name: "Deck.gl", purpose: "GPU-accelerated geospatial threat map rendering" },
-          { name: "Maplibre GL", purpose: "Open-source vector tile map engine" },
+          { name: "Deck.gl", version: "9.x", purpose: "GPU-accelerated geospatial threat map rendering" },
+          { name: "Maplibre GL", version: "5.x", purpose: "Open-source vector tile map engine" },
           { name: "Recharts", purpose: "Analytics dashboard chart library" },
         ],
       },
       {
         label: "Backend",
         items: [
-          { name: "FastAPI", version: "0.110+", purpose: "Async Python REST + WebSocket API" },
+          { name: "FastAPI", version: "0.115", purpose: "Async Python REST + WebSocket API" },
           { name: "Python", version: "3.11+", purpose: "Core runtime for ML and capture" },
-          { name: "Scapy", version: "2.5+", purpose: "Raw packet capture and flow aggregation" },
+          { name: "Scapy", version: "2.6", purpose: "Raw packet capture and flow aggregation" },
           { name: "Alembic", purpose: "Database schema migration management" },
         ],
       },
       {
         label: "Machine Learning",
         items: [
-          { name: "scikit-learn", purpose: "Isolation Forest and Random Forest classifiers" },
-          { name: "TensorFlow / Keras", purpose: "Autoencoder deep learning reconstruction model" },
+          { name: "scikit-learn", version: "1.6", purpose: "Isolation Forest and Random Forest classifiers" },
+          { name: "TensorFlow / Keras", version: "2.18", purpose: "Autoencoder deep learning reconstruction model" },
         ],
       },
       {
         label: "LLM Gateway",
         items: [
           { name: "OpenRouter", purpose: "Unified multi-model LLM API access" },
-          { name: "Nemotron-Ultra 253B", purpose: "Complex analysis & narrative generation" },
-          { name: "Step 3.5 Flash", purpose: "Real-time alert summarisation" },
-          { name: "GPT-OSS 120B", purpose: "General-purpose investigation chat" },
-          { name: "GLM-4.1v", purpose: "Bilingual Amharic/English translation" },
+          { name: "Cascading Model Fallback", purpose: "One ordered list of models per task, so a request moves to the next model if one is unavailable" },
         ],
       },
       {
@@ -174,7 +175,6 @@ export const PROJECT_DATABASE: ProjectEntry[] = [
           { name: "Docker Compose", version: "v2", purpose: "Multi-service orchestration" },
           { name: "Nginx", purpose: "Reverse proxy with TLS (Let's Encrypt)" },
           { name: "Vercel", purpose: "Frontend edge hosting and HTTPS" },
-          { name: "GitHub Actions", purpose: "CI/CD lint, test, and build pipeline" },
         ],
       },
     ],
@@ -213,8 +213,8 @@ export const PROJECT_DATABASE: ProjectEntry[] = [
       { title: "AI Analyst", description: "Conversational LLM interface enabling natural-language threat investigation, briefing generation, and Amharic translation.", icon: "Bot" },
       { title: "Three-Model ML Ensemble", description: "Parallel Isolation Forest, Random Forest, and Autoencoder inference with weighted composite scoring for zero-day and known-attack detection.", icon: "Brain" },
       { title: "Forensics Lab", description: "PCAP upload with packet inspection, flow reconstruction, and ML re-analysis for post-incident investigation.", icon: "FileSearch" },
-      { title: "Real-Time Alert Pipeline", description: "Sub-200ms end-to-end latency from packet capture to analyst notification via WebSocket push.", icon: "Zap" },
-      { title: "ML Operations Dashboard", description: "Model registry with performance metrics, retraining controls, and drift monitoring.", icon: "BarChart3" },
+      { title: "Real-Time Alert Pipeline", description: "New alerts appear on the analyst's screen within moments, with no page refresh.", icon: "Zap" },
+      { title: "ML Operations Dashboard", description: "See how each AI model is performing and retrain it from the dashboard.", icon: "BarChart3" },
     ],
 
     adrs: [
@@ -237,27 +237,26 @@ export const PROJECT_DATABASE: ProjectEntry[] = [
   // =========================================================================
   {
     slug: "obsidian-erp-v3.0",
-    title: "Obsidian ERP v3.0",
+    title: "Obsidian ERP",
     subtitle: "All-in-One Business Management Platform",
     summary:
       "Run your entire business from one place. Obsidian connects your sales, customers, inventory, manufacturing, and accounting into a single system — so nothing falls through the cracks.",
     category: "ERP",
-    tags: ["ERP", "Enterprise", "SaaS", "Global"],
+    tags: ["ERP", "SaaS", "Manufacturing"],
     year: "2026",
     status: "Production",
-    githubUrl: "https://github.com/VersaLabs-Studio",
     heroGradient: "from-violet-500/20 via-transparent to-indigo-500/10",
     thumbnail: "/Obsidian ERP/Mockups/New folder/obsidian-erp-2 (2).png",
     productType: "saas",
 
     description:
-      "Obsidian v3.0 is the ERP system that grows with your business. Designed for organizations of any size across any industry, it delivers complete lead-to-cash automation, real-time operational visibility, and integrated financial control. With clients spanning printing, import-export, and manufacturing sectors, Obsidian eliminates data silos and manual processes, giving leaders a single dashboard for every critical business function.",
+      "Obsidian is the ERP system we build for growing companies. It covers the journey from lead to cash: quote, order, produce, deliver, invoice, and get paid, with stock and accounting updating at each step. It replaces disconnected spreadsheets with one system and one dashboard for the whole business.",
     businessProblem:
       "Growing businesses manage operations across disconnected spreadsheets and siloed tools for CRM, sales, production, inventory, and accounting — creating costly reconciliation errors, pricing mistakes, and delayed invoicing.",
     architecturalSolution:
-      "A unified platform built with intelligent automation at its core. Auto-generated data contracts ensure zero drift between modules, while a factory pattern eliminates redundant workflows. Five enterprise modules share a single source of truth, enabling seamless data flow from first customer contact to final payment collection.",
+      "A Next.js front end over ERPNext (Frappe). TypeScript types and Zod schemas are generated from DocType metadata, and a factory layer builds the CRUD hooks and API routes, so modules share one data contract. The business modules share a single ERPNext database, so data flows from first customer contact to final payment.",
     systemFlow:
-      "Frappe DocType (Backend) → Type Generation → TypeScript + Zod Validation → Factory Pattern Hooks → Next.js App Router UI",
+      "ERPNext DocTypes → Type Generation → TypeScript + Zod Validation → Factory Pattern Hooks → Next.js App Router UI",
 
     techStack: [
       {
@@ -290,9 +289,9 @@ export const PROJECT_DATABASE: ProjectEntry[] = [
       {
         label: "Backend",
         items: [
-          { name: "Frappe Framework", purpose: "Python-based ERP platform with DocType ORM" },
-          { name: "PostgreSQL", purpose: "Primary relational database (via Frappe)" },
-          { name: "Redis", purpose: "Caching layer (via Frappe)" },
+          { name: "Frappe Framework + ERPNext", version: "v15", purpose: "Python-based ERP engine with DocType ORM" },
+          { name: "MariaDB", purpose: "Primary relational database (via Frappe)" },
+          { name: "Redis", purpose: "Cache and queue (via Frappe)" },
         ],
       },
       {
@@ -340,20 +339,20 @@ export const PROJECT_DATABASE: ProjectEntry[] = [
     ],
 
     features: [
-      { title: "Schema-First Type Generation", description: "Auto-generates TypeScript interfaces and Zod schemas from Frappe DocType metadata — zero manual types, 100% compile-time safety.", icon: "FileCode2" },
-      { title: "Factory Pattern CRUD", description: "Generic hooks and API route generators reduce CRUD boilerplate by 75% while maintaining full type safety across all 5 modules.", icon: "Factory" },
+      { title: "Schema-First Type Generation", description: "Generates TypeScript interfaces and Zod schemas from Frappe DocType metadata, so the front end and the ERP share one data contract.", icon: "FileCode2" },
+      { title: "Factory Pattern CRUD", description: "Generic hooks and API route generators cut CRUD boilerplate, so a new module needs little new code.", icon: "Factory" },
       { title: "Lead-to-Cash Pipeline", description: "Complete sales automation from customer inquiry through quotation, order, delivery, invoicing, and payment collection.", icon: "TrendingUp" },
-      { title: "Real-Time Manufacturing Execution", description: "Production tracking with BOM management, work order scheduling, material consumption, and workstation planning.", icon: "Settings2" },
+      { title: "Manufacturing Execution", description: "Production tracking with BOM management, work order scheduling, material consumption, and workstation planning.", icon: "Settings2" },
       { title: "Double-Entry Bookkeeping", description: "Automated journal entries with Chart of Accounts, cost center tracking, and financial reporting suite.", icon: "BookOpen" },
       { title: "Dual Theme System", description: "Professional light/dark modes using OKLCH perceptually-uniform color space with 200ms smooth transitions.", icon: "Palette" },
     ],
 
     adrs: [
       { id: "ADR-001", title: "Schema-First Development from Frappe DocTypes", status: "Accepted", rationale: "Eliminates type drift between frontend and backend — DocTypes are the absolute source of truth." },
-      { id: "ADR-002", title: "Factory Pattern for Generic CRUD", status: "Accepted", rationale: "75% reduction in boilerplate code while maintaining full type safety per module." },
+      { id: "ADR-002", title: "Factory Pattern for Generic CRUD", status: "Accepted", rationale: "One generic factory serves every DocType, so new modules need little new code." },
       { id: "ADR-003", title: "Centralized DocType Configuration Registry", status: "Accepted", rationale: "Single source of truth for all routing, query keys, and API endpoints." },
       { id: "ADR-004", title: "TanStack Query for Server State", status: "Accepted", rationale: "Intelligent caching, background refetching, and optimistic updates for enterprise data." },
-      { id: "ADR-005", title: "Frappe Framework as Backend Platform", status: "Accepted", rationale: "Provides 80% of ERP functionality out-of-the-box — focus on business-specific customizations." },
+      { id: "ADR-005", title: "ERPNext on Frappe as Backend Platform", status: "Accepted", rationale: "ERPNext supplies proven accounting, stock, and manufacturing logic, so we focus on the business-specific experience." },
     ],
   },
 
@@ -363,66 +362,71 @@ export const PROJECT_DATABASE: ProjectEntry[] = [
   {
     slug: "pana-web",
     title: "Pana Web",
-    subtitle: "Premium Corporate Website",
+    subtitle: "Company Website for a Printing & Branding House",
     summary:
-      "A professional website designed to make your brand look its best online. Fast, mobile-friendly, and built to turn visitors into paying customers.",
+      "A fast, mobile-friendly company website for a printing and branding business in Addis Ababa. Each of its eight services gets its own page.",
     category: "Corporate Web",
-    tags: ["Corporate", "Web Design", "CMS"],
-    year: "2026",
+    tags: ["Corporate", "Web Design", "Print & Branding"],
+    year: "2025",
     status: "Production",
     liveUrl: "https://pana-web-nine.vercel.app/",
-    githubUrl: "https://github.com/VersaLabs-Studio",
     heroGradient: "from-emerald-500/20 via-transparent to-teal-500/10",
     thumbnail: "/Pana Web/Mockups/160shots_so.png",
     productType: "client-project",
 
     description:
-      "Pana Web is a premium corporate web presence crafted to elevate brand perception and drive client acquisition. Featuring responsive design, strategic content placement, and seamless navigation, it transforms your digital footprint into a powerful business development tool that works around the clock.",
+      "Pana Web is the company website for a printing and branding house in Addis Ababa. It presents eight services, from digital print and signage to merchandise and events, each with its own page. Visitors can read about the company, browse past clients, and find the office on the map. It works well on phones.",
     businessProblem:
       "Businesses operating with outdated or template-based websites lose credibility with potential clients, resulting in missed opportunities and a brand perception gap that undermines their actual service quality.",
     architecturalSolution:
-      "A modern, performance-optimized web platform with server-side rendering for instant page loads, intelligent content management for easy updates, and conversion-focused design patterns that guide visitors through a strategic journey from discovery to contact.",
+      "A Next.js 16 App Router site with static, typed service data rendered into one shared service template. Per-service metadata comes from generateMetadata, and a Next.js proxy normalises service slugs and title aliases to canonical URLs.",
     systemFlow:
-      "Visitor Arrival → Brand Discovery → Service Exploration → Portfolio Review → Client Testimonials → Contact Conversion",
+      "Home → Services → Service Detail (8 services) → About / Past Clients → Contact & Directions",
 
     techStack: [
       {
         label: "Frontend",
         items: [
-          { name: "Next.js", version: "16.x", purpose: "Performance-optimized web framework" },
+          { name: "Next.js", version: "16.0.10", purpose: "App Router web framework" },
+          { name: "React", version: "19.2", purpose: "UI library" },
           { name: "TypeScript", version: "5.x", purpose: "Reliable codebase" },
           { name: "Tailwind CSS", version: "4.x", purpose: "Custom design system" },
-          { name: "Framer Motion", purpose: "Premium animations" },
+          { name: "Framer Motion", version: "12", purpose: "Page and section animations" },
+          { name: "Radix UI", purpose: "Accessible component primitives" },
         ],
       },
     ],
 
     architecture: {
-      pattern: "Server-Rendered Corporate Platform",
-      diagram: "Next.js SSR → Optimized Content Delivery → Edge CDN → Global Visitors",
-      designPatterns: ["Server-Side Rendering", "Responsive Design System", "Conversion Funnel Architecture"],
+      pattern: "Static-Data Corporate Site on Next.js App Router",
+      diagram: "Typed Service Data → Shared Service Template → Next.js App Router Pages → Vercel",
+      designPatterns: [
+        "Single Service Template Driven by Typed Data",
+        "Slug Normalisation in Next.js Proxy",
+        "Per-Route Metadata (generateMetadata)",
+        "Responsive Tailwind 4 Design System",
+      ],
     },
 
     boundedContexts: [
-      { name: "Brand Presentation", responsibility: "Company narrative, values, and visual identity", entities: ["Page", "Section", "MediaAsset"] },
-      { name: "Service Showcase", responsibility: "Service offerings and capability demonstrations", entities: ["Service", "CaseStudy", "Testimonial"] },
+      { name: "Pages", responsibility: "Home, about, blog, and services pages", entities: ["Page"] },
+      { name: "Service Catalogue", responsibility: "Eight typed service records rendered through one template", entities: ["Service"] },
     ],
 
     schema: [
-      { name: "pages", description: "Site pages with SEO metadata", keyFields: ["id", "slug", "title", "meta_description", "content"] },
-      { name: "services", description: "Service offerings", keyFields: ["id", "name", "description", "features"] },
+      { name: "services-data.ts", description: "Typed service records (no database)", keyFields: ["slug", "title", "subtitle", "description", "images"] },
     ],
 
     features: [
-      { title: "Conversion-Optimized Design", description: "Every element strategically placed to guide visitors toward contacting your business.", icon: "Target" },
-      { title: "Blazing Performance", description: "Sub-second page loads with server-side rendering and edge caching for visitors worldwide.", icon: "Zap" },
-      { title: "Mobile-First Responsive", description: "Pixel-perfect experience across every device, from desktop monitors to mobile phones.", icon: "Smartphone" },
-      { title: "SEO Foundation", description: "Built-in search engine optimization ensuring your business ranks where it matters.", icon: "Search" },
+      { title: "One Page per Service", description: "Eight service pages share one clean layout, so new services are quick to add.", icon: "LayoutGrid" },
+      { title: "Directions to the Office", description: "Clear calls to action on every page, plus one-tap directions to the office.", icon: "Target" },
+      { title: "Mobile-First Responsive", description: "A consistent experience across every device, from desktop monitors to mobile phones.", icon: "Smartphone" },
+      { title: "Search-Ready Pages", description: "Each service page has its own search title and description.", icon: "Search" },
     ],
 
     adrs: [
-      { id: "ADR-001", title: "Server-Side Rendering for Performance", status: "Accepted", rationale: "Instant page loads improve visitor retention and search rankings." },
-      { id: "ADR-002", title: "Conversion-First Design System", status: "Accepted", rationale: "Design decisions driven by client acquisition metrics." },
+      { id: "ADR-001", title: "Server-Side Rendering for Performance", status: "Accepted", rationale: "Fast first loads help visitors and search engines." },
+      { id: "ADR-002", title: "Static Typed Service Data", status: "Accepted", rationale: "No CMS needed for eight services that rarely change." },
     ],
   },
 
@@ -432,28 +436,26 @@ export const PROJECT_DATABASE: ProjectEntry[] = [
   {
     slug: "oskaz-ecommerce",
     title: "OSKAZ E-Commerce",
-    subtitle: "Complete Online Store Platform",
+    subtitle: "Online Store Connected to the Company ERP",
     summary:
-      "A powerful online store that lets businesses sell products with secure payments, live inventory tracking, and a smooth checkout that turns browsers into buyers.",
+      "An online store connected live to the company's ERP. Customers see real stock and prices, order in a few clicks, and pay on delivery.",
     category: "E-Commerce",
-    tags: ["E-Commerce", "Enterprise", "Retail"],
-    year: "2026",
+    tags: ["E-Commerce", "ERP Integration", "Retail"],
+    year: "2025",
     status: "Production",
-    liveUrl: "https://oskazimport.com/",
-    githubUrl: "https://github.com/VersaLabs-Studio",
     heroGradient: "from-blue-500/20 via-transparent to-cyan-500/10",
     thumbnail: "/Oskaz Import/Mockups/937shots_so.png",
     imageDir: "Oskaz Import",
     productType: "client-project",
 
     description:
-      "OSKAZ E-Commerce is a comprehensive digital commerce solution built for OSKAZ's enterprise operations spanning institutional and individual customers across Ethiopia. The platform implements Domain-Driven Design with four bounded contexts managing product catalogs, shopping carts, order lifecycle, and user management — all backed by Frappe ERP for inventory and fulfillment, and secured by Clerk authentication.",
+      "OSKAZ E-Commerce is the online store for OSKAZ Import, which sells interactive displays, power and automation products in Ethiopia. Products, prices and stock come straight from the company's ERP, so the website never goes out of date. Customers sign in, build a cart, and place orders that land in the ERP as sales orders. They can track past orders from their account.",
     businessProblem:
-      "OSKAZ needed a customer-facing digital storefront integrated with their existing Frappe ERP backend, with enterprise-grade authentication, multi-language support, and a domain architecture that could evolve independently of the back-office systems.",
+      "OSKAZ kept products, prices and stock in its ERP, but customers could only order by phone or in person. They needed a store that reads from the ERP directly, so staff never update two systems.",
     architecturalSolution:
-      "A Next.js frontend with DDD-modeled bounded contexts (Product Catalog, Shopping Cart, Order Management, User Management), Clerk for identity, and Frappe JS SDK for seamless ERP data integration via the Repository Pattern. Svix handles webhook event processing for real-time state synchronization.",
+      "A Next.js 16 App Router storefront. Server API routes wrap the Frappe JS SDK, so ERP credentials never reach the browser. Clerk handles sign-in, and a Svix-verified webhook creates the matching ERPNext Customer. The cart lives in a React context persisted to localStorage, and checkout posts a Sales Order to ERPNext.",
     systemFlow:
-      "Customer Request → Clerk Auth Middleware → DDD Domain Services → Frappe JS SDK → ERPNext Backend → Type-Safe JSON Response",
+      "Browse (ERP Items) → Cart (localStorage) → Clerk Sign-In → Checkout (Cash on Delivery) → Next.js API Route → Frappe JS SDK → ERPNext Sales Order → My Orders",
 
     techStack: [
       {
@@ -491,58 +493,53 @@ export const PROJECT_DATABASE: ProjectEntry[] = [
         label: "Development & Build",
         items: [
           { name: "ESLint", version: "9.17.0", purpose: "Code linting and quality" },
-          { name: "PostCSS", version: "10.4.21", purpose: "CSS processing" },
+          { name: "PostCSS", purpose: "CSS processing via @tailwindcss/postcss 4" },
           { name: "Autoprefixer", version: "10.4.21", purpose: "CSS vendor prefixing" },
-          { name: "Turbo", purpose: "High-performance build system" },
-          { name: "Node.js", version: "22.10.2", purpose: "Server runtime" },
+          { name: "Turbopack", purpose: "Fast development server" },
         ],
       },
     ],
 
     architecture: {
-      pattern: "DDD Frontend with ERP Backend Integration",
+      pattern: "Headless Storefront on ERPNext (Backend-for-Frontend API Routes)",
       diagram:
-        "Next.js App (Frontend) ↔ Clerk Auth (Identity) ↔ Frappe ERP (Backend)\n\nDomain Layer → Application Services → Repository Pattern → Frappe JS SDK",
+        "Next.js App (Storefront) ↔ Clerk Auth (Identity) ↔ ERPNext (Backend)\n\nPages → Next.js API Routes → Frappe JS SDK → ERPNext Items, Customers and Sales Orders",
       designPatterns: [
-        "Domain-Driven Design with 4 Bounded Contexts",
-        "Repository Pattern for data access abstraction",
-        "Factory Pattern for complex domain objects",
-        "Domain Events (OrderPlaced, OrderShipped)",
-        "Aggregate Pattern (Cart, Order, Product)",
-        "Value Objects (Price, Rating, ProductFeatures)",
+        "Backend-for-Frontend API routes over the Frappe JS SDK",
+        "Shared API handler template with endpoint logging",
+        "Clerk → ERPNext Customer sync via Svix-verified webhook",
+        "Client-side cart with localStorage persistence",
+        "Route protection via Clerk middleware",
       ],
     },
 
     boundedContexts: [
-      { name: "Product Catalog", responsibility: "Product information, categories, and inventory management", entities: ["Product", "Category", "Brand", "ProductAggregate"] },
-      { name: "Shopping Cart", responsibility: "Cart operations and temporary order assembly", entities: ["Cart", "CartItem", "CartAggregate"] },
-      { name: "Order Management", responsibility: "Order lifecycle from placement to fulfillment", entities: ["SalesOrder", "OrderItem", "OrderAggregate"] },
-      { name: "User Management", responsibility: "Authentication, profiles, and preferences", entities: ["User", "Customer", "UserAggregate"] },
+      { name: "Catalog", responsibility: "Products, categories, stock and prices read live from the ERP", entities: ["Item", "Item Group"] },
+      { name: "Cart", responsibility: "Cart operations in the browser", entities: ["CartItem (client-side)"] },
+      { name: "Orders", responsibility: "Checkout and order history", entities: ["Sales Order"] },
+      { name: "Customers", responsibility: "Sign-in and the matching ERP customer record", entities: ["Clerk User", "ERPNext Customer"] },
     ],
 
     schema: [
-      { name: "products", description: "Product catalog with categories and inventory", keyFields: ["id", "name", "category_id", "price", "stock_qty", "features (JSONB)"] },
-      { name: "categories", description: "Hierarchical product categories", keyFields: ["id", "name", "parent_id", "slug"] },
-      { name: "cart_items", description: "Shopping cart with user association", keyFields: ["id", "user_id", "product_id", "quantity", "selected_options"] },
-      { name: "sales_orders", description: "Order records with status lifecycle", keyFields: ["id", "customer_id", "items", "total", "status", "delivery_info"] },
-      { name: "customers", description: "Customer profiles linked to Clerk auth", keyFields: ["id", "clerk_user_id", "name", "contact_info", "preferences"] },
+      { name: "Item", description: "ERPNext product records", keyFields: ["item_code", "item_name", "item_group", "standard_rate", "image"] },
+      { name: "Item Group", description: "ERPNext product categories", keyFields: ["item_group_name", "parent_item_group"] },
+      { name: "Sales Order", description: "Web orders created in the ERP", keyFields: ["customer", "delivery_date", "grand_total", "status", "items"] },
+      { name: "Customer", description: "ERP customer created from a Clerk sign-up", keyFields: ["customer_name", "email"] },
     ],
 
     features: [
-      { title: "Clerk Authentication", description: "Enterprise identity management with social providers, session handling, and webhook-driven user sync.", icon: "UserCheck" },
-      { title: "ERP-Backed Inventory", description: "Real-time stock levels and pricing from Frappe ERPNext with type-safe SDK integration.", icon: "Package" },
-      { title: "Multi-Language Support", description: "Internationalization with translation management for Ethiopian market localization.", icon: "Languages" },
-      { title: "Domain Event Architecture", description: "OrderPlaced and OrderShipped events drive notifications, inventory updates, and fulfillment workflows.", icon: "Workflow" },
+      { title: "Sign In Once", description: "Customers sign in once, and their account is created in the ERP automatically.", icon: "UserCheck" },
+      { title: "ERP-Backed Inventory", description: "Stock and prices come live from the company ERP, so the store is always current.", icon: "Package" },
+      { title: "Orders Straight Into the ERP", description: "Every web order becomes a sales order in the ERP, ready for the sales team.", icon: "Workflow" },
+      { title: "Cash on Delivery Checkout", description: "Customers place orders online and pay when the goods arrive.", icon: "Truck" },
       { title: "Responsive Dark/Light Theme", description: "System-aware theming with next-themes and user preference persistence.", icon: "Moon" },
-      { title: "SEO Optimized SSR", description: "Server-side rendering with comprehensive meta tags for optimal search engine visibility.", icon: "Search" },
     ],
 
     adrs: [
-      { id: "ADR-001", title: "DDD for E-Commerce Frontend", status: "Accepted", rationale: "E-commerce has clear bounded contexts that align code with business domain." },
-      { id: "ADR-002", title: "Four Bounded Contexts", status: "Accepted", rationale: "Product, Cart, Order, User — each with distinct business rules and stakeholders." },
-      { id: "ADR-003", title: "Frontend DDD with TypeScript", status: "Accepted", rationale: "Domain services as pure functions with React context for aggregate state." },
-      { id: "ADR-004", title: "React Context + Custom Hooks for Aggregates", status: "Accepted", rationale: "Maintains aggregate invariants in frontend without Redux overhead." },
-      { id: "ADR-005", title: "Repository Pattern with Frappe JS SDK", status: "Accepted", rationale: "Decouples domain logic from data access technology." },
+      { id: "ADR-001", title: "Server-Side API Routes as the Only ERP Gateway", status: "Accepted", rationale: "ERP credentials stay on the server; the browser only talks to our own API routes." },
+      { id: "ADR-002", title: "Clerk for Identity with Webhook Sync to ERPNext", status: "Accepted", rationale: "Sign-up creates the ERP customer automatically, so staff never re-key accounts." },
+      { id: "ADR-003", title: "Client-Side Cart", status: "Accepted", rationale: "No server cart table; the cart persists in the browser until checkout." },
+      { id: "ADR-004", title: "Cash on Delivery for v1", status: "Accepted", rationale: "Orders go live without a payment gateway; payment happens on delivery." },
     ],
   },
 
@@ -554,40 +551,39 @@ export const PROJECT_DATABASE: ProjectEntry[] = [
     title: "FastPay ET Wallet",
     subtitle: "Send Money Home — Fast & Secure",
     summary:
-      "A mobile app for sending money between the US and Ethiopia instantly. Real-time exchange rates, fingerprint security, and a beautiful experience built for the Ethiopian diaspora.",
+      "A mobile app prototype for sending money between the US and Ethiopia. Live-style exchange rates, PIN sign-in, and a polished experience built for the Ethiopian diaspora.",
     category: "Fintech",
     tags: ["Fintech", "Mobile", "Payments"],
     year: "2026",
-    status: "Production",
-    client: "FastPay LLC (NMLS #2327896)",
-    githubUrl: "https://github.com/VersaLabs-Studio",
+    status: "Prototype",
+    client: "FastPay LLC",
     heroGradient: "from-green-500/20 via-transparent to-emerald-500/10",
     thumbnail: "/FastPay/Mockups/228shots_so.png",
     productType: "client-project",
 
     description:
-      "FastPay ET Wallet is a production-ready mobile application designed to facilitate seamless cross-border payments between the United States and Ethiopia. Built for FastPay LLC (MSB Licensed, NMLS #2327896), this application delivers a pixel-perfect user experience with 60fps UI-thread animations, comprehensive Zustand state management, and strict Domain-Driven Design across five core business domains — Auth, Wallet, Transaction, Contact, and Notification.",
+      "FastPay ET Wallet is a working prototype of a mobile app for cross-border payments between the United States and Ethiopia, built for FastPay LLC to show stakeholders the product. It runs on realistic sample data, with UI-thread animations, Zustand state management, and Domain-Driven Design across five business domains — Auth, Wallet, Transaction, Contact, and Notification.",
     businessProblem:
-      "Ethiopian diaspora communities in the US face high fees, slow settlement times, and poor mobile UX when sending remittances home. Existing apps lack native mobile feel, real-time exchange rates, and MSB-compliant security measures.",
+      "Ethiopian diaspora communities in the US face high fees, slow settlement times, and poor mobile UX when sending remittances home. Existing apps lack a native mobile feel and clear, up-to-date exchange rates.",
     architecturalSolution:
-      "A React Native (Expo SDK 52) mobile app with five DDD bounded contexts, Zustand state stores with MMKV encrypted persistence, and a 60fps animation system powered by Reanimated v3 running exclusively on the UI thread. Schema-first development ensures all data contracts are TypeScript interfaces before implementation, with factory patterns for zero-placeholder UI demos.",
+      "A React Native (Expo SDK 55) mobile app with five DDD bounded contexts, Zustand state stores persisted with AsyncStorage, and an animation system powered by Reanimated 4 running on the UI thread. Schema-first development ensures all data contracts are TypeScript interfaces before implementation, with factory patterns for zero-placeholder UI demos.",
     systemFlow:
-      "PIN/Biometric Auth → Zustand Session Store → Wallet Balance (Multi-Currency) → Transaction Creation → Exchange Rate Engine → Recipient Selection → Confirmation → Push Notification",
+      "PIN Auth → Zustand Session Store → Wallet Balance (Multi-Currency) → Transaction Creation → Exchange Rate Engine → Recipient Selection → Confirmation → In-App Notification",
 
     techStack: [
       {
         label: "Core Framework & Runtime",
         items: [
-          { name: "Expo SDK", version: "52+", purpose: "Managed React Native runtime with custom builds" },
-          { name: "React Native", version: "0.83.2", purpose: "Cross-platform mobile framework" },
+          { name: "Expo SDK", version: "~55", purpose: "Managed React Native runtime with custom builds" },
+          { name: "React Native", version: "0.83", purpose: "Cross-platform mobile framework" },
           { name: "TypeScript", version: "5.x", purpose: "Strict type safety" },
-          { name: "Expo Router", version: "v4", purpose: "File-based navigation with native performance" },
+          { name: "Expo Router", purpose: "File-based navigation with native performance" },
         ],
       },
       {
         label: "UI & Animation Engine",
         items: [
-          { name: "React Native Reanimated", version: "v3", purpose: "UI-thread 60fps animations and gestures" },
+          { name: "React Native Reanimated", version: "4.2", purpose: "UI-thread animations and gestures" },
           { name: "React Native Gesture Handler", version: "v2", purpose: "Advanced touch interactions and pan gestures" },
           { name: "Expo Linear Gradient", purpose: "Smooth gradient backgrounds" },
           { name: "Lottie React Native", purpose: "Complex micro-interactions and success animations" },
@@ -599,7 +595,7 @@ export const PROJECT_DATABASE: ProjectEntry[] = [
         label: "State Management & Data",
         items: [
           { name: "Zustand", purpose: "Lightweight reactive global state container" },
-          { name: "React Native MMKV", purpose: "Synchronous encrypted key-value persistence" },
+          { name: "AsyncStorage", version: "2.2", purpose: "On-device key-value persistence" },
           { name: "@faker-js/faker", purpose: "Realistic mock data generation (300+ transactions)" },
           { name: "Dayjs", purpose: "Date formatting and timezone handling" },
           { name: "@shopify/flash-list", purpose: "60fps virtualized lists" },
@@ -627,19 +623,19 @@ export const PROJECT_DATABASE: ProjectEntry[] = [
     architecture: {
       pattern: "Domain-Driven Mobile Architecture with Zustand State Machines",
       diagram:
-        "Expo Router Screens → Domain Hooks → Zustand Stores (MMKV Persistence) → Factory Data Layer\n\nDomains: Auth | Wallet | Transactions | Contacts | Notifications",
+        "Expo Router Screens → Domain Hooks → Zustand Stores (AsyncStorage Persistence) → Factory Data Layer\n\nDomains: Auth | Wallet | Transactions | Contacts | Notifications",
       designPatterns: [
         "Domain-Driven Design with 5 Bounded Contexts",
         "Schema-First Development (Interfaces → Implementation)",
         "Factory Pattern for components and data generation",
         "Observer Pattern (Zustand subscriptions)",
-        "UI-Thread Animation System (Reanimated v3)",
-        "MMKV Encrypted Persistence",
+        "UI-Thread Animation System (Reanimated 4)",
+        "Persisted Zustand Stores (AsyncStorage)",
       ],
     },
 
     boundedContexts: [
-      { name: "Auth", responsibility: "PIN/biometric authentication, session lifecycle", entities: ["User", "PIN (Value Object)", "Session (Aggregate)"] },
+      { name: "Auth", responsibility: "PIN authentication, session lifecycle", entities: ["User", "PIN (Value Object)", "Session (Aggregate)"] },
       { name: "Wallet", responsibility: "Multi-currency balance tracking and funding sources", entities: ["Wallet", "Balance (Value Object)", "Currency (Value Object)", "FundingSource"] },
       { name: "Transaction", responsibility: "Cross-border transfer processing and history", entities: ["Transaction", "TransactionType (Enum)", "TransactionStatus (Enum)", "Recipient (Value Object)", "ExchangeRate (Value Object)"] },
       { name: "Contact", responsibility: "Recipient management with favorites and search", entities: ["Contact", "ContactMethod (Value Object)", "Favorite (Aggregate)"] },
@@ -655,12 +651,12 @@ export const PROJECT_DATABASE: ProjectEntry[] = [
     ],
 
     features: [
-      { title: "60fps UI-Thread Animations", description: "Every interaction runs on the native UI thread via Reanimated v3 — spring physics, gesture-driven transitions, and Lottie micro-interactions.", icon: "Sparkles" },
-      { title: "Biometric + PIN Authentication", description: "4-digit PIN with FaceID/TouchID support, session management, and MSB-compliant security measures.", icon: "Fingerprint" },
-      { title: "Live Exchange Rate Engine", description: "Real-time USD-to-ETB conversion with live rate simulation and multi-currency balance display.", icon: "ArrowLeftRight" },
+      { title: "UI-Thread Animations", description: "Interactions run on the native UI thread via Reanimated 4 — spring physics, gesture-driven transitions, and Lottie micro-interactions.", icon: "Sparkles" },
+      { title: "PIN Authentication", description: "4-digit PIN sign-in with session management. Biometric unlock is planned.", icon: "Fingerprint" },
+      { title: "Live Exchange Rate Engine", description: "USD-to-ETB conversion with simulated live rates and multi-currency balance display.", icon: "ArrowLeftRight" },
       { title: "Factory Pattern Data Generation", description: "50+ Ethiopian/US contacts and 300+ transaction records generated via typed factories for zero-placeholder demos.", icon: "Database" },
-      { title: "Encrypted Offline Persistence", description: "MMKV synchronous storage with encryption for sensitive financial data — faster than AsyncStorage.", icon: "HardDrive" },
-      { title: "Cross-Platform Deployment", description: "Single codebase deploying to iOS, Android, and Web via Expo managed workflow.", icon: "Smartphone" },
+      { title: "Offline Persistence", description: "Sessions and app data persist on the device with AsyncStorage. Encrypted storage is planned.", icon: "HardDrive" },
+      { title: "Cross-Platform Deployment", description: "One codebase that runs on iOS, Android, and Web via the Expo managed workflow.", icon: "Smartphone" },
     ],
 
     adrs: [
@@ -668,9 +664,9 @@ export const PROJECT_DATABASE: ProjectEntry[] = [
       { id: "ADR-002", title: "Schema-First Development", status: "Accepted", rationale: "TypeScript interfaces defined before implementation ensure frontend-backend contract alignment." },
       { id: "ADR-003", title: "Factory Pattern for Components and Data", status: "Accepted", rationale: "Reduces duplication, ensures consistency, enables rapid prototyping." },
       { id: "ADR-004", title: "Zustand over Redux", status: "Accepted", rationale: "Lightweight with better TypeScript support, synchronous updates, zero boilerplate." },
-      { id: "ADR-005", title: "Reanimated v3 for Animation System", status: "Accepted", rationale: "UI-thread execution ensures 60fps on all devices — critical for fintech trust." },
+      { id: "ADR-005", title: "Reanimated 4 for Animation System", status: "Accepted", rationale: "UI-thread execution keeps animations smooth — important for fintech trust." },
       { id: "ADR-006", title: "Cross-Platform Expo Managed Workflow", status: "Accepted", rationale: "Faster development than bare React Native with excellent native performance." },
-      { id: "ADR-007", title: "MMKV for Encrypted Persistence", status: "Accepted", rationale: "Synchronous operations with built-in encryption — better than AsyncStorage for financial data." },
+      { id: "ADR-007", title: "AsyncStorage Persistence (MMKV Planned)", status: "Accepted", rationale: "AsyncStorage keeps the prototype simple; encrypted MMKV storage is planned for a production build." },
     ],
   },
 
@@ -682,32 +678,31 @@ export const PROJECT_DATABASE: ProjectEntry[] = [
     title: "Pana Sports",
     subtitle: "Ethiopia's Football Hub",
     summary:
-      "The go-to platform for Ethiopian football. Live scores, league tables, team profiles, and news — all in English and Amharic, serving fans, clubs, and media across the country.",
+      "A home for Ethiopian football fans. Live scores, league tables, team and player profiles, and news — in English and Amharic.",
     category: "Sports",
     tags: ["Sports", "Real-Time", "Media"],
     year: "2026",
     status: "Production",
     liveUrl: "https://panasport.et",
-    githubUrl: "https://github.com/VersaLabs-Studio",
     heroGradient: "from-amber-500/20 via-transparent to-yellow-500/10",
-    thumbnail: "/Pana Sport/Mockups/562shots_so.png",
+    thumbnail: "/Pana Sport/Mockups/246shots_so.png",
     productType: "client-project",
 
     description:
-      "Pana Sports is VersaLabs' flagship public-facing product — a comprehensive digital platform serving the Ethiopian football ecosystem. It delivers real-time match tracking, league standings, team and player profiles, and a bilingual (English/Amharic) content management system. Covering Premier League, Ethiopian Cup, Higher League, and Women's League, it serves fans, club administrators, league officials, and media broadcasters at national scale.",
+      "Pana Sports is a digital home for Ethiopian football. Fans follow live scores, tables, cups, and player profiles in English or Amharic. Editors run each match minute by minute from a control panel and publish news from one dashboard. It covers the Premier League, Higher League, League One, Women's League, Ethiopian Cup, and the Walias.",
     businessProblem:
-      "Ethiopian football lacked a centralized, reliable digital platform for real-time scores, league data, and content management — forcing fans to rely on fragmented social media posts and administrators to manage data through spreadsheets.",
+      "Ethiopian football scores and news were scattered across social media posts. Fans had no single place to check results, tables, and fixtures in their own language.",
     architecturalSolution:
-      "A clean layered architecture (Presentation → Application → Domain → Infrastructure) built on Next.js 16 with Supabase as Backend-as-a-Service providing PostgreSQL, real-time subscriptions for live scores, authentication, and file storage. Bilingual content is modeled as a first-class domain concept with _en and _am fields on all entities. The CMS operates as a separate bounded context from the public site.",
+      "A layered Next.js 16 app on Supabase (PostgreSQL, Auth, Storage, Realtime). Public match pages subscribe to Realtime channels on matches, match events, and lineups. Every entity carries _en/_am columns for bilingual content. The CMS is a separate route group behind an admin-role check, and editors curate standings with per-season group settings.",
     systemFlow:
-      "User Action → Next.js Component → TanStack Query Hook → API Route → Zod Validation → Supabase Client → PostgreSQL → Real-Time Subscription → WebSocket Push",
+      "CMS Match Control → API Route (Zod) → Supabase PostgreSQL → Realtime Channel (matches / match_events / match_lineups) → TanStack Query Cache → Public Match Page",
 
     techStack: [
       {
         label: "Frontend Framework",
         items: [
-          { name: "Next.js", version: "16.0.3", purpose: "App Router with server components and edge runtime" },
-          { name: "React", version: "19.2.0", purpose: "Concurrent features and hooks" },
+          { name: "Next.js", version: "16.0.10", purpose: "App Router with server components" },
+          { name: "React", version: "19.2.1", purpose: "Concurrent features and hooks" },
           { name: "TypeScript", version: "5.x", purpose: "Strict type-safe development" },
         ],
       },
@@ -716,6 +711,7 @@ export const PROJECT_DATABASE: ProjectEntry[] = [
         items: [
           { name: "Supabase", purpose: "PostgreSQL, real-time subscriptions, auth, and storage" },
           { name: "PostgreSQL", purpose: "Relational database with advanced querying" },
+          { name: "Supabase Realtime", purpose: "Live score, event, and lineup channels" },
         ],
       },
       {
@@ -742,18 +738,9 @@ export const PROJECT_DATABASE: ProjectEntry[] = [
         ],
       },
       {
-        label: "Monitoring & Analytics",
-        items: [
-          { name: "Sentry", purpose: "Error tracking and performance monitoring" },
-          { name: "Vercel Analytics", purpose: "Usage analytics and Web Vitals" },
-        ],
-      },
-      {
         label: "Development & Quality",
         items: [
           { name: "ESLint", purpose: "Code linting and enforcement" },
-          { name: "Prettier", purpose: "Code formatting" },
-          { name: "Husky", purpose: "Git hooks for quality gates" },
         ],
       },
     ],
@@ -767,33 +754,34 @@ export const PROJECT_DATABASE: ProjectEntry[] = [
         "DDD with Bounded Contexts (Public + CMS)",
         "Bilingual Content Model (_en / _am fields)",
         "Repository Pattern via Supabase Client",
-        "Domain Events (PostIngested, MetricCalculated)",
-        "ISR (Incremental Static Regeneration) for performance",
+        "Realtime Subscriptions (Supabase postgres_changes)",
+        "Per-Season League Configuration (groups, promotion, relegation)",
       ],
     },
 
     boundedContexts: [
       { name: "Public Platform", responsibility: "Fan-facing live scores, standings, team/player profiles, news", entities: ["Match", "League", "Team", "Player", "NewsArticle", "Standing"] },
-      { name: "CMS", responsibility: "Admin content management, match control, media uploads", entities: ["CMS_Match", "CMS_News", "CMS_Team", "User", "MediaAsset"] },
-      { name: "Analytics", responsibility: "Usage statistics, content metrics, and performance tracking", entities: ["PageView", "ContentMetric", "UserSession"] },
+      { name: "CMS", responsibility: "Admin content management, match control, media uploads", entities: ["MatchEvent", "MatchLineup", "Author", "Comment", "AdCampaign", "User"] },
+      { name: "Competitions", responsibility: "Seasons, cups, cup editions, groups, and knockout rounds", entities: ["Season", "Cup", "CupEdition", "CupGroup", "KnockoutRound", "LeagueSeasonConfig"] },
     ],
 
     schema: [
-      { name: "leagues", description: "League definitions with season data", keyFields: ["id", "name_en", "name_am", "season_id", "type", "status"] },
-      { name: "teams", description: "Club profiles with roster links", keyFields: ["id", "name_en", "name_am", "logo_url", "league_id", "founded_year"] },
-      { name: "players", description: "Player profiles with career statistics", keyFields: ["id", "name_en", "name_am", "team_id", "position", "jersey_number", "stats (JSONB)"] },
-      { name: "matches", description: "Match records with real-time event tracking", keyFields: ["id", "league_id", "home_team_id", "away_team_id", "score", "events (JSONB)", "status", "match_week"] },
-      { name: "news", description: "Bilingual news articles with rich text content", keyFields: ["id", "title_en", "title_am", "content_en", "content_am", "category", "published_at"] },
-      { name: "standings", description: "League table calculations", keyFields: ["id", "league_id", "team_id", "played", "won", "drawn", "lost", "gd", "points"] },
+      { name: "leagues", description: "League definitions", keyFields: ["id", "slug", "name_en", "name_am", "category", "is_active"] },
+      { name: "teams", description: "Club profiles with roster links", keyFields: ["id", "slug", "name_en", "name_am", "league_id", "stadium_en", "founded"] },
+      { name: "players", description: "Player profiles", keyFields: ["id", "name_en", "name_am", "team_id", "position_en", "jersey_number", "photo_url"] },
+      { name: "matches", description: "Match records with live status", keyFields: ["id", "league_id", "home_team_id", "away_team_id", "score_home", "score_away", "minute", "status", "match_day", "season"] },
+      { name: "match_events", description: "Goals, cards, substitutions, and VAR decisions per match", keyFields: ["id", "match_id", "type", "minute", "player_id", "team_id", "confirmed"] },
+      { name: "news", description: "Bilingual news articles with rich text content", keyFields: ["id", "title_en", "title_am", "content_en", "content_am", "category_id", "author_id", "published_at"] },
+      { name: "standings", description: "League tables curated by editors", keyFields: ["id", "league_id", "team_id", "season", "played", "won", "draw", "lost", "gd", "points", "rank"] },
     ],
 
     features: [
-      { title: "Real-Time Live Scores", description: "Supabase real-time subscriptions deliver live score updates, match events, and commentary via WebSocket.", icon: "Radio" },
-      { title: "Bilingual Content System", description: "All entities carry _en and _am fields — native English and Amharic support as a first-class domain concept.", icon: "Languages" },
-      { title: "Multi-League Coverage", description: "Premier League, Ethiopian Cup, Higher League, and Women's League with automated standings tables.", icon: "Trophy" },
-      { title: "Match Control Panel", description: "CMS operators manage live matches with time persistence, penalty shootouts, event editing, and real-time score updates.", icon: "Gamepad2" },
-      { title: "TipTap Rich Text Editor", description: "WYSIWYG content creation for news articles with image embedding and link support.", icon: "PenTool" },
-      { title: "Global Search (⌘K)", description: "Instant fuzzy search across teams, players, news, and matches from any page.", icon: "Search" },
+      { title: "Real-Time Live Scores", description: "Scores, goals, cards, and lineups update on fans' screens the moment editors record them.", icon: "Radio" },
+      { title: "Bilingual Content System", description: "Every page, team, player, and article works in English and Amharic, with a one-tap language switch.", icon: "Languages" },
+      { title: "Leagues, Cups, and National Team", description: "Premier League, Higher League, League One, Women's League, the Ethiopian Cup, and the Walias — each with its own tables and fixtures.", icon: "Trophy" },
+      { title: "Match Control Panel", description: "Editors run the match clock, log goals, cards, and VAR checks, record penalty shootouts, and fix mistakes afterwards.", icon: "Gamepad2" },
+      { title: "Built-In News Editor", description: "Editors write and publish news with images, tables, and links, straight from the dashboard.", icon: "PenTool" },
+      { title: "Global Search (⌘K)", description: "Press ⌘K to find any team, player, match, or article, in English or Amharic.", icon: "Search" },
     ],
 
     adrs: [
@@ -803,30 +791,30 @@ export const PROJECT_DATABASE: ProjectEntry[] = [
       { id: "ADR-004", title: "TanStack Query for Data Management", status: "Accepted", rationale: "Intelligent caching and background updates for data-heavy sports app." },
       { id: "ADR-005", title: "Bilingual Content Model (_en/_am)", status: "Accepted", rationale: "Language as a core domain concept — foundation for additional languages." },
       { id: "ADR-006", title: "CMS as Separate Bounded Context", status: "Accepted", rationale: "Clear isolation of admin and fan-facing domains for security and independent evolution." },
+      { id: "ADR-007", title: "Editor-Controlled Standings over Database Triggers", status: "Accepted", rationale: "Trigger-driven score updates double-counted goals; editors now own scores and standings directly." },
     ],
   },
 
   // =========================================================================
-  // 7. PAVILION360 V2.0
+  // 7. PAVILION360
   // =========================================================================
   {
-    slug: "pavillion-360",
-    title: "Pavilion360 V2.0",
+    slug: "pavilion-360",
+    title: "Pavilion360",
     subtitle: "Event Production Platform with Built-in CRM",
     summary:
       "A complete platform for event production companies. Manage your services, rental equipment, client quotes, and leads — all from one dashboard with a stunning public website.",
     category: "Events",
-    tags: ["Events", "CMS", "CRM", "Enterprise"],
-    year: "2026",
+    tags: ["Events", "CMS", "CRM"],
+    year: "2025",
     status: "Production",
     liveUrl: "https://www.pavilion360.events/",
-    githubUrl: "https://github.com/VersaLabs-Studio",
     heroGradient: "from-purple-500/20 via-transparent to-pink-500/10",
-    thumbnail: "/Pavillion360/Mockups/610shots_so.png",
+    thumbnail: "/Pavilion360/Mockups/610shots_so.png",
     productType: "client-project",
 
     description:
-      "Pavilion360 V2.0 represents a complete architectural transformation of a static marketing website into a fully data-driven, enterprise-grade platform with an integrated CMS and lightweight CRM. Built for a premium event production company specializing in audio-visual production and rental equipment, it features 8 comprehensive content modules, quote basket functionality, lead management, and Supabase PostgreSQL with Row Level Security.",
+      "Pavilion360 turns a static marketing website into a data-driven platform with an integrated CMS and lightweight CRM. Built for an event production company in Indianapolis that specializes in audio-visual production and rental equipment, it features 8 comprehensive content modules, quote basket functionality, lead management, and Supabase PostgreSQL with Row Level Security.",
     businessProblem:
       "Pavilion360's static website required developer intervention for every content update, had no lead capture capability, and couldn't showcase their rental inventory dynamically — losing potential clients to competitors with interactive online presences.",
     architecturalSolution:
@@ -917,7 +905,7 @@ export const PROJECT_DATABASE: ProjectEntry[] = [
       { title: "Lead Management CRM", description: "Quote-to-lead pipeline with status tracking, priority scoring, and customer communication workflows.", icon: "Users" },
       { title: "Centralized Media Library", description: "Supabase Storage integration with CDN-backed image management, thumbnail generation, and access control.", icon: "Image" },
       { title: "Row Level Security", description: "Database-level access control ensuring public endpoints are read-only and CMS mutations require admin authentication.", icon: "ShieldCheck" },
-      { title: "Analytics Dashboard", description: "Real-time content performance metrics, page view tracking, and business intelligence for administrative decision-making.", icon: "BarChart3" },
+      { title: "Admin Overview", description: "Content counts plus the latest inquiries and quote requests, at a glance.", icon: "BarChart3" },
     ],
 
     adrs: [
@@ -940,25 +928,24 @@ export const PROJECT_DATABASE: ProjectEntry[] = [
     title: "PrintOnline.et",
     subtitle: "Online Ordering for Printing Services",
     summary:
-      "Order printing services online with instant pricing, secure payments via Chapa, and real-time order tracking — from business cards to large-format prints, delivered across Ethiopia.",
+      "Order printing online with instant prices, secure Chapa payments and live order tracking. Business cards to booklets, delivered across Addis Ababa.",
     category: "E-Commerce",
-    tags: ["E-Commerce", "Print", "Fintech", "Enterprise"],
+    tags: ["E-Commerce", "Print", "Payments"],
     year: "2026",
     status: "Production",
     liveUrl: "https://printonline.et",
-    githubUrl: "https://github.com/VersaLabs-Studio",
     heroGradient: "from-orange-500/20 via-transparent to-red-500/10",
-    thumbnail: "/PrintOnline-ET/Mockups/100shots_so.png",
+    thumbnail: "/PrintOnline-ET/Mockups/405shots_so.png",
     productType: "client-project",
 
     description:
-      "PrintOnline.et is an enterprise-grade e-commerce platform built for the Ethiopian printing industry, empowering Pana Promotion to offer seamless online ordering for 15+ printing products. It features a matrix-based pricing engine replacing additive models, Chapa payment gateway integration for ETB transactions, an 8-step order status pipeline with email notifications, and a comprehensive admin CMS — transitioning from manual cash-on-delivery to a fully digital commerce operation.",
+      "PrintOnline.et is the online print shop we built for Pana Promotion in Addis Ababa. Customers choose from 15 print products, see the exact price as they pick options, upload their artwork and pay with Chapa. Every order moves through eight production steps, and customers get an email at each one. Staff run the whole shop from one dashboard: products, prices, orders, customers and the homepage.",
     businessProblem:
       "Ethiopian printing businesses rely on manual quoting, cash-on-delivery payments, and phone-based order tracking — creating pricing errors, payment delays, and zero visibility for customers into their order status.",
     architecturalSolution:
-      "A schema-first Next.js 16 application with six DDD bounded contexts (Catalog, Ordering, Customer, Payment, Fulfillment, Admin). Matrix-based pricing stores exact prices per option combination in PostgreSQL. Chapa's hosted checkout provides PCI-compliant payment processing without card data touching the server. Better-auth handles user sessions, and Nodemailer sends automated order notifications via Ethio Telecom SMTP.",
+      "A schema-first Next.js 16 application with six DDD bounded contexts (Catalog, Ordering, Customer, Payment, Fulfillment, Admin). Prices come from a per-combination matrix where a product has one, and from option add-ons where it doesn't. The server reprices every order before saving it and rejects any mismatch. Chapa's hosted checkout keeps card data off our servers, and each settlement is re-verified with Chapa's API. better-auth handles sessions and Google sign-in, and Resend sends transactional email.",
     systemFlow:
-      "Product Browse → Option Selection → Matrix Price Lookup → Cart (localStorage/DB) → Checkout Wizard → Chapa Payment → Order Created → 8-Step Status Pipeline → Email Notifications",
+      "Product Browse → Option Selection → Live Price (Matrix or Add-Ons) → Cart (Browser) → Checkout (Delivery Zone or Pickup) → Server Repricing → Chapa Hosted Payment → Verified Settlement → 8-Step Production Pipeline → Status Emails",
 
     techStack: [
       {
@@ -986,22 +973,21 @@ export const PROJECT_DATABASE: ProjectEntry[] = [
         label: "Backend & Database",
         items: [
           { name: "Supabase (PostgreSQL)", purpose: "Database, storage, and RLS" },
-          { name: "Supabase Storage", purpose: "File uploads (4 files, 10MB each)" },
-          { name: "better-auth", version: "v1.3.x", purpose: "Secure session-based authentication" },
-          { name: "Nodemailer", purpose: "SMTP email (Ethio Telecom)" },
+          { name: "Supabase Storage", purpose: "Artwork uploads via signed URLs (4 files, 10 MB each)" },
+          { name: "better-auth", version: "1.6.x", purpose: "Session auth with email verification and Google sign-in" },
+          { name: "Resend", version: "6.x", purpose: "Transactional email (order, status, verification)" },
         ],
       },
       {
         label: "Payment",
         items: [
-          { name: "Chapa", purpose: "Ethiopian payment gateway (redirect-based, PCI-compliant)" },
+          { name: "Chapa", purpose: "Ethiopian payment gateway (hosted checkout)" },
         ],
       },
       {
         label: "Deployment",
         items: [
           { name: "Vercel", purpose: "Hosting, CDN, and serverless functions" },
-          { name: "GitHub Actions", purpose: "CI/CD pipeline" },
         ],
       },
     ],
@@ -1009,23 +995,24 @@ export const PROJECT_DATABASE: ProjectEntry[] = [
     architecture: {
       pattern: "Schema-First E-Commerce with Matrix Pricing Engine",
       diagram:
-        "Next.js (Storefront + CMS) → API Routes → better-auth (Sessions) → Supabase (PostgreSQL + Storage)\n\nChapa Payment Gateway → Webhook Verification → Order Status Pipeline → Nodemailer (SMTP)\n\nRoute Groups: (storefront) | (auth) | (account) | (cms)",
+        "Next.js (Storefront + CMS) → API Routes (Zod + session checks) → better-auth (Sessions, Google) → Supabase (PostgreSQL + Storage, RLS)\n\nChapa Hosted Checkout → Callback / Webhook / Verify → Re-Verify With Chapa → Single Conditional Update → Resend Email\n\nRoute Groups: (storefront) | (auth) | (account) | (cms)",
       designPatterns: [
         "DDD with 6 Bounded Contexts",
-        "Matrix-Based Pricing (exact lookup, not additive)",
+        "Hybrid Pricing (exact matrix lookup, option add-ons as fallback)",
         "8-Step Order Status Pipeline with transition rules",
         "Schema-First Development (Supabase → Types → Zod)",
-        "Component Decomposition (max 200 lines)",
+        "Server-Side Repricing (409 on price mismatch)",
+        "Idempotent Payment Settlement (re-verify + conditional update)",
         "Row Level Security for data isolation",
       ],
     },
 
     boundedContexts: [
       { name: "Catalog", responsibility: "Products, categories, options, and pricing matrices", entities: ["Product", "ProductOptions", "ProductOptionValues", "PricingMatrix"] },
-      { name: "Ordering", responsibility: "Cart management, checkout wizard, order lifecycle", entities: ["Order", "OrderItems", "Cart", "CartItems"] },
+      { name: "Ordering", responsibility: "Cart management, checkout wizard, order lifecycle", entities: ["Order", "OrderItem", "DesignAsset", "Cart (client-side)"] },
       { name: "Customer", responsibility: "User profiles, authentication, account management", entities: ["CustomerProfile"] },
-      { name: "Payment", responsibility: "Chapa integration and transaction verification", entities: ["PaymentTransaction", "ChapaSession"] },
-      { name: "Fulfillment", responsibility: "Order status pipeline (8 steps) and notifications", entities: ["OrderStatus", "StatusHistory", "EmailNotification"] },
+      { name: "Payment", responsibility: "Chapa integration and transaction verification", entities: ["Order.payment (tx_ref, status, receipt)", "ChapaVerification"] },
+      { name: "Fulfillment", responsibility: "8-step production pipeline, delivery zones, status emails and order messaging", entities: ["OrderStatus", "StatusHistory", "DeliveryZone", "Message"] },
       { name: "Admin", responsibility: "CMS dashboard, order management, and customer insights", entities: ["CMS_Order", "CMS_Customer", "CMS_Analytics"] },
     ],
 
@@ -1033,27 +1020,27 @@ export const PROJECT_DATABASE: ProjectEntry[] = [
       { name: "products", description: "Printing product catalog", keyFields: ["id", "name", "slug", "category_id", "base_price", "description", "features (JSONB)"] },
       { name: "product_options", description: "Configurable options per product (size, paper, lamination)", keyFields: ["id", "product_id", "option_name", "display_order"] },
       { name: "product_option_values", description: "Possible values for each option", keyFields: ["id", "option_id", "value", "label"] },
-      { name: "product_pricing_matrix", description: "Exact price per option combination (v3.0)", keyFields: ["id", "product_id", "option_combination (JSONB)", "price_etb", "quantity_range"] },
-      { name: "orders", description: "Order headers with 8-step status pipeline", keyFields: ["id", "customer_id", "total_etb", "status", "status_history (JSONB)", "payment_ref"] },
-      { name: "order_items", description: "Line items with option selections and file uploads", keyFields: ["id", "order_id", "product_id", "selected_options (JSONB)", "quantity", "file_urls"] },
+      { name: "product_pricing_matrix", description: "Exact price per option combination (v3.0)", keyFields: ["id", "product_id", "matrix_key", "matrix_label", "price", "matrix_json (JSONB)"] },
+      { name: "orders", description: "Order headers with 8-step status pipeline", keyFields: ["id", "order_number", "customer_id", "total_amount", "delivery_fee", "status", "status_history (JSONB)", "payment_status", "tx_ref"] },
+      { name: "order_items", description: "Line items with option selections and file uploads", keyFields: ["id", "order_id", "product_id", "selected_options (JSONB)", "quantity", "unit_price", "design_file_url"] },
       { name: "customer_profiles", description: "User data linked to better-auth", keyFields: ["id", "auth_user_id", "name", "phone", "city", "sub_city", "woreda"] },
     ],
 
     features: [
-      { title: "Matrix-Based Pricing Engine", description: "Replaces additive pricing with exact price lookups per option combination — prevents calculation errors across 15+ product types.", icon: "Grid3X3" },
-      { title: "Chapa Payment Gateway", description: "Ethiopian ETB payment processing via hosted checkout — PCI-compliant with zero card data on our servers.", icon: "CreditCard" },
-      { title: "8-Step Order Pipeline", description: "Received → Confirmed → Designing → Printing → Quality Check → Ready → Shipped → Delivered — with email notifications at each transition.", icon: "GitBranch" },
-      { title: "Design File Upload", description: "Multi-file upload (up to 4 files, 10MB each) stored securely in Supabase Storage, attached to order line items.", icon: "Upload" },
-      { title: "Full-Text Product Search", description: "Debounced live search with premium UI suggestions across product catalog and categories.", icon: "Search" },
+      { title: "Exact Prices, Instantly", description: "Customers see the final price as they choose size, paper and finish. The server checks every price again before taking payment.", icon: "Grid3X3" },
+      { title: "Chapa Payments", description: "Customers pay in birr on Chapa's secure page. Card details never touch our servers, and every payment is double-checked with Chapa.", icon: "CreditCard" },
+      { title: "8-Step Order Tracking", description: "Confirmed, design review, approved, printing, ready, out for delivery, delivered. Customers get an email at every step.", icon: "GitBranch" },
+      { title: "Artwork Upload", description: "Attach up to four files per item. Each file is stored privately with its order.", icon: "Upload" },
+      { title: "Instant Product Search", description: "Results appear as you type, across every product and category.", icon: "Search" },
       { title: "ETB Currency Localization", description: "Localized Ethiopian Birr formatting and display throughout storefront, checkout, and admin dashboard.", icon: "BadgeDollarSign" },
     ],
 
     adrs: [
       { id: "ADR-001", title: "Schema-First Development", status: "Accepted", rationale: "Supabase schema as source of truth with auto-generated TypeScript types." },
       { id: "ADR-002", title: "Matrix-Based Pricing", status: "Accepted", rationale: "Client pricing depends on option combinations — prevents additive errors." },
-      { id: "ADR-003", title: "Hosted Payment (Chapa)", status: "Accepted", rationale: "No card data on our servers reduces PCI compliance burden." },
+      { id: "ADR-003", title: "Hosted Payment (Chapa)", status: "Accepted", rationale: "Card data never reaches our servers; Chapa carries the card-handling compliance." },
       { id: "ADR-004", title: "8-Step Order Status Pipeline", status: "Accepted", rationale: "Models real printing business workflow with strict transition rules." },
-      { id: "ADR-005", title: "200-Line Component Max", status: "Accepted", rationale: "Enforces single responsibility for maintainability and team collaboration." },
+      { id: "ADR-005", title: "Server Recomputes Every Price", status: "Accepted", rationale: "The browser's price is never trusted; mismatches return 409 and nothing is saved." },
       { id: "ADR-006", title: "TanStack Query for Data Fetching", status: "Accepted", rationale: "Caching, sync, and error handling for all data operations." },
     ],
   },
@@ -1071,10 +1058,10 @@ export const PROJECT_DATABASE: ProjectEntry[] = [
     tags: ["SaaS", "Real-Time", "Multi-Tenant", "Healthcare"],
     year: "2026",
     status: "Production",
-    githubUrl: "https://github.com/VersaLabs-Studio",
     heroGradient: "from-sky-500/20 via-transparent to-blue-500/10",
     thumbnail: "/AuroQueue/Mockups/628shots_so.png",
     productType: "saas",
+    visibility: "hide", // Not presented as studio work (proposal §2)
 
     description:
       "AuroQueue is an enterprise-grade Queue Management System architected for operational excellence in hospitals, banks, government offices, and enterprise organizations. It delivers real-time queue orchestration across three components — a Hapi.js API server, a Next.js staff dashboard, and an Expo self-service kiosk — with multi-tenant Docker deployment and Traefik load balancing for horizontal scaling.",
@@ -1187,21 +1174,20 @@ export const PROJECT_DATABASE: ProjectEntry[] = [
     summary:
       "Everything you need to run a Bitcoin mining business — from learning the basics to tracking your fleet, managing finances, and calculating tax depreciation.",
     category: "Blockchain",
-    tags: ["Blockchain", "Enterprise", "Analytics"],
-    year: "2026",
+    tags: ["Blockchain", "Analytics"],
+    year: "2025",
     status: "MVP",
     liveUrl: "https://potentia.digital",
-    githubUrl: "https://github.com/VersaLabs-Studio",
     heroGradient: "from-yellow-500/20 via-transparent to-amber-500/10",
     thumbnail: "/Potentia/Mockups/335shots_so.png",
     productType: "saas",
 
     description:
-      "Potentia is an enterprise-grade Bitcoin mining business management platform that transforms mining operations from technical endeavors into professional enterprises. Built around three interconnected phases — Learn (education & certification), Own (equipment & asset management), and Operate (fleet monitoring & financial reporting) — it guides users through every stage of building a mining business with domain-driven service architecture.",
+      "Potentia is a Bitcoin mining business platform, live today as a marketing site with a waitlist. It is built around three phases — Learn (education & certification), Own (equipment & asset management), and Operate (fleet monitoring & financial reporting). Demo flows show each phase, with dashboards running on sample data kept in the browser.",
     businessProblem:
       "Bitcoin mining operators lack integrated tooling to manage the full business lifecycle — education, equipment procurement, hosting contracts, fleet health monitoring, P&L reporting, and tax compliance — resulting in fragmented spreadsheets and missed depreciation opportunities.",
     architecturalSolution:
-      "A DDD-architected platform with three bounded contexts (Learn, Own, Operate), each with dedicated domain services (learnService, analyticsService, taxService, financeService). Client-side LocalStorage with structured service abstraction provides zero-backend MVP persistence, while TypeScript interfaces enforce strong domain models. Custom event tracking feeds real-time operational dashboards.",
+      "A DDD-architected platform with three bounded contexts (Learn, Own, Operate), each with dedicated domain services (learnService, analyticsService, taxService, financeService). Client-side LocalStorage with a structured service layer provides zero-backend MVP persistence, while TypeScript interfaces keep the models consistent. Waitlist sign-ups are forwarded to a Google Form.",
     systemFlow:
       "Learning Curriculum → Certification → Equipment Procurement → Hosting Contracts → Fleet Health Dashboard → P&L Reports → Tax Depreciation Schedules",
 
@@ -1280,9 +1266,9 @@ export const PROJECT_DATABASE: ProjectEntry[] = [
     features: [
       { title: "Interactive Learning Curriculum", description: "Comprehensive Bitcoin mining education from fundamentals to advanced strategy, with video content, quizzes, study streaks, and certification.", icon: "GraduationCap" },
       { title: "Equipment & Asset Management", description: "Track mining hardware inventory, hosting contracts, capital deployment, and facility management in one dashboard.", icon: "HardDrive" },
-      { title: "P&L Financial Reporting", description: "Real-time profit & loss tracking with revenue, expense, and cash flow analysis across mining operations.", icon: "DollarSign" },
+      { title: "P&L Financial Reporting", description: "Profit & loss views with revenue, expense, and cash flow breakdowns, shown on sample data in the demo.", icon: "DollarSign" },
       { title: "Tax Depreciation Engine", description: "Automated depreciation schedules for mining equipment with multiple strategy options (straight-line, MACRS).", icon: "Calculator" },
-      { title: "Fleet Health Monitoring", description: "Real-time operational dashboards for mining fleet performance, alert thresholds, and maintenance scheduling.", icon: "Activity" },
+      { title: "Fleet Health Dashboard", description: "Dashboards for mining fleet performance and alert thresholds, shown on sample data in the demo.", icon: "Activity" },
       { title: "Domain Analytics Events", description: "Structured event tracking across Learn, Own, and Operate phases for data-driven business decisions.", icon: "BarChart" },
     ],
 
@@ -1303,228 +1289,203 @@ export const PROJECT_DATABASE: ProjectEntry[] = [
     title: "Live Addis",
     subtitle: "Official Website for Live Addis NGO",
     summary:
-      "A clean, professional website built for Live Addis — a community-focused NGO based in Addis Ababa. Showcases the organization’s mission, programs, and impact with a modern, mobile-friendly design.",
+      "A clean, mobile-friendly website for LIVE-ADDIS, a non-profit in Addis Ababa that supports vulnerable young people. It presents the organization’s mission, programs, team, and news.",
     category: "Corporate Web",
     tags: ["Corporate", "Web Design", "NGO"],
-    year: "2026",
+    year: "2025",
     status: "Production",
-    liveUrl: "https://live-addis.vercel.app/",
-    githubUrl: "https://github.com/VersaLabs-Studio",
     heroGradient: "from-pink-500/20 via-transparent to-rose-500/10",
     thumbnail: "/LiveAddis/Mockups/47shots_so.png",
     productType: "client-project",
 
     description:
-      "Live Addis is a professional corporate website built for Live Addis, a community-focused NGO in Addis Ababa. The platform showcases the organization’s mission, ongoing programs, impact stories, and team — providing a polished digital presence that connects the NGO with supporters, partners, and the local community.",
+      "Live Addis is the website for LIVE-ADDIS (Livelihood Improvement for Vulnerable Ethiopians – Addis Ababa), a non-profit that supports vulnerable youth through vocational training, entrepreneurship, and health awareness. It is a static site with pages for the organization’s story, team and timeline, a blog built from the NGO’s Facebook posts, contact details, and an FAQ. There is no backend: all content ships with the site.",
     businessProblem:
       "The NGO needed a modern, professional online presence to communicate their mission, share program updates, and attract supporters — replacing an outdated digital footprint that limited their reach and credibility.",
     architecturalSolution:
-      "A performant static website built with Next.js for optimal loading speeds and SEO. Server-side rendering ensures content is immediately available to search engines, while a clean component architecture keeps the codebase maintainable and easy to update as the organization grows.",
+      "A static Next.js 16 site with no backend, database, or API. Blog posts come from a one-off scrape of the NGO’s Facebook page: a download script saves each post’s images and writes a JSON file that the home and blog pages import. Pages are prerendered, so content is immediately available to search engines.",
     systemFlow:
-      "Visitor Arrival → Mission Discovery → Program Exploration → Team Overview → Contact / Get Involved",
+      "Facebook Page Scrape → Image Download Script → clean_data.json → Home & Blog Pages → Static Build on Vercel",
 
     techStack: [
       {
         label: "Frontend",
         items: [
-          { name: "Next.js", version: "13+", purpose: "SSR and static generation" },
-          { name: "React", version: "18", purpose: "Component-based UI" },
-          { name: "TypeScript", purpose: "Type-safe development" },
-          { name: "Tailwind CSS", purpose: "Utility-first styling" },
-          { name: "PostCSS", purpose: "CSS processing" },
+          { name: "Next.js", version: "16.0.10", purpose: "App Router with static generation" },
+          { name: "React", version: "19.2.1", purpose: "Component-based UI" },
+          { name: "TypeScript", version: "5", purpose: "Type-safe development" },
+          { name: "Tailwind CSS", version: "4", purpose: "Utility-first styling" },
+          { name: "Framer Motion", version: "12", purpose: "Page animations" },
+          { name: "Swiper", version: "12", purpose: "Carousels" },
+          { name: "Radix UI", purpose: "Accordion, dialog, and switch primitives" },
+          { name: "next-themes", purpose: "Light and dark themes" },
         ],
       },
       {
-        label: "State Management",
+        label: "Content",
         items: [
-          { name: "React Context", purpose: "Client state management" },
-          { name: "SWR", purpose: "Cache-aware data fetching" },
-        ],
-      },
-      {
-        label: "Data Sources",
-        items: [
-          { name: "Facebook Graph API", purpose: "Social data ingestion" },
-          { name: "Twitter API", purpose: "Tweet data ingestion" },
-          { name: "JSON Files (dev)", purpose: "Prototype data store (prod: cloud storage)" },
-        ],
-      },
-      {
-        label: "Testing & Quality",
-        items: [
-          { name: "Jest", purpose: "Unit testing" },
-          { name: "React Testing Library", purpose: "Component testing" },
-          { name: "ESLint + Prettier", purpose: "Code quality" },
-          { name: "adr-tools", purpose: "ADR documentation generation" },
+          { name: "Facebook page scrape", purpose: "One-off export of the NGO’s posts" },
+          { name: "Image download script", purpose: "Saves post images and writes the blog data file" },
         ],
       },
       {
         label: "Infrastructure",
         items: [
-          { name: "Vercel", purpose: "Deployment with preview URLs" },
-          { name: "GitHub Actions", purpose: "CI/CD pipeline" },
-          { name: "PNPM", purpose: "Fast, deterministic package management" },
+          { name: "Vercel", purpose: "Static hosting" },
+          { name: "pnpm", purpose: "Package management" },
         ],
       },
     ],
 
     architecture: {
-      pattern: "Clean Layered Architecture with Domain Events",
+      pattern: "Static Marketing Site with Build-Time Content",
       diagram:
-        "Presentation (Next.js UI) → Application (Services, Use Cases) → Domain (Entities, Value Objects, Events) → Infrastructure (Social APIs, File Storage)",
+        "Facebook Page Scrape → Download Script → clean_data.json + public/images/posts → Next.js Pages (home, about, blog, contact, faq) → Vercel",
       designPatterns: [
-        "DDD with 4 Bounded Contexts",
-        "Domain Events (PostIngested, MetricCalculated)",
-        "Layered Architecture (Presentation → Application → Domain → Infrastructure)",
-        "Repository Pattern (API abstraction)",
-        "SWR Cache-Aware Fetching",
+        "Static Generation (no backend)",
+        "Build-Time Content from JSON",
+        "Shared Layout (navbar and footer)",
+        "Light and Dark Themes",
       ],
     },
 
     boundedContexts: [
-      { name: "SocialIngestion", responsibility: "Pull and normalise live posts from external platforms", entities: ["SocialPost", "PlatformSource"] },
-      { name: "Analytics", responsibility: "Compute metrics, trends, and sentiment scores", entities: ["Metric", "Trend", "SentimentScore"] },
-      { name: "UserDashboard", responsibility: "User-specific widget layouts and preferences", entities: ["Dashboard", "WidgetConfig"] },
-      { name: "Notification", responsibility: "Threshold-based alerts across notification channels", entities: ["AlertRule", "NotificationChannel"] },
+      { name: "Organization", responsibility: "Mission, programs, team, and timeline pages", entities: ["Page", "TeamMember", "Program"] },
+      { name: "Blog", responsibility: "News posts republished from the NGO’s Facebook page", entities: ["Post"] },
     ],
 
     schema: [
-      { name: "social_posts", description: "Normalised posts from all platforms", keyFields: ["id", "platform", "content", "author", "engagement_metrics", "timestamp"] },
-      { name: "metrics", description: "Computed analytics metrics", keyFields: ["id", "metric_type", "value", "period", "context"] },
-      { name: "dashboards", description: "User-specific widget layouts", keyFields: ["id", "user_id", "widget_configs (JSONB)", "layout"] },
-      { name: "alert_rules", description: "Threshold-based notification triggers", keyFields: ["id", "metric_type", "threshold", "channel", "is_active"] },
+      { name: "clean_data.json", description: "Blog posts from the NGO’s Facebook page (no database)", keyFields: ["id", "text", "url", "likes", "comments", "shares", "media"] },
     ],
 
     features: [
-      { title: "Social Media Aggregation", description: "Unified ingestion from Facebook and Twitter with normalised post schema and platform-agnostic querying.", icon: "Share2" },
-      { title: "Sentiment Analysis Engine", description: "Real-time sentiment scoring with trend detection and anomaly alerts for live event monitoring.", icon: "TrendingUp" },
-      { title: "Customizable Widget Dashboards", description: "User-configurable layouts with drag-and-drop widgets for metrics, trends, and social feeds.", icon: "LayoutDashboard" },
-      { title: "Threshold Notifications", description: "Automated alerts when engagement metrics cross configurable thresholds across email and in-app channels.", icon: "Bell" },
-      { title: "Domain Event Architecture", description: "PostIngested and MetricCalculated events drive decoupled cross-context communication.", icon: "Workflow" },
-      { title: "ADR Documentation System", description: "Structured Architecture Decision Records generated via adr-tools for engineering transparency.", icon: "FileText" },
+      { title: "Mission and Programs", description: "Clear pages for the organization’s story, programs, team, and timeline.", icon: "Users" },
+      { title: "Blog from Facebook Posts", description: "The NGO’s Facebook updates become blog posts on the site, with their photos.", icon: "Share2" },
+      { title: "Mobile-Friendly Design", description: "Works well on phones, with smooth page animations.", icon: "Smartphone" },
+      { title: "Light and Dark Themes", description: "Visitors can switch between light and dark modes.", icon: "Moon" },
+      { title: "FAQ and Contact", description: "Common questions answered, with contact details on every page.", icon: "MessageSquare" },
     ],
 
     adrs: [
-      { id: "ADR-001", title: "Next.js with TypeScript for UI", status: "Accepted", rationale: "SSR, static generation, and excellent developer ergonomics." },
-      { id: "ADR-002", title: "DDD with Bounded Contexts", status: "Accepted", rationale: "Aligns code structure with business capabilities." },
-      { id: "ADR-003", title: "JSON Files for Dev Data", status: "Accepted", rationale: "Rapid iteration — production switches to cloud storage." },
-      { id: "ADR-004", title: "PNPM Package Manager", status: "Accepted", rationale: "Faster installs, deterministic lockfile, disk efficiency." },
-      { id: "ADR-005", title: "React Context + SWR for State", status: "Accepted", rationale: "Simple, no Redux boilerplate, built-in cache." },
-      { id: "ADR-006", title: "Vercel with GitHub CI/CD", status: "Accepted", rationale: "Zero-config deployment with edge network and preview URLs." },
+      { id: "ADR-001", title: "Static Site with No Backend", status: "Accepted", rationale: "An NGO site that rarely changes needs no server, database, or running costs." },
+      { id: "ADR-002", title: "Blog Content from a Facebook Scrape", status: "Accepted", rationale: "Reuses the posts the NGO already writes instead of a second publishing workflow." },
+      { id: "ADR-003", title: "Next.js with TypeScript for UI", status: "Accepted", rationale: "Static generation and excellent developer ergonomics." },
     ],
   },
 
   // =========================================================================
-  // 12. JARVIS CORE
+  // 12. JARVIS
   // =========================================================================
   {
     slug: "jarvis",
-    title: "JARVIS Core v1.0",
+    title: "JARVIS",
     subtitle: "AI-Powered Development Automation",
     summary:
-      "Our in-house AI assistant that automates development workflows — managing code, deployments, documentation, and communication across all our projects through intelligent AI agents.",
+      "Our in-house AI assistant. Ask it on Telegram, web, or mobile, and it plans work, reviews code, and runs our daily routines.",
     category: "AI Infra",
     tags: ["AI Infra", "AI/ML", "DevOps", "Automation"],
     year: "2026",
     status: "Development",
-    githubUrl: "https://github.com/VersaLabs-Studio",
     heroGradient: "from-cyan-500/20 via-transparent to-teal-500/10",
     thumbnail: "/Jarvis/Mockups/175shots_so.png",
     productType: "internal",
 
     description:
-      "JARVIS Core is a self-hosted autonomous software engineering workflow system that orchestrates development tasks, automates code deployment pipelines, and scales for distributed enterprise operations. Built on OpenClaw as a self-hosted AI gateway with OpenRouter for unified multi-model LLM access, it integrates with GitHub, Vercel, Notion, Gmail, and VS Code via individual MCP (Model Context Protocol) servers — all containerized with Docker for portable, scalable deployment.",
+      "JARVIS is the assistant our studio runs on. You chat with it from Telegram, a web dashboard, or a mobile app. It follows written playbooks, from morning check-ins to shipping a feature or drafting a client report, and it connects to GitHub, Notion, Supabase, a browser, and files to get real work done.",
     businessProblem:
-      "Software engineering teams waste significant time on repetitive tasks — repo management, deployment, documentation updates, email triage, and cross-tool coordination — that could be orchestrated by autonomous AI agents with proper tool integration.",
+      "A small studio loses hours to repeat work: checking repos, writing updates, reviewing code, and chasing deploys. That time should go into building.",
     architecturalSolution:
-      "A layered autonomous platform with Chat Interface (Telegram/WhatsApp/Web) feeding into OpenClaw Gateway for model routing and agent orchestration. Three-tier model routing assigns specialized LLMs to different task types (planning, implementation, heavy SWE). MCP servers provide modular, independently-deployable integrations with external tools, all running in Docker containers on a Hostinger KVM-4 VPS.",
+      "A Turborepo monorepo with four apps: a Fastify 5 API (Supabase Auth, tenant-scoped row-level security, a CRUD route factory), Hermes, a Next.js dashboard, and an Expo mobile app. Hermes is an in-house agent runtime with per-role OpenRouter fallback chains, skill docs, and a BullMQ cron. MCP servers run as pinned Docker containers behind a stdio bridge.",
     systemFlow:
-      "Chat Interface (Telegram/Web) → OpenClaw Gateway → Model Router (Nemotron/MiniMax/GLM) → MCP Servers (GitHub, Vercel, Notion, Gmail, VS Code) → Execution Results",
+      "Telegram / Web / Mobile → Fastify API (Supabase Auth + Tenant Context) → Hermes Runtime (Skill Matcher → OpenRouter Fallback Chain) → MCP Bridge (GitHub | Notion | Supabase | Browser | Filesystem) → WebSocket Progress + Telegram Reply",
 
     techStack: [
       {
-        label: "AI Gateway",
+        label: "Agent Runtime",
         items: [
-          { name: "OpenClaw", purpose: "Self-hosted AI gateway for model routing and orchestration" },
-          { name: "OpenRouter", purpose: "Unified API access to free SOTA LLM models" },
-        ],
-      },
-      {
-        label: "LLM Models",
-        items: [
-          { name: "Nemotron-3-Super", purpose: "Planning, audit, master docs, scope adherence" },
-          { name: "MiniMax-M2.5", purpose: "Heavy SWE tasks, office automation" },
-          { name: "GLM-5-Turbo", purpose: "Long-chain tool use, persistent fast execution" },
+          { name: "Hermes", purpose: "In-house agent runtime (Fastify 5 + BullMQ)" },
+          { name: "OpenRouter", purpose: "Model access with per-role fallback chains" },
         ],
       },
       {
         label: "MCP Integrations",
         items: [
           { name: "GitHub MCP", purpose: "Repository management, PRs, and issues" },
-          { name: "Vercel MCP", purpose: "Deployment and project management" },
           { name: "Notion MCP", purpose: "Documentation and knowledge base" },
-          { name: "Gmail/Google MCP", purpose: "Email, calendar, and drive automation" },
-          { name: "VS Code MCP", purpose: "Workspace and code integration" },
-          { name: "Browser MCP", purpose: "Web automation and research" },
+          { name: "Supabase MCP", purpose: "Database access" },
+          { name: "Browser MCP (Playwright)", purpose: "Web automation and research" },
+          { name: "Filesystem MCP", purpose: "Project files" },
+        ],
+      },
+      {
+        label: "Platform",
+        items: [
+          { name: "Fastify", version: "5", purpose: "API server" },
+          { name: "Supabase", purpose: "Postgres, Auth, and row-level security" },
+          { name: "Redis + BullMQ", purpose: "Job queue and scheduled jobs" },
+          { name: "Next.js", purpose: "Web dashboard" },
+          { name: "Expo / React Native", purpose: "Mobile app" },
+          { name: "Turborepo + pnpm", purpose: "Monorepo tooling" },
         ],
       },
       {
         label: "Infrastructure",
         items: [
-          { name: "Docker", purpose: "Containerized, portable deployment" },
-          { name: "Docker Compose", purpose: "Multi-service orchestration" },
-          { name: "Ubuntu 22.04+ (VPS)", purpose: "Hostinger KVM-4 server runtime" },
-          { name: "Bash Scripts", purpose: "Deployment, health check, and lifecycle automation" },
+          { name: "Docker Compose", purpose: "API, runtime, Redis, and MCP containers" },
+          { name: "GitHub Actions", purpose: "CI with custom audit guards" },
         ],
       },
       {
         label: "Chat Interface",
         items: [
-          { name: "Telegram Bot API", purpose: "Primary chat interface for agent interaction" },
+          { name: "Telegram Bot API", purpose: "Two-way chat with allow-listed chats" },
         ],
       },
     ],
 
     architecture: {
-      pattern: "Autonomous Agent Orchestration with MCP Protocol",
+      pattern: "Multi-Client Agent Platform (API + Agent Runtime + MCP Bridge)",
       diagram:
-        "Chat (Telegram/WhatsApp/Web) → OpenClaw Gateway → Model Router → LLM Layer (Nemotron | MiniMax | GLM)\n↓\nMCP Servers (GitHub | Vercel | Notion | Gmail | VS Code | Browser)\n↓\nDocker + Docker Compose (Hostinger KVM-4 VPS)",
+        "Clients (Telegram | Web Dashboard | Mobile App) → Fastify API (Supabase Auth, Tenant Context)\n↓\nHermes Runtime (Skills, Fallback Chains, Cron)\n↓\nMCP Bridge (GitHub | Notion | Supabase | Browser | Filesystem)",
       designPatterns: [
-        "Multi-Model Agent Orchestration",
+        "Per-Role Model Fallback Chains with Boot-Time Catalog Check",
         "MCP (Model Context Protocol) for tool integration",
-        "Model Routing (task-type → optimal model)",
-        "Containerized Microservice Deployment",
-        "Config-as-Code (YAML model routing)",
-        "VPS Snapshot Rollback Strategy",
+        "Skill Docs as Agent Playbooks",
+        "Tenant-Scoped Row-Level Security",
+        "Read-Only Docker Socket Proxy",
       ],
     },
 
     boundedContexts: [
-      { name: "Orchestration", responsibility: "Task routing, model selection, and agent lifecycle", entities: ["Task", "AgentSession", "ModelConfig"] },
-      { name: "Integration", responsibility: "MCP server management and tool execution", entities: ["MCPServer", "ToolInvocation", "ExecutionResult"] },
-      { name: "Communication", responsibility: "Chat interface handling and response formatting", entities: ["ChatMessage", "ConversationThread"] },
+      { name: "Agent Runtime", responsibility: "Skill matching, model chains, cron jobs, and MCP tool calls", entities: ["Skill", "WorkflowRun", "Chain"] },
+      { name: "Platform", responsibility: "Tenants, users, services, secrets, and audit logs", entities: ["Tenant", "Profile", "Service", "Secret", "AuditLog"] },
+      { name: "Conversation", responsibility: "Chat sessions across Telegram, web, and mobile", entities: ["ChatSession", "ChatMessage"] },
     ],
 
     schema: [
-      { name: "models (YAML)", description: "Model routing configuration", keyFields: ["role", "model_name", "use_case", "priority"] },
-      { name: "mcp_servers", description: "MCP server configurations", keyFields: ["server_name", "transport", "endpoint", "capabilities"] },
-      { name: "task_log", description: "Execution history for audit and replay", keyFields: ["task_id", "model_used", "mcp_invoked", "status", "timestamp"] },
+      { name: "tenants", description: "Workspaces that own all other records", keyFields: ["id", "name"] },
+      { name: "workflows", description: "Saved multi-step routines", keyFields: ["id", "tenant_id", "name"] },
+      { name: "workflow_runs", description: "Run history for each workflow", keyFields: ["id", "workflow_id", "status"] },
+      { name: "skills", description: "Agent playbooks the runtime can match", keyFields: ["id", "tenant_id", "name"] },
+      { name: "chat_sessions", description: "Conversations across Telegram, web, and mobile", keyFields: ["id", "tenant_id"] },
+      { name: "chat_messages", description: "Messages within a chat session", keyFields: ["id", "session_id"] },
     ],
 
     features: [
-      { title: "Multi-Model Agent Routing", description: "Intelligent routing assigns Nemotron for planning, MiniMax for heavy SWE, and GLM for fast execution — optimizing cost and quality per task.", icon: "Route" },
-      { title: "MCP Tool Integrations", description: "GitHub, Vercel, Notion, Gmail, VS Code, and Browser integrations via Model Context Protocol for autonomous tool use.", icon: "Plug" },
-      { title: "Self-Hosted AI Gateway", description: "OpenClaw provides a locally-controlled gateway for model management, reducing vendor lock-in and enabling custom routing logic.", icon: "Server" },
-      { title: "Containerized Deployment", description: "All services run in Docker with Compose orchestration, Git-versioned configs, and VPS snapshot rollback for safety.", icon: "Container" },
-      { title: "Chat-First Interface", description: "Telegram/WhatsApp/Web chat interface for natural-language task submission and status tracking.", icon: "MessageSquare" },
-      { title: "Config-as-Code Model Routing", description: "YAML-defined model configurations enable rapid switching, A/B testing, and cost optimization across LLM providers.", icon: "Settings" },
+      { title: "Multi-Model Agent Routing", description: "Each job goes to the model best suited for it, with backups ready if one is down.", icon: "Route" },
+      { title: "Connected Tools", description: "Works directly in GitHub, Notion, Supabase, a web browser, and project files.", icon: "Plug" },
+      { title: "Built-In Playbooks", description: "Written routines for morning check-ins, code reviews, shipping features, client reports, and invoices.", icon: "Server" },
+      { title: "Containerized Services", description: "The assistant, its job queue, and each connected tool run in their own Docker containers.", icon: "Container" },
+      { title: "Chat-First Interface", description: "Chat with it from Telegram, the web dashboard, or the mobile app.", icon: "MessageSquare" },
+      { title: "Scheduled Jobs", description: "Runs routines on a schedule and reports back on Telegram.", icon: "Settings" },
     ],
 
     adrs: [
-      { id: "ADR-001", title: "OpenClaw as Self-Hosted Gateway", status: "Accepted", rationale: "Local control over model routing without vendor lock-in." },
-      { id: "ADR-002", title: "OpenRouter for Free Model Access", status: "Accepted", rationale: "Unified API to free SOTA models reduces cost to zero for development." },
-      { id: "ADR-003", title: "Individual MCP Servers", status: "Accepted", rationale: "Modular integrations deployed and updated independently." },
-      { id: "ADR-004", title: "Docker Containerization", status: "Accepted", rationale: "Portable, scalable deployment with easy rollback via snapshots." },
+      { id: "ADR-001", title: "OpenClaw as Self-Hosted Gateway", status: "Deprecated", rationale: "Replaced in v1.5 by the in-house Hermes runtime." },
+      { id: "ADR-002", title: "OpenRouter for Model Access", status: "Accepted", rationale: "Free model tiers keep costs near zero; a boot-time check catches renamed models." },
+      { id: "ADR-003", title: "One Container per MCP Server", status: "Accepted", rationale: "One pinned image, with each integration in its own container." },
+      { id: "ADR-004", title: "Docker Containerization", status: "Accepted", rationale: "Portable deployment with the API, runtime, and tools in containers." },
+      { id: "ADR-005", title: "In-House Hermes Runtime", status: "Accepted", rationale: "Owning the agent loop gives control over skills, fallback chains, and tool security." },
     ],
   },
   // =========================================================================
@@ -1532,9 +1493,9 @@ export const PROJECT_DATABASE: ProjectEntry[] = [
   // =========================================================================
   {
     slug: "unlock-ethiopia-potential",
-     title: "Unlock Ethiopian Potential",
+    title: "Unlock Ethiopia Potential",
     subtitle: "Bitcoin Mining Summit 2025",
-    summary: "The official digital face for Ethiopia's premier Bitcoin Mining Summit. A premium, immersive event landing page showcasing speakers, partners, and the future of global hashing power.",
+    summary: "The website for a Bitcoin mining summit in Ethiopia. An immersive event landing page showcasing speakers, partners, and the agenda.",
     category: "Events",
     tags: ["Events", "Blockchain", "Landing Page"],
     year: "2025",
@@ -1545,7 +1506,7 @@ export const PROJECT_DATABASE: ProjectEntry[] = [
      imageDir: "Unlock Ethiopian Potential",
     productType: "client-project",
 
-    description: "Unlock Ethiopia Potential is the official platform for Ethiopia's premier Bitcoin Mining Summit. Built as an immersive, high-performance web experience, it highlights the nation's rising status as a global destination for Bitcoin mining. The platform features an interactive agenda, speaker profiles, a comprehensive partner showcase, and data-driven insights into energy allocation and hashrate metrics.",
+    description: "Unlock Ethiopia Potential is the website for a Bitcoin mining summit held in Ethiopia in March 2025. Built as an immersive web experience, it highlights the nation's rising status as a global destination for Bitcoin mining. The platform features an interactive agenda, speaker profiles, a comprehensive partner showcase, and data-driven insights into energy allocation and hashrate metrics.",
     businessProblem: "A premier international summit requires a digital presence that reflects its magnitude. The organizers needed a premium, performant platform capable of handling international traffic, presenting complex industry statistics elegantly, and driving ticket registrations without relying on generic event templates.",
     architecturalSolution: "A component-based React SPA built with Vite for rapid loading and Framer Motion for cinematic scroll reveals. The architecture separates the agenda, vital statistics, and sponsor grids into isolated, easily updatable components. The routing is handled entirely client-side for zero-latency navigation, with a seamless handoff to Google Forms for registration processing.",
     systemFlow: "Visitor Arrival → Immersive Hero Animation → Industry Statistics Reveal → Agenda/Speaker Exploration → Registration Redirect",
@@ -1590,7 +1551,7 @@ export const PROJECT_DATABASE: ProjectEntry[] = [
 
     features: [
       { title: "Cinematic Scroll Reveals", description: "Framer Motion powers smooth fade-ins, slide-ups, and floating background elements for a premium feel.", icon: "Sparkles" },
-      { title: "Dynamic Partner Grid", description: "Responsive showcase of 13+ global partner organizations with automated logo scaling and hover effects.", icon: "LayoutGrid" },
+      { title: "Dynamic Partner Grid", description: "Responsive showcase of the summit's partner organizations, with per-logo scaling and hover effects.", icon: "LayoutGrid" },
       { title: "Vital Industry Statistics", description: "Animated data cards presenting Ethiopia's hashrate, energy allocation, and mining footprint.", icon: "BarChart3" },
       { title: "Interactive Agenda", description: "Day-by-day timeline with speaker profiles, session descriptions, and integrated LinkedIn links.", icon: "Calendar" }
     ],
@@ -1608,18 +1569,17 @@ export const PROJECT_DATABASE: ProjectEntry[] = [
     slug: "minab-clothing",
     title: "Minab Clothing",
     subtitle: "Premium Ethiopian Fashion E-Commerce",
-    summary: "A gallery-worthy digital storefront for contemporary Ethiopian fashion. Beautiful dark and light themes, smooth animations, and a complete shopping experience from browsing to checkout.",
+    summary: "A demo storefront for contemporary Ethiopian fashion. Dark and light themes, smooth animations, and a full mock shopping flow from browsing to checkout.",
     category: "E-Commerce",
     tags: ["E-Commerce", "Fashion", "Retail"],
-    year: "2025",
-    status: "Production",
-    liveUrl: "https://minab-clothing-fm7q.vercel.app/",
+    year: "2024",
+    status: "Demo",
     heroGradient: "from-[#8B4513]/20 via-transparent to-[#D2B48C]/10",
-     thumbnail: "/Minab/Mockups/524shots_so.png",
-     imageDir: "Minab",
-    productType: "client-project",
+    thumbnail: "/Minab/Mockups/524shots_so.png",
+    imageDir: "Minab",
+    productType: "internal",
 
-    description: "Minab Clothing is a premium digital storefront designed to showcase contemporary Ethiopian fashion rooted in heritage craftsmanship. Built as a high-fidelity demonstration of enterprise-grade UI architecture, it delivers a flawless shopping experience with a dual-theme OKLCH color system, fluid Framer Motion transitions, and extreme modularity.",
+    description: "Minab Clothing is a demo storefront for contemporary Ethiopian fashion rooted in heritage craftsmanship. Built in 2024 on a mock data layer, it shows the full shopping flow with a dual-theme OKLCH color system, fluid Framer Motion transitions, and a strictly modular component structure.",
     businessProblem: "Fashion brands require more than just an 'add to cart' button; they need a digital environment that reflects the quality of their physical products. Standard templates often feel cheap and fail to provide the immersive, premium feel necessary for luxury or heritage fashion.",
     architecturalSolution: "Built on Next.js App Router, the platform employs a strict three-tier architecture (Public, Customer, Admin) and an 'Extreme Modularization' pattern. It utilizes a custom Radix-inspired UI primitive library, ensuring perfect accessibility while maintaining complete design freedom. State is managed locally with a robust mock data layer for instant interaction feedback.",
     systemFlow: "Discovery (Collections/Home) → Product Detail (SSG) → Cart Management → 3-Step Checkout Flow → Order Confirmation",
@@ -1668,7 +1628,7 @@ export const PROJECT_DATABASE: ProjectEntry[] = [
       { title: "OKLCH Dual Theme System", description: "Perceptually uniform color tokens provide perfect contrast ratios across both deep espresso dark mode and warm cream light mode.", icon: "Palette" },
       { title: "Fluid Spring Animations", description: "Framer Motion powers staggered entrances, layout transitions, and interactive micro-animations for a native app feel.", icon: "Activity" },
       { title: "Multi-Step Checkout", description: "A comprehensive mock checkout flow including shipping profiles, promo code validation, and order review.", icon: "CreditCard" },
-      { title: "Custom UI Primitives", description: "A proprietary, Radix-inspired component library ensuring accessibility without sacrificing the bespoke brand aesthetic.", icon: "Component" }
+      { title: "Custom UI Primitives", description: "A Radix-inspired component library built for accessibility and the brand's own look.", icon: "Component" }
     ],
 
     adrs: [
@@ -1684,21 +1644,20 @@ export const PROJECT_DATABASE: ProjectEntry[] = [
     slug: "tibeb",
     title: "Tibeb",
     subtitle: "Traditional Habesha Clothing Platform",
-    summary: "Bridging centuries of Ethiopian artistry with modern digital commerce. A premium storefront with secure international payments, bringing traditional Habesha clothing to the global market.",
+    summary: "Bridging centuries of Ethiopian artistry with modern digital commerce. A storefront with international card payments, built to bring traditional Habesha clothing to a global market.",
     category: "E-Commerce",
     tags: ["E-Commerce", "Cultural", "Retail"],
     year: "2025",
-    status: "Production",
-    githubUrl: "https://github.com/VersaLabs-Studio",
+    status: "MVP",
     heroGradient: "from-[#D4AF37]/20 via-transparent to-[#1C2526]/10",
     thumbnail: "/Tibeb/Mockups/765shots_so.png",
     imageDir: "Tibeb",
     productType: "client-project",
 
-    description: "Tibeb is an enterprise-grade digital storefront celebrating the beauty of traditional Ethiopian Habesha clothing. Designed for high-end cultural fashion, it offers a seamless browsing experience for dresses, menswear, and couples' sets. The platform is architected with a tier-1 public interface for SEO-optimized discovery, transitioning to a secure, authenticated flow for cart management and checkout.",
+    description: "Tibeb is a digital storefront celebrating the beauty of traditional Ethiopian Habesha clothing. Designed for high-end cultural fashion, it offers a seamless browsing experience for dresses, menswear, and couples' sets. The platform is architected with a tier-1 public interface for SEO-optimized discovery, transitioning to a secure, authenticated flow for cart management and checkout.",
     businessProblem: "Traditional clothing artisans and retailers often lack the technical infrastructure to reach global diaspora markets. They require a platform that not only processes international payments securely but also presents their handcrafted products with the visual dignity they deserve.",
     architecturalSolution: "Built on Next.js 15 App Router, Tibeb utilizes a dual-tier architecture. The public storefront is highly optimized for read-only discovery, while Clerk authentication protects the cart and checkout flows. Supabase PostgreSQL serves as the primary data store, integrated via a strict schema-first Factory Pattern. Payments are processed securely via Stripe Elements.",
-    systemFlow: "Public Browsing (SSR/SSG) → Clerk Authentication (for Cart) → Supabase Real-time Cart → Stripe Checkout → Order Fulfillment",
+    systemFlow: "Public Browsing (SSR/SSG) → Clerk Authentication (for Cart) → Supabase Cart → Stripe Checkout → Order Fulfillment",
 
     techStack: [
       {
@@ -1740,15 +1699,15 @@ export const PROJECT_DATABASE: ProjectEntry[] = [
     ],
 
     features: [
-      { title: "Stripe Checkout Integration", description: "Secure, PCI-compliant payment processing supporting international cards via Stripe Elements.", icon: "CreditCard" },
+      { title: "Stripe Checkout Integration", description: "International card payments through Stripe Elements, so card details are handled by Stripe.", icon: "CreditCard" },
       { title: "Clerk Auth Wall", description: "Frictionless browsing transitions into secure authentication only when users interact with the cart or checkout.", icon: "Lock" },
-      { title: "Supabase Real-time Cart", description: "PostgreSQL-backed shopping cart that persists across devices for authenticated users.", icon: "ShoppingCart" },
+      { title: "Supabase-Backed Cart", description: "A PostgreSQL-backed shopping cart stored on the server instead of the browser.", icon: "ShoppingCart" },
       { title: "Cultural Spotlight UI", description: "Premium, abstract geometric hero sections and glassmorphism elements that elevate the brand aesthetic.", icon: "Sparkles" }
     ],
 
     adrs: [
       { id: "ADR-001", title: "Dual API Namespace", status: "Accepted", rationale: "Strict separation of /api/public and /api/protected ensures sensitive mutation routes cannot be accessed accidentally." },
-      { id: "ADR-002", title: "Supabase + Stripe Stack", status: "Accepted", rationale: "Combines robust relational data integrity with enterprise-grade payment security." }
+      { id: "ADR-002", title: "Supabase + Stripe Stack", status: "Accepted", rationale: "Combines relational data integrity with Stripe's hosted payment security." }
     ]
   }
 ];
@@ -1763,7 +1722,7 @@ const PROJECT_ORDER: string[] = [
   'jarvis',
   'auroqueue',
   'pana-sport',
-  'pavillion-360',
+  'pavilion-360',
   'printonline-et',
   'oskaz-ecommerce',
   'fastpay',
@@ -1779,32 +1738,36 @@ const PROJECT_ORDER: string[] = [
 // HELPER FUNCTIONS
 // ---------------------------------------------------------------------------
 
+const isVisible = (p: ProjectEntry) => p.visibility !== 'hide';
+
+const VISIBLE_PROJECTS: ProjectEntry[] = PROJECT_DATABASE.filter(isVisible);
+
 export function getProjectBySlug(slug: string): ProjectEntry | undefined {
-  return PROJECT_DATABASE.find((p) => p.slug === slug);
+  return VISIBLE_PROJECTS.find((p) => p.slug === slug);
 }
 
 export function getAllProjects(): ProjectEntry[] {
   return PROJECT_ORDER
-    .map(slug => PROJECT_DATABASE.find(p => p.slug === slug)!)
-    .filter(Boolean);
+    .map(slug => VISIBLE_PROJECTS.find(p => p.slug === slug))
+    .filter((p): p is ProjectEntry => Boolean(p));
 }
 
 export function getAllSlugs(): string[] {
-  return PROJECT_ORDER;
+  return getAllProjects().map((p) => p.slug);
 }
 
 export function getProjectsByCategory(category: string): ProjectEntry[] {
-  return PROJECT_DATABASE.filter((p) => p.category === category);
+  return VISIBLE_PROJECTS.filter((p) => p.category === category);
 }
 
 export function getProjectsByTag(tag: string): ProjectEntry[] {
-  return PROJECT_DATABASE.filter((p) => p.tags.includes(tag));
+  return VISIBLE_PROJECTS.filter((p) => p.tags.includes(tag));
 }
 
 export function getAllCategories(): string[] {
-  return Array.from(new Set(PROJECT_DATABASE.map((p) => p.category)));
+  return Array.from(new Set(VISIBLE_PROJECTS.map((p) => p.category)));
 }
 
 export function getAllTags(): string[] {
-  return Array.from(new Set(PROJECT_DATABASE.flatMap((p) => p.tags)));
+  return Array.from(new Set(VISIBLE_PROJECTS.flatMap((p) => p.tags)));
 }
