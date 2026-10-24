@@ -32,7 +32,7 @@ export default function ArchitecturePhilosophy() {
                   <span className="text-[10px] uppercase tracking-widest text-zinc-600 mb-6 font-medium">Foundation</span>
                   <h3 className="text-2xl font-semibold text-white mb-4">Schema-First Execution</h3>
                   <p className="text-[14px] leading-relaxed text-zinc-500">
-                    We start by rigidly defining the data models and API contracts entirely isolated from UI constraints. This guarantees that your core business logic dictates the platform's behavior autonomously, resulting in incredibly sturdy schemas immune to UI turbulence.
+                    We start by rigidly defining the data models and API contracts entirely isolated from UI constraints. This guarantees that your core business logic dictates the platform&apos;s behavior autonomously, resulting in incredibly sturdy schemas immune to UI turbulence.
                   </p>
                 </div>
                 {/* Large Multi-Layer Schema SVG */}

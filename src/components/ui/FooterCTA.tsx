@@ -26,7 +26,7 @@ const SPRING = { stiffness: 300, damping: 30 };
 
 const defaultProps: FooterCTAProps = {
   title: "Ready to Build Something Extraordinary?",
-  description: "Let's architect your next breakthrough. From MVPs to enterprise-scale solutions, we deliver digital infrastructure that scales.",
+  description: "Tell us the problem you need solved. We'll help you shape the product, build it, and launch it.",
   primaryButton: {
     label: "Start Your Project",
     href: "/contact",

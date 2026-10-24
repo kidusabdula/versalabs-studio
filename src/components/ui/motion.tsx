@@ -1,13 +1,18 @@
 'use client';
 
 import { motion, MotionConfig, useInView } from 'framer-motion';
+import Link from 'next/link';
 import { useRef } from 'react';
 
 const SPRING = { stiffness: 300, damping: 30 };
 
 export const MotionConfigProvider = ({ children }: { children: React.ReactNode }) => (
-  <MotionConfig transition={SPRING}>{children}</MotionConfig>
+  <MotionConfig transition={SPRING} reducedMotion="user">{children}</MotionConfig>
 );
+
+// A Next link that takes motion props, so an animated call to action stays a
+// single <a> instead of a <button> nested inside a link.
+export const MotionLink = motion.create(Link);
 
 interface FadeInProps {
   children: React.ReactNode;

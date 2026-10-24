@@ -4,10 +4,10 @@ import { FadeIn, StaggerContainer, StaggerItem } from '@/components/ui/motion';
 
 export default function GlobalReach() {
   const pillars = [
-    { title: 'Enterprise Grade', text: 'Built for businesses that need reliability. Our platforms handle thousands of users and never cut corners on security.' },
-    { title: 'Locally Rooted', text: 'We understand the Ethiopian market — Telebirr integrations, Amharic support, and design that resonates locally.' },
-    { title: 'Globally Ready', text: 'Stripe payments, multi-currency support, and infrastructure that serves users from Addis Ababa to New York.' },
-    { title: 'AI-First Approach', text: 'Every product we build leverages artificial intelligence — from automated workflows to smart analytics and predictions.' },
+    { title: 'Built to Be Relied On', text: 'Built for businesses that need reliability, with security treated as a requirement from the first day.' },
+    { title: 'Locally Rooted', text: 'We understand the Ethiopian market: Amharic content, local payment gateways such as Chapa, and design that resonates locally.' },
+    { title: 'Globally Ready', text: 'Stripe payments for international customers, and clients from Addis Ababa to Indianapolis.' },
+    { title: 'AI Where It Helps', text: "We add AI where it earns its place, like ThreatMatrix's plain-language alerts and the JARVIS assistant, and leave it out where it doesn't." },
   ];
 
   return (
@@ -20,7 +20,7 @@ export default function GlobalReach() {
           <h2 className="text-[32px] md:text-[40px] leading-[1.1] font-semibold tracking-tighter text-white max-w-4xl">
             Software that speaks your language —{' '}
             <span className="text-zinc-500">
-              literally. We build platforms that work for businesses here in Ethiopia and around the world. Whether you need Amharic content management, Telebirr payment integration, or a multi-currency system for global customers — we've done it.
+              literally. We build platforms for businesses here in Ethiopia and abroad, from bilingual English and Amharic content to international card payments.
             </span>
           </h2>
         </FadeIn>

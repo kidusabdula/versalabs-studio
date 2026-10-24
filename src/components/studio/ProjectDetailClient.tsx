@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowLeft, ExternalLink, ArrowRight, X, Layers } from 'lucide-react';
@@ -11,6 +11,15 @@ import ImageLightbox from '@/components/ui/ImageLightbox';
 import type { DetailProjectData } from '@/app/projects/[slug]/page';
 import type { SimilarProject } from '@/app/projects/[slug]/page';
 import type { TechLayer, BoundedContext, SchemaTable, Feature, ADRRecord } from '@/config/project-database';
+import { PRODUCT_TYPE_LABEL, PRODUCT_TYPE_BADGE, STATUS_BADGE } from '@/config/project-labels';
+
+// Closing line for the inline call to action, by project type.
+const INTEREST_COPY: Record<DetailProjectData['productType'], (title: string) => string> = {
+  saas: (title) => `Deploy ${title} for your organization, or let us customize it for your specific industry needs.`,
+  'client-project': () => 'We built this for a client, and we can build something like it for you. Tell us what you need.',
+  internal: () => 'We built this in-house, and we can build something like it for you. Tell us what you need.',
+  research: () => 'This began as a university research project. If you need something similar, we can build it for you. Tell us what you need.',
+};
 
 interface Props {
   project: DetailProjectData;
@@ -33,6 +42,15 @@ export default function ProjectDetailClient({ project, similarProjects }: Props)
     setLightboxIndex(index);
     setLightboxOpen(true);
   };
+
+  useEffect(() => {
+    if (!showTechnical) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setShowTechnical(false);
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [showTechnical]);
 
   // Product-type-aware CTA text
   const isSaaS = project.productType === 'saas';
@@ -62,20 +80,12 @@ export default function ProjectDetailClient({ project, similarProjects }: Props)
               <span className="text-xs font-medium text-zinc-400 border border-white/[0.06] px-3 py-1.5 rounded-sm bg-[#141417]">
                 {project.year}
               </span>
-              <span className="text-xs font-medium text-emerald-400 border border-emerald-500/20 px-3 py-1.5 rounded-sm bg-emerald-500/10">
+              <span className={`text-xs font-medium px-3 py-1.5 rounded-sm ${STATUS_BADGE[project.status]}`}>
                 {project.status}
               </span>
-              {project.productType && (
-                <span className={`text-xs font-medium px-3 py-1.5 rounded-sm ${
-                  project.productType === 'saas' 
-                    ? 'text-blue-400 bg-blue-500/10 border border-blue-500/20'
-                    : project.productType === 'internal'
-                      ? 'text-cyan-400 bg-cyan-500/10 border border-cyan-500/20'
-                      : 'text-violet-400 bg-violet-500/10 border border-violet-500/20'
-                }`}>
-                  {project.productType === 'saas' ? 'Deploy Ready' : project.productType === 'internal' ? 'Internal Tool' : 'Custom Built'}
-                </span>
-              )}
+              <span className={`text-xs font-medium px-3 py-1.5 rounded-sm ${PRODUCT_TYPE_BADGE[project.productType]}`}>
+                {PRODUCT_TYPE_LABEL[project.productType]}
+              </span>
             </div>
           </FadeIn>
 
@@ -93,14 +103,14 @@ export default function ProjectDetailClient({ project, similarProjects }: Props)
 
           <FadeIn delay={0.3}>
             <div className="flex flex-wrap items-center gap-4">
-              {project.liveUrl && project.slug !== 'threatmatrix-ai' && (
+              {project.liveUrl && (
                 <a href={project.liveUrl} target="_blank" rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 rounded-full bg-white text-black px-6 py-3 text-sm font-semibold transition-all hover:bg-zinc-200 hover:scale-[1.02]">
                   View Live Platform
                   <ExternalLink className="h-4 w-4" />
                 </a>
               )}
-              <button onClick={() => setShowTechnical(true)}
+              <button type="button" onClick={() => setShowTechnical(true)}
                 className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-[#1C1C1F] px-6 py-3 text-sm font-medium text-white transition-all hover:bg-[#27272A] hover:scale-[1.02]">
                 <Layers className="h-4 w-4" />
                 View Architecture
@@ -186,10 +196,7 @@ export default function ProjectDetailClient({ project, similarProjects }: Props)
                 Interested in {project.title}?
               </h3>
               <p className="text-[16px] text-zinc-400 mb-8 max-w-lg">
-                {isSaaS
-                  ? `Deploy ${project.title} for your organization, or let us customize it for your specific industry needs.`
-                  : `We built this for a client — and we can build something just like it (or better) for you. Tell us what you need.`
-                }
+                {INTEREST_COPY[project.productType](project.title)}
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link href="/contact">
@@ -201,7 +208,7 @@ export default function ProjectDetailClient({ project, similarProjects }: Props)
                 <Link href="/studio">
                   <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
                     className="flex items-center justify-center h-12 px-8 rounded-full bg-[#1A1A1A] border border-white/[0.08] text-white text-[15px] font-semibold transition-colors hover:bg-[#222222]">
-                    Explore More Products
+                    Explore More Work
                   </motion.div>
                 </Link>
               </div>
@@ -217,14 +224,16 @@ export default function ProjectDetailClient({ project, similarProjects }: Props)
               <h2 className="text-3xl font-bold text-white mb-12">See It in Action</h2>
               <div className="grid gap-4 md:grid-cols-2">
                 {visibleGallery.map((img, idx) => (
-                  <motion.div
+                  <motion.button
+                    type="button"
                     key={idx}
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ delay: idx * 0.04, duration: 0.5 }}
                     viewport={{ once: true }}
                     onClick={() => openLightbox(project.mockupImages.length + idx)}
-                    className={`relative overflow-hidden rounded-xl border border-white/[0.04] bg-[#0E0E10] cursor-pointer group ${
+                    aria-label={`View full size: ${project.title}, image ${idx + 1}`}
+                    className={`block w-full relative overflow-hidden rounded-xl border border-white/[0.04] bg-[#0E0E10] cursor-pointer group ${
                       idx === 0 ? 'md:col-span-2 aspect-[21/9]' : 'aspect-[3/2]'
                     }`}
                   >
@@ -241,12 +250,13 @@ export default function ProjectDetailClient({ project, similarProjects }: Props)
                         View Full Size
                       </span>
                     </div>
-                  </motion.div>
+                  </motion.button>
                 ))}
               </div>
               {hasMoreImages && !showAllGallery && (
                 <div className="mt-8 text-center">
                   <button
+                    type="button"
                     onClick={() => setShowAllGallery(true)}
                     className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-white/[0.08] bg-white/[0.03] text-sm font-medium text-zinc-300 hover:text-white hover:bg-white/[0.06] transition-colors"
                   >
@@ -262,7 +272,7 @@ export default function ProjectDetailClient({ project, similarProjects }: Props)
         {similarProjects.length > 0 && (
           <FadeIn>
             <div className="mb-24">
-              <span className="text-[11px] uppercase tracking-widest font-semibold text-zinc-500 block mb-4">Related Products</span>
+              <span className="text-[11px] uppercase tracking-widest font-semibold text-zinc-500 block mb-4">Related Work</span>
               <h2 className="text-3xl font-bold text-white mb-12">You May Also Like</h2>
               <div className="grid gap-6 md:grid-cols-3">
                 {similarProjects.map((sp: SimilarProject) => (
@@ -275,7 +285,7 @@ export default function ProjectDetailClient({ project, similarProjects }: Props)
                             alt={sp.title}
                             fill
                             className="object-cover group-hover:scale-105 transition-transform duration-500"
-                            sizes="33vw"
+                            sizes="(max-width: 768px) 100vw, 33vw"
                           />
                         </div>
                       )}
@@ -326,6 +336,9 @@ export default function ProjectDetailClient({ project, similarProjects }: Props)
               />
               
               <motion.div
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="architecture-title"
                 initial={{ opacity: 0, scale: 0.95, y: 20 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95, y: 20 }}
@@ -334,14 +347,17 @@ export default function ProjectDetailClient({ project, similarProjects }: Props)
               >
                 <div className="flex items-center justify-between p-6 md:p-8 border-b border-white/[0.04] bg-[#0A0A0C] z-10 shrink-0">
                   <div>
-                    <h2 className="text-2xl font-bold text-white mb-2">Technical Architecture</h2>
+                    <h2 id="architecture-title" className="text-2xl font-bold text-white mb-2">Technical Architecture</h2>
                     <p className="text-sm text-zinc-400">Engineering details for {project.title}</p>
                   </div>
-                  <button 
+                  <button
+                    type="button"
+                    autoFocus
                     onClick={() => setShowTechnical(false)}
+                    aria-label="Close technical architecture"
                     className="p-3 rounded-full bg-white/[0.04] hover:bg-white/[0.1] text-zinc-400 hover:text-white transition-colors"
                   >
-                    <X className="h-5 w-5" />
+                    <X className="h-5 w-5" aria-hidden="true" />
                   </button>
                 </div>
 

@@ -39,7 +39,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     title: project.title,
     description: project.summary,
     path: `/projects/${project.slug}`,
-    image: { url: project.thumbnail, alt: `${project.title}: ${project.subtitle}` },
+    image: project.thumbnail ? { url: project.thumbnail, alt: `${project.title}: ${project.subtitle}` } : undefined,
   });
 }
 

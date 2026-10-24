@@ -4,13 +4,14 @@ import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
+import { MotionLink } from '@/components/ui/motion';
 
 const FEATURES = [
   { label: 'CRM & Sales', delay: 0 },
   { label: 'Manufacturing', delay: 0.1 },
   { label: 'Inventory', delay: 0.2 },
   { label: 'Accounting', delay: 0.3 },
-  { label: 'AI-Powered', delay: 0.4 },
+  { label: 'Built on ERPNext', delay: 0.4 },
 ];
 
 export default function ObsidianShowcase() {
@@ -22,7 +23,6 @@ export default function ObsidianShowcase() {
 
   const imageScale = useTransform(scrollYProgress, [0, 0.5], [1.1, 1]);
   const imageY = useTransform(scrollYProgress, [0, 1], [60, -60]);
-  const overlayOpacity = useTransform(scrollYProgress, [0, 0.4], [0.8, 0.3]);
 
   return (
     <section
@@ -83,7 +83,7 @@ export default function ObsidianShowcase() {
               
               <div className="mb-auto">
                 <span className="inline-block px-3 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/20 text-[11px] font-semibold tracking-widest uppercase text-violet-400 mb-6">
-                  Available Now
+                  In Production
                 </span>
                 
                 <h2 className="text-3xl md:text-4xl font-bold tracking-tighter text-white mb-4">
@@ -105,18 +105,17 @@ export default function ObsidianShowcase() {
                 </div>
               </div>
 
-              <Link href="/projects/obsidian-erp-v3.0">
-                <motion.button 
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="w-full inline-flex items-center justify-center gap-2 px-6 py-4 text-[14px] font-semibold tracking-wide text-black bg-white rounded-xl transition-colors hover:bg-zinc-200"
-                >
-                  Explore Platform
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </motion.button>
-              </Link>
+              <MotionLink
+                href="/projects/obsidian-erp-v3.0"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="w-full inline-flex items-center justify-center gap-2 px-6 py-4 text-[14px] font-semibold tracking-wide text-black bg-white rounded-xl transition-colors hover:bg-zinc-200"
+              >
+                Explore Platform
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                  <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </MotionLink>
             </div>
           </motion.div>
         </div>

@@ -20,10 +20,10 @@ const drawLine = {
 const team = [
   {
     name: 'Kidus Abdula',
-    role: 'Founder & Lead AI Software Engineer',
+    role: 'Founder & Engineer',
     portrait: '/Kidus.jpg',
     hasImage: true,
-    bio: 'Full-stack systems architect and AI specialist leading VersaLabs Studio. Designs and builds enterprise platforms from the ground up — from database schema to production deployment. Obsessed with clean architecture and shipping fast.',
+    bio: 'Full-stack engineer leading VersaLabs Studio. Designs and builds business platforms from the ground up, from database schema to production deployment. Cares about clean architecture and shipping fast.',
   },
   {
     name: 'Caleb Demelash',
@@ -53,16 +53,37 @@ const principles = [
   { icon: '◎', title: 'Clean Architecture', desc: 'Our code is organized into clear, focused sections so it\'s easy to understand, test, and extend as your business grows.' },
   { icon: '▲', title: 'No Wasted Code', desc: 'Every feature earns its place. We build lean, fast platforms without unnecessary complexity or bloated dependencies.' },
   { icon: '⬡', title: 'Weekly Delivery', desc: 'You see progress every week. We ship working features in short cycles, so you can give feedback early and often.' },
-  { icon: '◇', title: 'AI-First Workflow', desc: 'We leverage AI at every stage — from code generation to testing to deployment. It\'s how a small team ships enterprise-grade platforms.' },
+  { icon: '◇', title: 'AI-First Workflow', desc: 'We leverage AI at every stage — from code generation to testing to deployment. It\'s how a small team ships complete platforms.' },
   { icon: '▣', title: 'Client Partnership', desc: 'We\'re not just vendors. We work alongside you, understand your business, and build solutions that actually solve your problems.' },
 ];
 
 const milestones = [
-  { year: '2024', event: 'VersaLabs Studio founded in Addis Ababa' },
-  { year: '2024', event: 'First 5 client projects shipped to production' },
-  { year: '2025', event: 'Obsidian ERP v3.0 launched — our flagship SaaS platform' },
-  { year: '2025', event: 'ThreatMatrix AI deployed — real-time network security' },
-  { year: '2026', event: '15+ products shipped, serving businesses locally and globally' },
+  { year: '2023', event: 'VersaLabs Studio founded in Addis Ababa' },
+  { year: '2024', event: 'Minab Clothing demo storefront built' },
+  { year: '2025', event: 'Pavilion360 built for an event production company in Indianapolis' },
+  { year: '2025', event: "OSKAZ online store launched, connected live to the company's ERP" },
+  { year: '2026', event: 'Obsidian ERP v3.0 in production' },
+  { year: '2026', event: 'ThreatMatrix AI built as a university senior project' },
+];
+
+// Tools used in the projects on this site (see src/config/project-database.ts).
+const techStack = [
+  {
+    label: 'Frontend & Mobile',
+    items: ['TypeScript', 'Next.js', 'React', 'Tailwind CSS', 'Framer Motion', 'Radix UI', 'shadcn/ui', 'TanStack Query', 'React Hook Form', 'Zod', 'Zustand', 'next-intl', 'TipTap', 'Recharts', 'Deck.gl', 'MapLibre GL', 'React Native', 'Expo'],
+  },
+  {
+    label: 'Backend & APIs',
+    items: ['Node.js', 'Fastify', 'Hapi.js', 'Socket.io', 'Sequelize', 'Python', 'FastAPI', 'Frappe Framework', 'ERPNext', 'better-auth', 'Clerk', 'Resend', 'Stripe', 'Chapa', 'Telegram Bot API'],
+  },
+  {
+    label: 'Data & Infrastructure',
+    items: ['PostgreSQL', 'Supabase', 'MariaDB', 'Redis', 'BullMQ', 'Docker', 'Docker Compose', 'Nginx', 'Traefik', 'PM2', 'Vercel', 'GitHub Actions'],
+  },
+  {
+    label: 'AI & Machine Learning',
+    items: ['OpenRouter', 'scikit-learn', 'TensorFlow / Keras', 'Scapy', 'Model Context Protocol'],
+  },
 ];
 
 /* Immersive avatar placeholder for team members without photos */
@@ -158,7 +179,7 @@ export default function AboutClient() {
               </FadeIn>
               <FadeIn delay={0.15}>
                 <p className="text-[17px] text-zinc-400 leading-relaxed max-w-xl">
-                  We&apos;re a small, focused team based in Addis Ababa, Ethiopia. We build enterprise-grade software — ERP systems, AI platforms, e-commerce stores, and custom business tools — for clients locally and around the world.
+                  We&apos;re a small, focused team based in Addis Ababa, Ethiopia. We build business software (ERP systems, AI tools, e-commerce stores, and custom business tools) for clients in Ethiopia and abroad.
                 </p>
               </FadeIn>
             </div>
@@ -168,12 +189,12 @@ export default function AboutClient() {
               <ScaleIn>
                 <div className="grid grid-cols-2 gap-3">
                   <GlassCard hover={false} className="p-5 text-center">
-                    <div className="text-3xl font-bold text-white mb-1">4</div>
-                    <div className="text-[11px] text-zinc-500 uppercase tracking-wider">Engineers</div>
+                    <div className="text-2xl font-bold text-white mb-1">Addis Ababa</div>
+                    <div className="text-[11px] text-zinc-500 uppercase tracking-wider">Home Base</div>
                   </GlassCard>
                   <GlassCard hover={false} className="p-5 text-center">
-                    <div className="text-3xl font-bold text-white mb-1">15+</div>
-                    <div className="text-[11px] text-zinc-500 uppercase tracking-wider">Products</div>
+                    <div className="text-2xl font-bold text-white mb-1">Full-Stack</div>
+                    <div className="text-[11px] text-zinc-500 uppercase tracking-wider">Every Engineer</div>
                   </GlassCard>
                 </div>
               </ScaleIn>
@@ -188,8 +209,8 @@ export default function AboutClient() {
       <section className="px-6 py-24 border-t border-white/[0.04]">
         <div className="mx-auto max-w-6xl">
           <FadeIn>
-            <span className="text-[11px] uppercase tracking-[0.2em] font-semibold text-zinc-500 mb-4 block">Leadership</span>
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Executive Team</h2>
+            <span className="text-[11px] uppercase tracking-[0.2em] font-semibold text-zinc-500 mb-4 block">People</span>
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">The Team</h2>
             <p className="text-[16px] text-zinc-500 mb-16 max-w-lg">
               Every engineer on our team is full-stack capable. We don&apos;t just code — we architect, design, and deploy.
             </p>
@@ -211,7 +232,7 @@ export default function AboutClient() {
                         alt={member.name}
                         fill
                         className="object-cover object-top group-hover:scale-105 transition-transform duration-700"
-                        sizes="25vw"
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                       />
                     ) : (
                       <AvatarPlaceholder name={member.name} />
@@ -353,24 +374,7 @@ export default function AboutClient() {
             <h2 className="text-3xl font-bold mb-12 text-white">Our Technology</h2>
           </FadeIn>
           <StaggerContainer staggerDelay={0.08} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-2">
-            {[
-              { 
-                label: 'Frontend & UI', 
-                items: ['TypeScript', 'Next.js 14 App Router', 'React 18', 'Tailwind CSS v3', 'Framer Motion', 'Radix UI', 'Lucide Icons', 'Zustand', 'React Query', 'SWR', 'Three.js', 'React Three Fiber', 'Shadcn UI', 'Headless UI', 'MUI', 'Chakra UI', 'Styled Components', 'SCSS', 'React Hook Form', 'Zod', 'Yup', 'React Dropzone', 'React Toastify', 'Sonner', 'Chart.js', 'Recharts', 'Date-fns', 'Day.js', 'Moment.js', 'Next-Intl', 'I18next'] 
-              },
-              { 
-                label: 'Backend & APIs', 
-                items: ['Python 3.11', 'FastAPI', 'Node.js 20', 'Express', 'NestJS', 'tRPC', 'Prisma ORM', 'Drizzle ORM', 'Sequelize', 'TypeORM', 'Mongoose', 'Socket.io', 'GraphQL', 'Apollo Server', 'REST', 'gRPC', 'RabbitMQ', 'Celery', 'Redis Pub/Sub', 'Kafka', 'Stripe API', 'Chapa API', 'Telebirr API', 'PayPal SDK', 'Twilio', 'SendGrid', 'Nodemailer', 'Pusher'] 
-              },
-              { 
-                label: 'Data & Infrastructure', 
-                items: ['PostgreSQL', 'Redis', 'MongoDB', 'MySQL', 'SQLite', 'Supabase', 'Firebase', 'Vercel Serverless', 'Docker', 'Kubernetes', 'AWS S3', 'AWS EC2', 'AWS Lambda', 'AWS RDS', 'Google Cloud Run', 'DigitalOcean Droplets', 'Cloudflare Workers', 'Nginx', 'Apache', 'Clerk Auth', 'NextAuth.js', 'Auth0', 'JWT', 'OAuth2', 'GitHub Actions', 'GitLab CI', 'Terraform', 'Ansible'] 
-              },
-              { 
-                label: 'AI & Machine Learning', 
-                items: ['OpenRouter AI', 'OpenAI GPT-4', 'Anthropic Claude 3', 'Hugging Face Transformers', 'TensorFlow', 'PyTorch', 'Scikit-Learn', 'Pandas', 'NumPy', 'SciPy', 'Scapy', 'NLTK', 'Spacy', 'LangChain', 'LlamaIndex', 'Pinecone Vector DB', 'Milvus', 'Weaviate', 'ChromaDB', 'FAISS', 'Ollama', 'Stable Diffusion', 'Midjourney API'] 
-              }
-            ].map((stack) => (
+            {techStack.map((stack) => (
               <StaggerItem key={stack.label}>
                 <GlassCard className="p-6 h-full flex flex-col group transition-colors hover:border-white/[0.15]">
                   <h3 className="font-bold text-white text-[15px] mb-5 border-b border-white/[0.04] pb-4">{stack.label}</h3>

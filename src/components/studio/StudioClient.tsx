@@ -7,6 +7,7 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { FadeIn, StaggerContainer, StaggerItem, GlassCard } from '@/components/ui/motion';
 import type { StudioProjectData } from '@/app/studio/page';
+import { PRODUCT_TYPE_LABEL, PRODUCT_TYPE_BADGE, STATUS_BADGE } from '@/config/project-labels';
 
 interface StudioClientProps {
   projects: StudioProjectData[];
@@ -59,7 +60,7 @@ export default function StudioClient({ projects }: StudioClientProps) {
                   Our Best Work.
                 </h1>
                 <p className="text-xl md:text-2xl text-zinc-400 max-w-3xl leading-relaxed">
-                  Enterprise platforms, online stores, AI tools, and custom software — built from scratch and deployed live. Browse everything we&apos;ve shipped.
+                  Business platforms, online stores, AI tools, and websites. Browse what we&apos;ve designed, built, and shipped.
                 </p>
               </FadeIn>
             </div>
@@ -83,8 +84,8 @@ export default function StudioClient({ projects }: StudioClientProps) {
                     <div className="absolute top-0 right-0 p-4 opacity-20 group-hover:opacity-100 transition-opacity">
                       <ArrowUpRight className="w-4 h-4 text-white" />
                     </div>
-                    <div className="text-4xl font-bold text-white mb-1">15<span className="text-emerald-400">+</span></div>
-                    <div className="text-xs font-semibold uppercase tracking-wider text-zinc-500">Products Shipped</div>
+                    <div className="text-4xl font-bold text-white mb-1">ERP<span className="text-emerald-400">.</span></div>
+                    <div className="text-xs font-semibold uppercase tracking-wider text-zinc-500">Business Systems</div>
                   </motion.div>
                   
                   <motion.div
@@ -95,8 +96,8 @@ export default function StudioClient({ projects }: StudioClientProps) {
                     <div className="absolute top-0 right-0 p-4 opacity-20 group-hover:opacity-100 transition-opacity">
                       <ArrowUpRight className="w-4 h-4 text-white" />
                     </div>
-                    <div className="text-4xl font-bold text-white mb-1">100<span className="text-violet-400">%</span></div>
-                    <div className="text-xs font-semibold uppercase tracking-wider text-zinc-500">Custom Built</div>
+                    <div className="text-4xl font-bold text-white mb-1">Web<span className="text-violet-400">.</span></div>
+                    <div className="text-xs font-semibold uppercase tracking-wider text-zinc-500">Stores and Sites</div>
                   </motion.div>
                   
                   <motion.div
@@ -110,8 +111,8 @@ export default function StudioClient({ projects }: StudioClientProps) {
                       <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500"></span>
                     </div>
 
-                    <div className="text-xl font-bold text-white mb-2 group-hover:text-emerald-400 transition-colors">Production-Ready</div>
-                    <div className="text-sm text-zinc-400 leading-relaxed">Deployed and serving real users every day. Built for scale, security, and performance.</div>
+                    <div className="text-xl font-bold text-white mb-2 group-hover:text-emerald-400 transition-colors">Honest Status Labels</div>
+                    <div className="text-sm text-zinc-400 leading-relaxed">Every project shows where it stands today: in production, an MVP, a prototype, or a demo.</div>
                   </motion.div>
                 </div>
               </FadeIn>
@@ -135,7 +136,7 @@ export default function StudioClient({ projects }: StudioClientProps) {
                           fill
                           className="object-cover"
                           sizes="(max-width: 1280px) 100vw, 1280px"
-                          priority
+                          priority={idx === 0}
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-[#111113] via-transparent to-transparent" />
                       </motion.div>
@@ -147,18 +148,12 @@ export default function StudioClient({ projects }: StudioClientProps) {
                           <span className={`text-[11px] uppercase tracking-wider font-semibold px-3 py-1.5 rounded-sm bg-gradient-to-r ${project.heroGradient} border border-white/[0.06] text-white`}>
                             {project.category}
                           </span>
-                          <span className="text-[11px] font-medium text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 rounded-sm">
+                          <span className={`text-[11px] font-medium px-2.5 py-1 rounded-sm ${STATUS_BADGE[project.status]}`}>
                             {project.status}
                           </span>
-                          {project.productType && (
-                            <span className={`text-[11px] font-medium px-2.5 py-1 rounded-sm ${
-                              project.productType === 'saas' 
-                                ? 'text-blue-400 bg-blue-500/10 border border-blue-500/20'
-                                : 'text-violet-400 bg-violet-500/10 border border-violet-500/20'
-                            }`}>
-                              {project.productType === 'saas' ? 'Deploy Ready' : 'Custom Built'}
-                            </span>
-                          )}
+                          <span className={`text-[11px] font-medium px-2.5 py-1 rounded-sm ${PRODUCT_TYPE_BADGE[project.productType]}`}>
+                            {PRODUCT_TYPE_LABEL[project.productType]}
+                          </span>
                         </div>
                         <h2 className="text-3xl md:text-5xl font-bold tracking-tighter text-white mb-3">
                           {project.title}
@@ -190,27 +185,29 @@ export default function StudioClient({ projects }: StudioClientProps) {
 
           <FadeIn>
             <h2 className="text-3xl md:text-4xl font-bold tracking-tighter text-white mb-4">
-              Full Product Catalog
+              All Projects
             </h2>
             <p className="text-[16px] text-zinc-500 mb-12 max-w-xl">
-              Every platform we&apos;ve shipped — from enterprise systems to mobile apps. Filter by category to find what you need.
+              Every project in the studio, from ERP systems to mobile apps. Filter by category to find what you need.
             </p>
           </FadeIn>
 
           {/* Filters */}
           <div className="mb-12 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
-            <div className="flex flex-wrap items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2" role="group" aria-label="Filter by category">
               {allCategories.map((cat: string) => (
                 <button
+                  type="button"
                   key={cat}
                   onClick={() => setActiveCategory(cat)}
+                  aria-pressed={activeCategory === cat}
                   className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
                     activeCategory === cat
                       ? 'bg-white text-black'
                       : 'bg-[#1C1C1F] text-zinc-400 hover:text-white border border-white/[0.06]'
                   }`}
                 >
-                  {cat === 'all' ? 'All Products' : cat}
+                  {cat === 'all' ? 'All' : cat}
                 </button>
               ))}
             </div>
@@ -218,8 +215,9 @@ export default function StudioClient({ projects }: StudioClientProps) {
             <div className="relative w-full sm:w-72">
               <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-500" />
               <input
-                type="text"
-                placeholder="Search products..."
+                type="search"
+                aria-label="Search projects"
+                placeholder="Search projects..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className="w-full rounded-full border border-white/[0.08] bg-[#141417] pl-10 pr-4 py-2.5 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-white/[0.15] transition-colors"
@@ -262,7 +260,7 @@ export default function StudioClient({ projects }: StudioClientProps) {
                             <span className="text-[11px] font-medium text-zinc-500 border border-white/[0.06] px-2 py-0.5 rounded-sm">
                               {project.year}
                             </span>
-                            <span className="text-[11px] font-medium text-emerald-500/80 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-sm">
+                            <span className={`text-[11px] font-medium px-2 py-0.5 rounded-sm ${STATUS_BADGE[project.status]}`}>
                               {project.status}
                             </span>
                           </div>
@@ -287,17 +285,9 @@ export default function StudioClient({ projects }: StudioClientProps) {
                               <span key={tag} className="text-xs text-zinc-500">#{tag}</span>
                             ))}
                           </div>
-                          {project.productType && (
-                            <span className={`text-[10px] font-medium px-2 py-0.5 rounded-sm ${
-                              project.productType === 'saas' 
-                                ? 'text-emerald-400 bg-emerald-500/10 border border-emerald-500/20'
-                                : project.productType === 'internal' 
-                                  ? 'text-cyan-400 bg-cyan-500/10 border border-cyan-500/20'
-                                  : 'text-violet-400 bg-violet-500/10 border border-violet-500/20'
-                            }`}>
-                              {project.productType === 'saas' ? 'SaaS' : project.productType === 'internal' ? 'Internal' : 'Custom'}
-                            </span>
-                          )}
+                          <span className={`text-[10px] font-medium px-2 py-0.5 rounded-sm ${PRODUCT_TYPE_BADGE[project.productType]}`}>
+                            {PRODUCT_TYPE_LABEL[project.productType]}
+                          </span>
                         </div>
                       </div>
                     </GlassCard>
@@ -309,7 +299,7 @@ export default function StudioClient({ projects }: StudioClientProps) {
 
           {filtered.length === 0 && (
             <div className="py-32 text-center">
-              <p className="text-zinc-500">No products found matching your criteria.</p>
+              <p className="text-zinc-500">No projects match your search.</p>
             </div>
           )}
         </div>
@@ -324,7 +314,7 @@ export default function StudioClient({ projects }: StudioClientProps) {
               Ready to build something great?
             </h2>
             <p className="text-lg text-zinc-400 mb-10 max-w-xl mx-auto">
-              Whether you need a custom platform built from scratch or want to deploy one of our existing products, we&apos;re ready to help.
+              Whether you need a custom platform built from scratch or want something like one of our projects, we&apos;re ready to help.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link href="/contact">

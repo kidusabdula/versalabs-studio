@@ -12,6 +12,10 @@
   --color-glass-white: rgba(255, 255, 255, 0.04);
   --color-glass-white-hover: rgba(255, 255, 255, 0.08);
   --color-glass-black: rgba(0, 0, 0, 0.4);
+  /* AA contrast: the stock zinc-500 (#71717b) and zinc-600 (#52525c) fall below
+     4.5:1 on the dark surfaces. These pass on every surface up to #202023. */
+  --color-zinc-500: #8e8e98;
+  --color-zinc-600: #86868f;
   --font-sans: var(--font-outfit), var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -42,6 +46,26 @@ html {
   section {
     max-width: 100vw;
     overflow-x: hidden;
+  }
+}
+
+/* ── Focus ── */
+/* Unlayered, so it wins over Tailwind's outline-none utilities. */
+:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+}
+
+/* ── Reduced Motion ── */
+/* Framer Motion follows MotionConfig reducedMotion="user"; this covers CSS. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
 

@@ -4,9 +4,9 @@ import { FadeIn, StaggerContainer, StaggerItem } from '@/components/ui/motion';
 
 export default function WhyChooseUs() {
   const stats = [
-    { value: '3x', label: 'Faster Than Agencies', desc: 'AI-augmented development means your platform ships in weeks, not months.' },
-    { value: '0', label: 'Templates Used', desc: 'Every system is custom-built from scratch. No generic themes, no shortcuts.' },
-    { value: '24h', label: 'Response Time', desc: 'Questions answered, bugs fixed, and features scoped — within a single business day.' },
+    { label: 'AI-Assisted Development', desc: 'We use AI tooling across design and engineering, so a small team can move quickly without cutting corners.' },
+    { label: 'Built Around Your Workflow', desc: 'Every system is designed around how your business actually works, not adapted from a generic theme.' },
+    { label: 'Direct Line to the Builders', desc: 'You talk to the people designing and building your platform, from the first call to launch.' },
   ];
 
   return (
@@ -19,7 +19,7 @@ export default function WhyChooseUs() {
           <h2 className="text-[32px] md:text-[40px] leading-[1.1] font-semibold tracking-tighter text-white max-w-4xl">
             Your idea deserves more than a template.{' '}
             <span className="text-zinc-500">
-              Most agencies hand you a WordPress theme and call it a day. We architect real systems — platforms that handle your data, automate your workflows, and grow with your business. That's the VersaLabs difference.
+              Most agencies hand you a WordPress theme and call it a day. We architect real systems — platforms that handle your data, automate your workflows, and grow with your business. That&apos;s the VersaLabs difference.
             </span>
           </h2>
         </FadeIn>
@@ -35,10 +35,7 @@ export default function WhyChooseUs() {
                   
                   {/* Visual: Isometric geometric placeholder mapping to value */}
                   <div className="h-48 w-full flex items-center justify-center relative transition-transform duration-700 ease-out group-hover:-translate-y-2">
-                    <span className="text-[80px] font-bold text-white/[0.02] group-hover:text-white/[0.05] transition-colors duration-700 pointer-events-none select-none tracking-tighter">
-                      {stat.value}
-                    </span>
-                    <svg viewBox="0 0 200 200" className="absolute inset-0 w-full h-full opacity-60 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none">
+                    <svg viewBox="0 0 200 200" className="absolute inset-0 w-full h-full opacity-60 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" aria-hidden="true">
                       <g fill="none" stroke="currentColor" strokeWidth="1" className="text-zinc-600">
                         {idx === 0 && (
                            <>

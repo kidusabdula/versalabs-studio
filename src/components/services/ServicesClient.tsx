@@ -4,8 +4,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef, useState } from 'react';
-import { ArrowRight, Monitor, ShoppingCart, Brain, Smartphone, Globe, Users } from 'lucide-react';
-import { FadeIn, SlideIn, ScaleIn, StaggerContainer, StaggerItem, GlassCard } from '@/components/ui/motion';
+import { ArrowRight, Monitor, ShoppingCart, Brain, Smartphone, Globe } from 'lucide-react';
+import { FadeIn, SlideIn, ScaleIn, StaggerContainer, StaggerItem } from '@/components/ui/motion';
 import type { ProjectEntry } from '@/config/project-database';
 
 const SPRING = { stiffness: 300, damping: 30 };
@@ -14,41 +14,33 @@ interface ServicesClientProps {
   projects: ProjectEntry[];
 }
 
-const drawLine = {
-  hidden: { pathLength: 0, opacity: 0 },
-  visible: (i: number) => ({
-    pathLength: 1, opacity: 1,
-    transition: { duration: 1.5, delay: i * 0.2, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] },
-  }),
-};
-
 const services = [
   {
     title: 'Custom Business Platforms',
     description: 'ERPs, CRMs, and operational dashboards built from scratch — designed around the way your business actually works.',
     icon: Monitor,
-    capabilities: ['Sales & customer management', 'Inventory and warehouse tracking', 'Financial reporting & invoicing', 'Multi-branch support'],
+    capabilities: ['Sales & customer management', 'Inventory and warehouse tracking', 'Financial reporting & invoicing', 'Manufacturing and production'],
     exampleSlugs: ['obsidian-erp-v3.0'],
   },
   {
     title: 'Online Stores',
-    description: 'Beautiful, fast e-commerce platforms with secure payments, real-time inventory, and a checkout experience that converts.',
+    description: 'Fast, good-looking online stores with online or cash-on-delivery payments, stock tied to your inventory, and a checkout that converts.',
     icon: ShoppingCart,
-    capabilities: ['Secure payment processing', 'Real-time stock sync', 'Mobile-optimized design', 'Multi-language support'],
+    capabilities: ['Online payments with Chapa or Stripe', 'Stock synced with your ERP', 'Mobile-optimized design', 'Order status emails'],
     exampleSlugs: ['oskaz-ecommerce', 'minab-clothing', 'tibeb'],
   },
   {
     title: 'AI & Intelligent Systems',
     description: 'From network security to smart automation — we build AI-powered tools that watch, learn, and act on your behalf.',
     icon: Brain,
-    capabilities: ['Real-time threat detection', 'AI-powered analysis & alerts', 'Automated workflows', 'Custom ML models'],
+    capabilities: ['Network threat detection', 'AI-powered analysis & alerts', 'Automated workflows', 'Custom ML models'],
     exampleSlugs: ['threatmatrix-ai', 'jarvis'],
   },
   {
     title: 'Mobile Applications',
     description: 'Cross-platform mobile apps for payments, services, and on-the-go business management — smooth, fast, and reliable.',
     icon: Smartphone,
-    capabilities: ['iOS & Android support', 'Offline-capable design', 'Push notifications', 'Biometric authentication'],
+    capabilities: ['iOS & Android support', 'Offline-capable design', 'PIN sign-in', 'Smooth native animations'],
     exampleSlugs: ['fastpay'],
   },
   {
@@ -57,13 +49,6 @@ const services = [
     icon: Globe,
     capabilities: ['Responsive design', 'Search engine optimization', 'Content management', 'Analytics integration'],
     exampleSlugs: ['pana-web', 'live-addis', 'unlock-ethiopia-potential'],
-  },
-  {
-    title: 'Queue & Operations Systems',
-    description: 'Manage walk-in customers, appointments, and multi-location operations with real-time dashboards and self-service kiosks.',
-    icon: Users,
-    capabilities: ['Self-service kiosks', 'Live queue dashboards', 'Multi-department routing', 'Performance analytics'],
-    exampleSlugs: ['auroqueue'],
   },
 ];
 
@@ -75,10 +60,10 @@ const processSteps = [
 ];
 
 const trustSignals = [
-  { value: '15+', label: 'Products Shipped', desc: 'Real platforms in production serving real users every day.' },
-  { value: '4-8wk', label: 'Average Timeline', desc: 'Most MVPs are live and serving customers in under two months.' },
-  { value: '100%', label: 'Custom Built', desc: 'Zero templates. Every line of code is written for your business.' },
-  { value: '24/7', label: 'Production Support', desc: 'We don\'t disappear after launch. Your platform is monitored and maintained.' },
+  { value: 'Real', label: 'Real Projects', desc: 'Everything in our studio is real work: client platforms in production, products, prototypes and research builds, each labeled with its current status.' },
+  { value: 'Scoped', label: 'Clear Milestones', desc: 'We agree on scope and milestones before we start, and you see working software along the way.' },
+  { value: 'Custom', label: 'Custom Built', desc: 'Every system is designed around your business, not adapted from a generic theme.' },
+  { value: 'Ongoing', label: 'Support After Launch', desc: 'We don\'t disappear after launch. Support and maintenance are agreed with you up front.' },
 ];
 
 export default function ServicesClient({ projects }: ServicesClientProps) {
@@ -116,7 +101,7 @@ export default function ServicesClient({ projects }: ServicesClientProps) {
             </SlideIn>
             <FadeIn>
               <h1 className="text-5xl md:text-7xl font-bold tracking-tighter text-white mb-6">
-                Enterprise Software,{' '}
+                Business Software,{' '}
                 <span className="bg-gradient-to-b from-white to-white/40 bg-clip-text text-transparent">
                   Delivered.
                 </span>
@@ -141,7 +126,7 @@ export default function ServicesClient({ projects }: ServicesClientProps) {
           <FadeIn>
             <span className="text-[11px] uppercase tracking-[0.2em] font-semibold text-emerald-400/70 mb-6 block">Why VersaLabs</span>
             <h2 className="text-[32px] md:text-[40px] leading-[1.1] font-bold tracking-tighter text-white mb-16">
-              Numbers that matter.
+              What you can expect.
             </h2>
           </FadeIn>
 
@@ -149,10 +134,14 @@ export default function ServicesClient({ projects }: ServicesClientProps) {
             {/* Left: Navigation Menu */}
             <div className="lg:col-span-5 flex flex-col gap-0 border-l border-white/[0.04]">
               {trustSignals.map((signal, idx) => (
-                <div 
+                <button
+                  type="button"
                   key={signal.label}
                   onMouseEnter={() => setActiveTrustIdx(idx)}
-                  className={`cursor-pointer px-6 md:px-10 py-8 border-b border-white/[0.04] transition-all duration-500 relative group overflow-hidden ${
+                  onFocus={() => setActiveTrustIdx(idx)}
+                  onClick={() => setActiveTrustIdx(idx)}
+                  aria-pressed={activeTrustIdx === idx}
+                  className={`w-full text-left cursor-pointer px-6 md:px-10 py-8 border-b border-white/[0.04] transition-all duration-500 relative group overflow-hidden ${
                     activeTrustIdx === idx ? 'bg-white/[0.02]' : 'hover:bg-white/[0.01]'
                   }`}
                 >
@@ -161,18 +150,13 @@ export default function ServicesClient({ projects }: ServicesClientProps) {
                   }`} />
                   
                   <div className="flex justify-between items-center relative z-10">
-                    <h3 className={`text-xl md:text-2xl font-bold tracking-tight transition-colors duration-500 ${
+                    <span className={`block text-xl md:text-2xl font-bold tracking-tight transition-colors duration-500 ${
                       activeTrustIdx === idx ? 'text-white' : 'text-zinc-600 group-hover:text-zinc-400'
                     }`}>
                       {signal.label}
-                    </h3>
-                    <div className={`text-2xl md:text-3xl font-bold transition-colors duration-500 ${
-                      activeTrustIdx === idx ? 'text-emerald-400' : 'text-zinc-800 group-hover:text-zinc-700'
-                    }`}>
-                      {signal.value}
-                    </div>
+                    </span>
                   </div>
-                </div>
+                </button>
               ))}
             </div>
 
@@ -246,12 +230,14 @@ export default function ServicesClient({ projects }: ServicesClientProps) {
                       }}
                       transition={{ duration: 0.5 }}
                       className="absolute inset-0 p-6 lg:p-12 pointer-events-none flex flex-col justify-center"
+                      aria-hidden={activeTrustIdx !== idx}
+                      inert={activeTrustIdx !== idx}
                     >
                       <div className={activeTrustIdx === idx ? 'pointer-events-auto' : ''}>
                         <div className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tighter">
                           {signal.value}
                         </div>
-                        <h4 className="text-xl font-semibold text-emerald-400 mb-4">{signal.label}</h4>
+                        <h3 className="text-xl font-semibold text-emerald-400 mb-4">{signal.label}</h3>
                         <p className="text-[15px] md:text-[16px] text-zinc-400 leading-relaxed max-w-xl">
                           {signal.desc}
                         </p>
@@ -273,7 +259,7 @@ export default function ServicesClient({ projects }: ServicesClientProps) {
           <FadeIn>
             <h2 className="text-3xl md:text-4xl font-bold tracking-tighter text-white mb-4">What We Build</h2>
             <p className="text-[16px] text-zinc-500 mb-16 max-w-xl">
-              Six core areas of expertise — each backed by real projects we&apos;ve shipped and deployed.
+              Five core areas of expertise, each backed by real projects we&apos;ve built.
             </p>
           </FadeIn>
 
@@ -281,10 +267,14 @@ export default function ServicesClient({ projects }: ServicesClientProps) {
             {/* Left: Navigation Menu */}
             <div className="lg:col-span-5 flex flex-col gap-0 border-l border-white/[0.04]">
               {services.map((service, idx) => (
-                <div 
+                <button
+                  type="button"
                   key={service.title}
                   onMouseEnter={() => setActiveServiceIdx(idx)}
-                  className={`cursor-pointer px-6 md:px-10 py-8 border-b border-white/[0.04] transition-all duration-500 relative group overflow-hidden ${
+                  onFocus={() => setActiveServiceIdx(idx)}
+                  onClick={() => setActiveServiceIdx(idx)}
+                  aria-pressed={activeServiceIdx === idx}
+                  className={`w-full text-left cursor-pointer px-6 md:px-10 py-8 border-b border-white/[0.04] transition-all duration-500 relative group overflow-hidden ${
                     activeServiceIdx === idx ? 'bg-white/[0.02]' : 'hover:bg-white/[0.01]'
                   }`}
                 >
@@ -293,16 +283,16 @@ export default function ServicesClient({ projects }: ServicesClientProps) {
                   }`} />
                   
                   <div className="flex justify-between items-center relative z-10">
-                    <h3 className={`text-2xl md:text-3xl font-bold tracking-tight transition-colors duration-500 ${
+                    <span className={`block text-2xl md:text-3xl font-bold tracking-tight transition-colors duration-500 ${
                       activeServiceIdx === idx ? 'text-white' : 'text-zinc-600 group-hover:text-zinc-400'
                     }`}>
                       {service.title}
-                    </h3>
-                    <service.icon className={`h-6 w-6 transition-colors duration-500 ${
+                    </span>
+                    <service.icon aria-hidden="true" className={`h-6 w-6 transition-colors duration-500 ${
                       activeServiceIdx === idx ? 'text-violet-400' : 'text-zinc-700'
                     }`} />
                   </div>
-                </div>
+                </button>
               ))}
             </div>
 
@@ -400,9 +390,11 @@ export default function ServicesClient({ projects }: ServicesClientProps) {
                         }}
                         transition={{ duration: 0.5 }}
                         className="absolute inset-0 p-6 lg:p-12 pointer-events-none flex flex-col"
+                        aria-hidden={activeServiceIdx !== idx}
+                        inert={activeServiceIdx !== idx}
                       >
                         <div className={activeServiceIdx === idx ? 'pointer-events-auto h-full flex flex-col' : 'h-full flex flex-col'}>
-                          <h4 className="text-xl font-bold text-white mb-3">{service.title}</h4>
+                          <h3 className="text-xl font-bold text-white mb-3">{service.title}</h3>
                           <p className="text-[14px] md:text-[15px] text-zinc-400 mb-6 leading-relaxed max-w-xl">
                             {service.description}
                           </p>
@@ -448,7 +440,7 @@ export default function ServicesClient({ projects }: ServicesClientProps) {
           <FadeIn>
             <h2 className="text-3xl md:text-4xl font-bold tracking-tighter text-white mb-4">How We Work</h2>
             <p className="text-[16px] text-zinc-500 mb-16 max-w-xl">
-              A proven, transparent process from first conversation to production launch.
+              A clear, transparent process from first conversation to launch.
             </p>
           </FadeIn>
 
@@ -468,6 +460,7 @@ export default function ServicesClient({ projects }: ServicesClientProps) {
                     viewport={{ once: true }}
                     transition={{ delay: idx * 0.15, duration: 0.6, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
                     className="text-[48px] font-bold text-white/[0.05] mb-4 group-hover:text-white/[0.12] transition-colors duration-500"
+                    aria-hidden="true"
                   >
                     {step.step}
                   </motion.span>
@@ -486,9 +479,9 @@ export default function ServicesClient({ projects }: ServicesClientProps) {
       <section className="px-6 py-24 border-t border-white/[0.04]">
         <div className="mx-auto max-w-[1400px]">
           <FadeIn>
-            <h2 className="text-3xl md:text-4xl font-bold tracking-tighter text-white mb-4">Proven Results</h2>
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tighter text-white mb-4">Recent Work</h2>
             <p className="text-[16px] text-zinc-500 mb-16 max-w-xl">
-              Real platforms, deployed and serving real users. Every one built by our team.
+              A selection of platforms from our studio. Open any project to see its status, stack and story.
             </p>
           </FadeIn>
 
@@ -506,7 +499,7 @@ export default function ServicesClient({ projects }: ServicesClientProps) {
                     className="relative aspect-[4/3] rounded-xl overflow-hidden border border-white/[0.04] bg-[#0E0E10]">
                     {proj.thumbnail && (
                       <Image src={proj.thumbnail} alt={proj.title} fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-700" sizes="25vw" />
+                        className="object-cover group-hover:scale-105 transition-transform duration-700" sizes="(max-width: 1024px) 50vw, 25vw" />
                     )}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
                       <div>

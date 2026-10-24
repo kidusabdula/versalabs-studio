@@ -50,7 +50,12 @@ export default function ImageLightbox({
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center">
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center"
+          role="dialog"
+          aria-modal="true"
+          aria-label={`${title} gallery`}
+        >
           {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
@@ -62,10 +67,13 @@ export default function ImageLightbox({
 
           {/* Close Button */}
           <button
+            type="button"
+            autoFocus
             onClick={onClose}
+            aria-label="Close gallery"
             className="absolute top-6 right-6 z-20 p-3 rounded-full bg-white/[0.06] hover:bg-white/[0.12] text-white transition-colors"
           >
-            <X className="h-5 w-5" />
+            <X className="h-5 w-5" aria-hidden="true" />
           </button>
 
           {/* Counter */}
@@ -77,16 +85,20 @@ export default function ImageLightbox({
           {images.length > 1 && (
             <>
               <button
+                type="button"
                 onClick={goPrev}
+                aria-label="Previous image"
                 className="absolute left-4 md:left-8 z-20 p-3 rounded-full bg-white/[0.06] hover:bg-white/[0.12] text-white transition-colors"
               >
-                <ChevronLeft className="h-6 w-6" />
+                <ChevronLeft className="h-6 w-6" aria-hidden="true" />
               </button>
               <button
+                type="button"
                 onClick={goNext}
+                aria-label="Next image"
                 className="absolute right-4 md:right-8 z-20 p-3 rounded-full bg-white/[0.06] hover:bg-white/[0.12] text-white transition-colors"
               >
-                <ChevronRight className="h-6 w-6" />
+                <ChevronRight className="h-6 w-6" aria-hidden="true" />
               </button>
             </>
           )}

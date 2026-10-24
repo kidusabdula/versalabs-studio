@@ -10,7 +10,7 @@ export default function CoreCapabilities() {
           <h2 className="text-[32px] md:text-[40px] leading-[1.1] font-semibold tracking-tighter text-white max-w-4xl">
             Built different — by design.{' '}
             <span className="text-zinc-500">
-              Every platform we ship is structured for clarity, built to scale, and powered by the latest in AI and modern engineering.
+              Every platform we ship is structured for clarity, built to grow, and engineered with modern tools, AI included.
             </span>
           </h2>
         </FadeIn>
