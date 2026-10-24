@@ -16,16 +16,12 @@ const slideUp = {
   visible: { opacity: 1, y: 0, filter: 'blur(0px)', transition: { duration: 1, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] } },
 };
 
-// The heading is the LCP element: it only slides, so it paints on the first
-// frame instead of waiting for hydration to fade it in.
+// The heading and subtitle are the LCP candidates (the subtitle on phones):
+// they only slide, so they paint on the first frame instead of waiting for
+// hydration to fade them in.
 const headingLine = {
   hidden: { y: 24 },
   visible: { y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] } },
-};
-
-const slideInLeft = {
-  hidden: { opacity: 0, x: -40 },
-  visible: { opacity: 1, x: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] } },
 };
 
 const slideInRight = {
@@ -134,7 +130,7 @@ export default function Hero() {
           </h1>
 
           {/* Description — slides in from left */}
-          <motion.p variants={slideInLeft} className="mx-auto mt-6 max-w-2xl text-[17px] leading-relaxed text-zinc-400">
+          <motion.p variants={headingLine} className="mx-auto mt-6 max-w-2xl text-[17px] leading-relaxed text-zinc-400">
             Bring us the business problem. We shape the product, design the experience, build the system, and help launch software your team can actually use.
           </motion.p>
 
