@@ -32,23 +32,24 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 ## Deployment
 
 ### Prerequisites
-- Vercel account
-- Domain: versalabs.dev
-- Resend account for email
+- Vercel project `versalabs-studio`, linked to the GitHub repository `kidusabdula/versalabs-studio`
+- Domain: `www.versalabs-studio.com` (set as `SITE_URL` in `src/lib/site.ts`)
+- An SMTP mailbox for the contact form
 
 ### Environment Variables
 Create `.env.local` with:
 ```
-NEXT_PUBLIC_GA_ID=your_google_analytics_id
-RESEND_API_KEY=your_resend_api_key
+SMTP_HOST=mail.versalabs-studio.com   # optional, this is the default
+SMTP_PORT=465                         # optional, this is the default
+SMTP_USER=contact@versalabs-studio.com
+SMTP_PASS=your_smtp_password
 ```
+The contact form (`src/app/api/contact/route.ts`) validates input with Zod (`src/lib/contact-schema.ts`), drops honeypot submissions, rate-limits each IP on a best-effort basis, and HTML-escapes everything it puts in the email.
 
 ### Vercel Deployment
-1. Connect GitHub repository to Vercel
-2. Configure domain: versalabs.dev
-3. Add environment variables in Vercel dashboard
-4. Configure Resend domain verification for versalabs.dev
-5. Deploy automatically on push to main branch
+1. Add the environment variables in the Vercel dashboard
+2. Push a branch to get a preview deployment
+3. Merging to `main` deploys production
 
 ### Production Checklist
 - [ ] Static generation enabled for project pages

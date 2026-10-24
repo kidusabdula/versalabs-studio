@@ -56,10 +56,10 @@ Key phrases that reinforce this:
 - **Search/Filter**: Functional, no marketing copy needed
 
 ### Services Page
-- **Hero**: "Enterprise Software, Delivered." — direct, professional
+- **Hero**: "Business Software, Delivered." — direct, professional
 - **Service Cards**: Each service described in one sentence of plain language
 - **Process Steps**: 4-step flow (Discover → Design → Build → Launch) — transparent, no jargon
-- **Trust Signals**: Numbers with brief explanations (15+ Products, 4-8wk Timeline, 100% Custom, 24/7 Support)
+- **Trust Signals**: Plain statements with no numbers we can't back up (Real, Scoped, Custom, Ongoing)
 
 ### About Page
 - **Hero**: "The Team Behind VersaLabs." — personal, approachable
@@ -70,7 +70,7 @@ Key phrases that reinforce this:
 ### Contact Page
 - **Hero**: "Let's Talk." — warm, inviting, no barriers
 - **Form**: 8 fields with clear labels, nothing ambiguous
-- **Sidebar**: Response time (24h), location, social links
+- **Sidebar**: Email, location, how replies work, social links (no response-time promise)
 
 ### Blog
 - **Coming Soon** with pulse indicator — "We're preparing articles about software architecture, AI development, and building products in the Ethiopian tech ecosystem."
