@@ -1,28 +1,45 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { FadeIn, GlassCard } from '@/components/ui/motion';
 import { Send, CheckCircle, Mail, MapPin, Clock, MessageCircle } from 'lucide-react';
+import { BUDGETS, HONEYPOT_FIELD, PROJECT_TYPES } from '@/lib/contact-schema';
+
+const EMPTY_FORM = {
+  name: '',
+  email: '',
+  phone: '',
+  enterprise: '',
+  projectType: '',
+  budget: '',
+  scope: '',
+  referral: '',
+  [HONEYPOT_FIELD]: '',
+};
+
+type FormField = keyof typeof EMPTY_FORM;
+type Status = 'idle' | 'submitting' | 'success' | 'error';
+
+const FALLBACK_ERROR = "We couldn't send your message. Please try again, or email us at contact@versalabs-studio.com.";
 
 export default function ContactClient() {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    enterprise: '',
-    projectType: '',
-    budget: '',
-    scope: '',
-    referral: '',
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [formData, setFormData] = useState(EMPTY_FORM);
+  const [status, setStatus] = useState<Status>('idle');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [fieldErrors, setFieldErrors] = useState<Partial<Record<FormField, string>>>({});
+  const successHeading = useRef<HTMLHeadingElement>(null);
+
+  useEffect(() => {
+    if (status === 'success') successHeading.current?.focus();
+  }, [status]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
+    setStatus('submitting');
+    setErrorMessage('');
+    setFieldErrors({});
 
     try {
       const response = await fetch('/api/contact', {
@@ -32,13 +49,18 @@ export default function ContactClient() {
       });
 
       if (response.ok) {
-        setIsSubmitted(true);
-        setFormData({ name: '', email: '', phone: '', enterprise: '', projectType: '', budget: '', scope: '', referral: '' });
+        setStatus('success');
+        setFormData(EMPTY_FORM);
+        return;
       }
-    } catch (error) {
-      console.error('Error submitting form:', error);
-    } finally {
-      setIsSubmitting(false);
+
+      const data = await response.json().catch(() => ({}));
+      setFieldErrors(data.fields ?? {});
+      setErrorMessage(response.status === 429 || response.status === 400 ? data.error ?? FALLBACK_ERROR : FALLBACK_ERROR);
+      setStatus('error');
+    } catch {
+      setErrorMessage(FALLBACK_ERROR);
+      setStatus('error');
     }
   };
 
@@ -46,19 +68,29 @@ export default function ContactClient() {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  if (isSubmitted) {
+  // Wires a field to its server-side error message, when there is one.
+  const describe = (field: FormField) =>
+    fieldErrors[field] ? { 'aria-invalid': true, 'aria-describedby': `${field}-error` } : {};
+
+  const fieldError = (field: FormField) =>
+    fieldErrors[field] ? (
+      <p id={`${field}-error`} className="mt-2 text-sm text-red-300">{fieldErrors[field]}</p>
+    ) : null;
+
+  if (status === 'success') {
     return (
       <div className="min-h-screen px-6 py-24 flex items-center justify-center">
         <div className="mx-auto max-w-2xl text-center">
           <FadeIn>
             <GlassCard className="p-12">
-              <CheckCircle className="mx-auto h-16 w-16 text-emerald-400 mb-6" />
-              <h1 className="text-3xl font-bold mb-4 text-white">Message Received!</h1>
+              <CheckCircle className="mx-auto h-16 w-16 text-emerald-400 mb-6" aria-hidden="true" />
+              <h1 ref={successHeading} tabIndex={-1} className="text-3xl font-bold mb-4 text-white">Message Received!</h1>
               <p className="text-zinc-400 mb-6">
-                Thank you for reaching out. We&apos;ll review your project details and respond within 24 hours.
+                Thank you for reaching out. We&apos;ll review your project details and reply by email.
               </p>
               <button
-                onClick={() => setIsSubmitted(false)}
+                type="button"
+                onClick={() => setStatus('idle')}
                 className="inline-flex items-center justify-center h-11 px-6 rounded-full bg-white/[0.06] border border-white/[0.08] text-sm font-medium text-white hover:bg-white/[0.1] transition-colors"
               >
                 Submit Another Request
@@ -69,6 +101,8 @@ export default function ContactClient() {
       </div>
     );
   }
+
+  const isSubmitting = status === 'submitting';
 
   return (
     <div className="min-h-screen px-6 pt-40 pb-24">
@@ -81,7 +115,7 @@ export default function ContactClient() {
               Let&apos;s Talk.
             </h1>
             <p className="text-xl text-zinc-400 leading-relaxed">
-              Tell us about your project and we&apos;ll get back to you within 24 hours with a plan.
+              Tell us about your project and we&apos;ll get back to you with a plan.
             </p>
           </div>
         </FadeIn>
@@ -91,19 +125,23 @@ export default function ContactClient() {
           {/* LEFT: Form (3 cols) */}
           <FadeIn delay={0.1} className="lg:col-span-3">
             <GlassCard className="p-8">
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-6" aria-busy={isSubmitting}>
                 <div className="grid gap-6 sm:grid-cols-2">
                   <div>
                     <label htmlFor="name" className="block text-sm font-medium mb-2 text-white">Name *</label>
                     <input type="text" id="name" name="name" value={formData.name} onChange={handleChange} required
-                      className="w-full rounded-lg border border-white/[0.08] bg-[#1C1C1F] px-4 py-3 text-sm text-white placeholder:text-zinc-600 transition-colors focus:border-white/[0.15] focus:outline-none"
+                      maxLength={100} autoComplete="name" {...describe('name')}
+                      className="w-full rounded-lg border border-white/[0.08] bg-[#1C1C1F] px-4 py-3 text-sm text-white placeholder:text-zinc-600 transition-colors focus:border-white/[0.15] focus:outline-none aria-[invalid=true]:border-red-400/60"
                       placeholder="Your full name" />
+                    {fieldError('name')}
                   </div>
                   <div>
                     <label htmlFor="email" className="block text-sm font-medium mb-2 text-white">Email *</label>
                     <input type="email" id="email" name="email" value={formData.email} onChange={handleChange} required
-                      className="w-full rounded-lg border border-white/[0.08] bg-[#1C1C1F] px-4 py-3 text-sm text-white placeholder:text-zinc-600 transition-colors focus:border-white/[0.15] focus:outline-none"
+                      maxLength={254} autoComplete="email" {...describe('email')}
+                      className="w-full rounded-lg border border-white/[0.08] bg-[#1C1C1F] px-4 py-3 text-sm text-white placeholder:text-zinc-600 transition-colors focus:border-white/[0.15] focus:outline-none aria-[invalid=true]:border-red-400/60"
                       placeholder="your@email.com" />
+                    {fieldError('email')}
                   </div>
                 </div>
 
@@ -111,14 +149,18 @@ export default function ContactClient() {
                   <div>
                     <label htmlFor="phone" className="block text-sm font-medium mb-2 text-white">Phone</label>
                     <input type="tel" id="phone" name="phone" value={formData.phone} onChange={handleChange}
-                      className="w-full rounded-lg border border-white/[0.08] bg-[#1C1C1F] px-4 py-3 text-sm text-white placeholder:text-zinc-600 transition-colors focus:border-white/[0.15] focus:outline-none"
+                      maxLength={40} autoComplete="tel" {...describe('phone')}
+                      className="w-full rounded-lg border border-white/[0.08] bg-[#1C1C1F] px-4 py-3 text-sm text-white placeholder:text-zinc-600 transition-colors focus:border-white/[0.15] focus:outline-none aria-[invalid=true]:border-red-400/60"
                       placeholder="+251 ..." />
+                    {fieldError('phone')}
                   </div>
                   <div>
                     <label htmlFor="enterprise" className="block text-sm font-medium mb-2 text-white">Company</label>
                     <input type="text" id="enterprise" name="enterprise" value={formData.enterprise} onChange={handleChange}
-                      className="w-full rounded-lg border border-white/[0.08] bg-[#1C1C1F] px-4 py-3 text-sm text-white placeholder:text-zinc-600 transition-colors focus:border-white/[0.15] focus:outline-none"
+                      maxLength={120} autoComplete="organization" {...describe('enterprise')}
+                      className="w-full rounded-lg border border-white/[0.08] bg-[#1C1C1F] px-4 py-3 text-sm text-white placeholder:text-zinc-600 transition-colors focus:border-white/[0.15] focus:outline-none aria-[invalid=true]:border-red-400/60"
                       placeholder="Your company name" />
+                    {fieldError('enterprise')}
                   </div>
                 </div>
 
@@ -126,41 +168,60 @@ export default function ContactClient() {
                   <div>
                     <label htmlFor="projectType" className="block text-sm font-medium mb-2 text-white">Project Type</label>
                     <select id="projectType" name="projectType" value={formData.projectType} onChange={handleChange}
-                      className="w-full rounded-lg border border-white/[0.08] bg-[#1C1C1F] px-4 py-3 text-sm text-white transition-colors focus:border-white/[0.15] focus:outline-none">
+                      {...describe('projectType')}
+                      className="w-full rounded-lg border border-white/[0.08] bg-[#1C1C1F] px-4 py-3 text-sm text-white transition-colors focus:border-white/[0.15] focus:outline-none aria-[invalid=true]:border-red-400/60">
                       <option value="" className="bg-[#0D0D0F]">Select type</option>
-                      <option value="erp" className="bg-[#0D0D0F]">ERP / Business Platform</option>
-                      <option value="ecommerce" className="bg-[#0D0D0F]">E-Commerce / Online Store</option>
-                      <option value="ai" className="bg-[#0D0D0F]">AI / Security System</option>
-                      <option value="mobile" className="bg-[#0D0D0F]">Mobile Application</option>
-                      <option value="website" className="bg-[#0D0D0F]">Corporate Website</option>
-                      <option value="custom" className="bg-[#0D0D0F]">Custom / Other</option>
+                      {Object.entries(PROJECT_TYPES).map(([value, label]) => (
+                        <option key={value} value={value} className="bg-[#0D0D0F]">{label}</option>
+                      ))}
                     </select>
+                    {fieldError('projectType')}
                   </div>
                   <div>
                     <label htmlFor="budget" className="block text-sm font-medium mb-2 text-white">Budget Range</label>
                     <select id="budget" name="budget" value={formData.budget} onChange={handleChange}
-                      className="w-full rounded-lg border border-white/[0.08] bg-[#1C1C1F] px-4 py-3 text-sm text-white transition-colors focus:border-white/[0.15] focus:outline-none">
+                      {...describe('budget')}
+                      className="w-full rounded-lg border border-white/[0.08] bg-[#1C1C1F] px-4 py-3 text-sm text-white transition-colors focus:border-white/[0.15] focus:outline-none aria-[invalid=true]:border-red-400/60">
                       <option value="" className="bg-[#0D0D0F]">Select budget</option>
-                      <option value="0-5k" className="bg-[#0D0D0F]">$0 - $5,000 / 0 - 600,000 ETB</option>
-                      <option value="5k-15k" className="bg-[#0D0D0F]">$5,000 - $15,000 / 600,000 - 1.8M ETB</option>
-                      <option value="15k-50k" className="bg-[#0D0D0F]">$15,000 - $50,000 / 1.8M - 6.0M ETB</option>
-                      <option value="50k+" className="bg-[#0D0D0F]">$50,000+ / 6.0M+ ETB</option>
+                      {Object.entries(BUDGETS).map(([value, label]) => (
+                        <option key={value} value={value} className="bg-[#0D0D0F]">{label}</option>
+                      ))}
                     </select>
+                    {fieldError('budget')}
                   </div>
                 </div>
 
                 <div>
                   <label htmlFor="scope" className="block text-sm font-medium mb-2 text-white">Project Description *</label>
                   <textarea id="scope" name="scope" value={formData.scope} onChange={handleChange} required rows={4}
-                    className="w-full rounded-lg border border-white/[0.08] bg-[#1C1C1F] px-4 py-3 text-sm text-white placeholder:text-zinc-600 transition-colors focus:border-white/[0.15] focus:outline-none resize-none"
+                    minLength={10} maxLength={5000} {...describe('scope')}
+                    className="w-full rounded-lg border border-white/[0.08] bg-[#1C1C1F] px-4 py-3 text-sm text-white placeholder:text-zinc-600 transition-colors focus:border-white/[0.15] focus:outline-none resize-none aria-[invalid=true]:border-red-400/60"
                     placeholder="Tell us about what you need built..." />
+                  {fieldError('scope')}
                 </div>
 
                 <div>
                   <label htmlFor="referral" className="block text-sm font-medium mb-2 text-white">How did you hear about us?</label>
                   <input type="text" id="referral" name="referral" value={formData.referral} onChange={handleChange}
-                    className="w-full rounded-lg border border-white/[0.08] bg-[#1C1C1F] px-4 py-3 text-sm text-white placeholder:text-zinc-600 transition-colors focus:border-white/[0.15] focus:outline-none"
+                    maxLength={200} {...describe('referral')}
+                    className="w-full rounded-lg border border-white/[0.08] bg-[#1C1C1F] px-4 py-3 text-sm text-white placeholder:text-zinc-600 transition-colors focus:border-white/[0.15] focus:outline-none aria-[invalid=true]:border-red-400/60"
                     placeholder="Referral, Google, social media..." />
+                  {fieldError('referral')}
+                </div>
+
+                {/* Honeypot: hidden from people and screen readers, filled in by bots. */}
+                <div className="absolute -left-[10000px] top-auto h-px w-px overflow-hidden" aria-hidden="true">
+                  <label htmlFor={HONEYPOT_FIELD}>Leave this field empty</label>
+                  <input type="text" id={HONEYPOT_FIELD} name={HONEYPOT_FIELD} value={formData[HONEYPOT_FIELD]}
+                    onChange={handleChange} tabIndex={-1} autoComplete="off" />
+                </div>
+
+                <div role="alert">
+                  {status === 'error' && errorMessage && (
+                    <p className="rounded-lg border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+                      {errorMessage}
+                    </p>
+                  )}
                 </div>
 
                 <motion.button
@@ -172,12 +233,12 @@ export default function ContactClient() {
                 >
                   {isSubmitting ? (
                     <>
-                      <div className="h-4 w-4 animate-spin rounded-full border-2 border-black border-t-transparent" />
+                      <div className="h-4 w-4 animate-spin rounded-full border-2 border-black border-t-transparent" aria-hidden="true" />
                       Sending...
                     </>
                   ) : (
                     <>
-                      <Send className="h-4 w-4" />
+                      <Send className="h-4 w-4" aria-hidden="true" />
                       Send Message
                     </>
                   )}
@@ -192,10 +253,10 @@ export default function ContactClient() {
               <GlassCard className="p-6">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/[0.04] border border-white/[0.06]">
-                    <Mail className="h-5 w-5 text-white" />
+                    <Mail className="h-5 w-5 text-white" aria-hidden="true" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-white text-sm">Email</h3>
+                    <h2 className="font-semibold text-white text-sm">Email</h2>
                     <a href="mailto:contact@versalabs-studio.com" className="text-sm text-zinc-400 hover:text-white transition-colors">
                       contact@versalabs-studio.com
                     </a>
@@ -206,10 +267,10 @@ export default function ContactClient() {
               <GlassCard className="p-6">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/[0.04] border border-white/[0.06]">
-                    <MapPin className="h-5 w-5 text-white" />
+                    <MapPin className="h-5 w-5 text-white" aria-hidden="true" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-white text-sm">Location</h3>
+                    <h2 className="font-semibold text-white text-sm">Location</h2>
                     <p className="text-sm text-zinc-400">Addis Ababa, Ethiopia</p>
                   </div>
                 </div>
@@ -218,11 +279,11 @@ export default function ContactClient() {
               <GlassCard className="p-6">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/[0.04] border border-white/[0.06]">
-                    <Clock className="h-5 w-5 text-white" />
+                    <Clock className="h-5 w-5 text-white" aria-hidden="true" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-white text-sm">Response Time</h3>
-                    <p className="text-sm text-zinc-400">Within 24 hours</p>
+                    <h2 className="font-semibold text-white text-sm">Replies</h2>
+                    <p className="text-sm text-zinc-400">By email, from the team directly</p>
                   </div>
                 </div>
               </GlassCard>
@@ -230,15 +291,15 @@ export default function ContactClient() {
               <GlassCard className="p-6">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/[0.04] border border-white/[0.06]">
-                    <MessageCircle className="h-5 w-5 text-white" />
+                    <MessageCircle className="h-5 w-5 text-white" aria-hidden="true" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-white text-sm">Quick Connect</h3>
+                    <h2 className="font-semibold text-white text-sm">Quick Connect</h2>
                     <div className="flex flex-col gap-1 mt-1">
-                      <a href="https://t.me/kidusabdula" target="_blank" rel="noopener noreferrer" className="text-sm text-zinc-400 hover:text-white transition-colors">
+                      <a href="https://t.me/kidusabdula" target="_blank" rel="noopener noreferrer" className="inline-block py-0.5 text-sm text-zinc-400 hover:text-white transition-colors">
                         Telegram →
                       </a>
-                      <a href="https://linkedin.com/company/versalabs-studio" target="_blank" rel="noopener noreferrer" className="text-sm text-zinc-400 hover:text-white transition-colors">
+                      <a href="https://linkedin.com/company/versalabs-studio" target="_blank" rel="noopener noreferrer" className="inline-block py-0.5 text-sm text-zinc-400 hover:text-white transition-colors">
                         LinkedIn →
                       </a>
                     </div>
