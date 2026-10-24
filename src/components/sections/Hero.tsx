@@ -129,7 +129,7 @@ export default function Hero() {
             </motion.span>
           </h1>
 
-          {/* Description — slides in from left */}
+          {/* Description — slides up with the heading */}
           <motion.p variants={headingLine} className="mx-auto mt-6 max-w-2xl text-[17px] leading-relaxed text-zinc-400">
             Bring us the business problem. We shape the product, design the experience, build the system, and help launch software your team can actually use.
           </motion.p>
@@ -192,12 +192,13 @@ export default function Hero() {
         </motion.div>
       </motion.div>
 
-      {/* Scroll Indicator */}
+      {/* Scroll Indicator: in the flow, so it never lands on the stats when
+          the hero is taller than the screen */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 2, duration: 1 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10"
+        className="relative z-10 mt-10 mb-8"
         aria-hidden="true"
       >
         <motion.div
