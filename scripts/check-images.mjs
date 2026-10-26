@@ -1,6 +1,6 @@
 // Build check for the image rule: every file under public/images/<folder>/ must be
 // listed by a project in src/content/projects/, every listed image must exist,
-// and each folder stays under the size cap. Runs before `next build`.
+// and each folder stays under the size cap. Runs as the first step of `pnpm build`.
 // Alt text and the `reviewed: true` flag are enforced by the Zod schema.
 import fs from 'node:fs';
 import path from 'node:path';

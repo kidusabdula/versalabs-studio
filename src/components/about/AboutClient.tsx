@@ -66,7 +66,7 @@ const milestones = [
   { year: '2026', event: 'ThreatMatrix AI built as a university senior project' },
 ];
 
-// Tools used in the projects on this site (see src/config/project-database.ts).
+// Tools used in the projects on this site (see src/content/projects/).
 const techStack = [
   {
     label: 'Frontend & Mobile',

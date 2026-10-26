@@ -5,7 +5,7 @@ import Image from 'next/image';
 import FooterCTA from '../ui/FooterCTA';
 
 const projectLinks = [
-  { label: 'Obsidian ERP', href: '/projects/obsidian-erp' },
+  { label: 'Obsidian ERP', href: '/projects/obsidian-erp-v3.0' },
   { label: 'ThreatMatrix AI', href: '/projects/threatmatrix-ai' },
   { label: 'JARVIS', href: '/projects/jarvis' },
   { label: 'Pana Sports', href: '/projects/pana-sport' },
