@@ -104,7 +104,7 @@ Detail page CTAs adapt based on product type:
 - "Leverage" → use "use" or "powered by"
 - "Utilize" → use "use"
 - "Scalable" → describe what actually scales ("handles thousands of users")
-- "Robust" → describe what makes it reliable ("tested", "monitored 24/7")
+- "Robust" → describe what makes it reliable ("covered by tests", "validated at the server")
 - "Solution" → use "platform", "system", or "tool"
 - "Synergy" → never
 - "Cutting-edge" → use "modern" or "latest"

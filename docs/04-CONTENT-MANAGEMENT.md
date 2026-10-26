@@ -1,13 +1,23 @@
 # VersaLabs Studio - Content Management
 
-## 1. Project Database Architecture (v2)
+## 1. Project Content
 
-The VersaLabs Portfolio pulls its data exclusively from `src/config/project-database.ts`. This single TypeScript array serves as the absolute source of truth, completely replacing the legacy Markdown-based `/project-catalog/` parsers.
+Every project and product on the site is one typed file in `src/content/projects/<slug>.ts`. It is the single source of
+truth: the home page, the `/studio` listing, the case study pages and the sitemap all read from
+`src/content/projects/index.ts`.
 
-### The TS Database Source
-- All projects exist as `ProjectEntry` objects inside `src/config/project-database.ts`.
-- This strict typing ensures zero runtime errors when parsing complex metadata such as `techStack` layers, `schema` details, and `boundedContexts`.
-- `visibility: 'hide'` removes a project everywhere at once: listings, `/projects/[slug]` (a hard 404 via `dynamicParams = false`), and the sitemap.
+### Project Files
+- Each file exports `defineProject({ ... })`, typed by `src/content/schema.ts`, so the editor flags mistakes as you write.
+- `src/content/projects/index.ts` lists every file in listing order and validates each one with the Zod schema when the
+  site builds. A missing field, a bad slug, an `http` link or a duplicate image fails the build with a readable error.
+- `kind` is `client`, `product`, `internal` or `research`; `status` is one of `Production`, `Beta`, `MVP`, `Prototype`,
+  `Demo` or `Development`. Badges for both come from `src/content/labels.ts`.
+- `links.live` and `links.repo` are optional. Leave `repo` out for private repositories, and leave `live` out until the
+  live site is something we stand behind.
+- `visibility: 'hide'` removes a project everywhere at once: listings, `/projects/[slug]` (a hard 404 via
+  `dynamicParams = false`), and the sitemap.
+- Listing pages receive a slim `ProjectCard` (`toCard()`), not the whole project, so case study text stays out of their
+  payload.
 
 ### One Listing, One Sitemap
 - `/studio` is the only project listing. `/projects` redirects to it permanently (`next.config.ts`).
@@ -21,29 +31,25 @@ The VersaLabs Portfolio pulls its data exclusively from `src/config/project-data
 - Status labels are honest: `Production` only for software real users rely on today.
 
 ### Tone & Voice
-- **Authoritative & Corporate:** Frame all content for directors, VPs of Engineering, and Fortune 500 decision makers.
-- **Strictly Factual & Data-Driven:** Focus on architectures scaled, pipelines configured, metrics reduced, and features implemented. Avoid generic marketing fluff.
-- **Narrative Structure:** Every `ProjectEntry` must define explicit fields for `businessProblem`, `architecturalSolution`, and its comprehensive `features` grid.
+- **Plain and specific:** say what the software does and for whom, in words a business owner understands.
+- **Factual:** describe what was built and how. Numbers appear only with evidence behind them.
+- **Narrative Structure:** every project defines `businessProblem`, `architecturalSolution`, `systemFlow` and its
+  `features`.
 
-## 2. Automated Image Discovery Mechanism
+## 2. Images
 
-Visual mockups are handled via automated Server-Side traversal.
-
-### Directory Structure
-Images **must** be stored in the public directory matching the project title or slug:
-`public/[Project Title]/Mockups/` or `public/[Project Title]/Screenshots/`
-
-### Discovery Pipeline (`src/lib/image-discovery.ts`)
-1. During static site generation or server requests, `getProjectImages(title, slug)` performs a fuzzy match against the `public/` directory to locate the project's specific folder.
-2. It aggressively scans `Mockups` and `Screenshots` sub-directories for `.png`, `.jpg`, and `.webp` payloads.
-3. It pushes an array of valid public URLs downwards to the client (`ProjectSlideshow.tsx`).
-
-**Never hardcode image paths inside `project-database.ts`**. The layout agents will automatically discover and generate the 3:2 aspect ratio sliders based solely on folder contents.
-
-**No client data in images.** Before adding a screenshot, check it for customer names, emails, phone numbers, addresses, TINs, orders, payment references, revenue, or admin screens. File names count too. When in doubt, leave it out.
-
-The image list is baked into `src/config/image-manifest.json` by `scripts/build-image-manifest.js`, which runs on `prebuild`. Rerun it after adding or removing images.
+- Images live in `public/images/<slug>/` as WebP, named `mockup-NN.webp` (device mockups) or `screen-NN.webp` (plain
+  screenshots), at most 1920px on the long side.
+- Each one is listed in its project's `gallery` with a descriptive `alt`, its `kind`, `width`, `height`, and
+  `reviewed: true`. `cover` must be one of the gallery images.
+- `reviewed: true` records that a person checked the image. Before adding one, check it for customer names, emails,
+  phone numbers, addresses, TINs, orders, payment references, revenue, server addresses, admin screens, and claims the
+  client's own site no longer makes (invented stats, ratings, testimonials). File names count too. When in doubt, leave
+  it out.
+- `scripts/check-images.mjs` runs first in `pnpm build`. It fails when `public/images` holds a file no project lists, a
+  listed file is missing, or a folder passes 6 MB. Team portraits in `public/images/team/` are exempt from listing.
+- Pages render images with `next/image` and a `sizes` hint, so Vercel serves each visitor a resized WebP.
 
 ## 3. SEO & Web Vital Governance
 - Every page exports metadata through `pageMetadata()` in `src/lib/site.ts`, which sets the title, description, canonical URL, Open Graph and Twitter tags.
-- The `<ProjectSlideshow />` runs strictly using `next/image` with `priority` flags set only on `currentIndex === 0` to preserve the 0-bloat / maximum Lighthouse score requirements constraint.
+- `<ProjectSlideshow />` marks only its first slide `priority`, so one image competes for the first paint.
