@@ -1,12 +1,19 @@
 import { z } from 'zod';
 import { projectSchema, type GalleryImage, type Project, type ProjectInput } from '../schema';
 import obsidianErp from './obsidian-erp';
+import safeframe from './safeframe';
+import printonlineEt from './printonline-et';
+import eventology from './eventology';
 import threatmatrixAi from './threatmatrix-ai';
-import jarvis from './jarvis';
 import panaSport from './pana-sport';
 import pavilion360 from './pavilion-360';
-import printonlineEt from './printonline-et';
 import oskazEcommerce from './oskaz-ecommerce';
+import tamemKitfo from './tamem-kitfo';
+import versaFx from './versa-fx';
+import versaEstate from './versa-estate';
+import rentflow from './rentflow';
+import versalabsAde from './versalabs-ade';
+import jarvis from './jarvis';
 import fastpay from './fastpay';
 import unlockEthiopiaPotential from './unlock-ethiopia-potential';
 import panaWeb from './pana-web';
@@ -21,12 +28,19 @@ import tibeb from './tibeb';
 // so they get no card, no route and no sitemap URL.
 const ENTRIES: ProjectInput[] = [
   obsidianErp,
+  safeframe,
+  printonlineEt,
+  eventology,
   threatmatrixAi,
-  jarvis,
   panaSport,
   pavilion360,
-  printonlineEt,
   oskazEcommerce,
+  tamemKitfo,
+  versaFx,
+  versaEstate,
+  rentflow,
+  versalabsAde,
+  jarvis,
   fastpay,
   unlockEthiopiaPotential,
   panaWeb,
