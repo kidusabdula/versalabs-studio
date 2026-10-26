@@ -10,6 +10,8 @@ export default defineProject({
   year: "2026",
   status: "Prototype",
   kind: "client",
+  industry: ["Finance"],
+  stack: ["React Native"],
   client: "FastPay LLC",
   links: {},
   heroGradient: "from-green-500/20 via-transparent to-emerald-500/10",

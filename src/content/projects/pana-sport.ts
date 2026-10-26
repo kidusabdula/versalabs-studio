@@ -10,6 +10,8 @@ export default defineProject({
   year: "2026",
   status: "Production",
   kind: "client",
+  industry: ["Sports & Media"],
+  stack: ["Next.js", "Supabase", "PostgreSQL"],
   links: { live: "https://panasport.et" },
   heroGradient: "from-amber-500/20 via-transparent to-yellow-500/10",
   cover: "/images/pana-sport/mockup-03.webp",

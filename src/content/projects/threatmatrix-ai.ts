@@ -10,6 +10,8 @@ export default defineProject({
   year: "2026",
   status: "MVP",
   kind: "research",
+  industry: ["Cybersecurity"],
+  stack: ["Next.js", "Python", "Machine Learning", "PostgreSQL"],
   links: {},
   heroGradient: "from-red-500/20 via-transparent to-orange-500/10",
   cover: "/images/threatmatrix-ai/mockup-09.webp",

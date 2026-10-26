@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { projectSchema, type GalleryImage, type Project, type ProjectInput } from '../schema';
+import { projectSchema, type GalleryImage, type Project, type ProjectInput, type ProjectSection } from '../schema';
 import obsidianErp from './obsidian-erp';
 import safeframe from './safeframe';
 import printonlineEt from './printonline-et';
@@ -81,6 +81,22 @@ export function getAllSlugs(): string[] {
   return VISIBLE.map((project) => project.slug);
 }
 
+export function getProjectsInSection(section: ProjectSection): Project[] {
+  return VISIBLE.filter((project) => project.section === section);
+}
+
+// The one place a project's URL is built. Links, the sitemap, canonical URLs,
+// JSON-LD and the redirects in next.config.ts all use it.
+export function projectPath(project: Pick<Project, 'section' | 'slug'>): string {
+  return `/${project.section}/${project.slug}`;
+}
+
+// Every visible project, for next.config.ts: old /projects/<slug> URLs and a
+// slug requested under the wrong section redirect to the project's real page.
+export function getProjectRoutes(): { slug: string; section: ProjectSection }[] {
+  return VISIBLE.map(({ slug, section }) => ({ slug, section }));
+}
+
 export function getImage(project: Project, src: string): GalleryImage | undefined {
   return project.gallery.find((image) => image.src === src);
 }
@@ -90,6 +106,7 @@ export function getImage(project: Project, src: string): GalleryImage | undefine
 // gallery out of the listing pages' payload.
 export interface ProjectCard {
   slug: string;
+  href: string;
   title: string;
   subtitle: string;
   summary: string;
@@ -98,6 +115,8 @@ export interface ProjectCard {
   year: string;
   status: Project['status'];
   kind: Project['kind'];
+  industry: Project['industry'];
+  stack: Project['stack'];
   heroGradient: string;
   cover?: GalleryImage;
 }
@@ -105,6 +124,7 @@ export interface ProjectCard {
 export function toCard(project: Project): ProjectCard {
   return {
     slug: project.slug,
+    href: projectPath(project),
     title: project.title,
     subtitle: project.subtitle,
     summary: project.summary,
@@ -113,6 +133,8 @@ export function toCard(project: Project): ProjectCard {
     year: project.year,
     status: project.status,
     kind: project.kind,
+    industry: project.industry,
+    stack: project.stack,
     heroGradient: project.heroGradient,
     cover: project.cover ? getImage(project, project.cover) : undefined,
   };

@@ -10,6 +10,8 @@ export default defineProject({
   year: "2026",
   status: "Development",
   kind: "product",
+  industry: ["Real Estate"],
+  stack: ["Next.js"],
   links: {},
   heroGradient: "from-zinc-500/20 via-transparent to-neutral-500/10",
   gallery: [],

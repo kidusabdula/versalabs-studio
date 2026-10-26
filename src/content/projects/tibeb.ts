@@ -10,6 +10,8 @@ export default defineProject({
   year: "2025",
   status: "MVP",
   kind: "client",
+  industry: ["E-Commerce"],
+  stack: ["Next.js", "Supabase"],
   links: {},
   heroGradient: "from-[#D4AF37]/20 via-transparent to-[#1C2526]/10",
   cover: "/images/tibeb/mockup-12.webp",

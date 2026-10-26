@@ -10,6 +10,8 @@ export default defineProject({
   year: "2025",
   status: "MVP",
   kind: "client",
+  industry: ["Blockchain"],
+  stack: ["Next.js"],
   links: {},
   heroGradient: "from-yellow-500/20 via-transparent to-amber-500/10",
   cover: "/images/potentia/mockup-01.webp",

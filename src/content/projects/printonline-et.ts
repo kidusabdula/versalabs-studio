@@ -10,6 +10,8 @@ export default defineProject({
   year: "2026",
   status: "Production",
   kind: "client",
+  industry: ["Printing", "E-Commerce"],
+  stack: ["Next.js", "Supabase", "PostgreSQL"],
   links: { live: "https://printonline.et" },
   heroGradient: "from-orange-500/20 via-transparent to-red-500/10",
   cover: "/images/printonline-et/mockup-02.webp",

@@ -10,6 +10,8 @@ export default defineProject({
   year: "2025",
   status: "Production",
   kind: "client",
+  industry: ["Nonprofit"],
+  stack: ["Next.js"],
   links: {},
   heroGradient: "from-pink-500/20 via-transparent to-rose-500/10",
   cover: "/images/live-addis/mockup-07.webp",
