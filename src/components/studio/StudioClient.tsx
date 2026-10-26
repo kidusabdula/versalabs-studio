@@ -6,25 +6,20 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { FadeIn, StaggerContainer, StaggerItem, GlassCard } from '@/components/ui/motion';
-import type { StudioProjectData } from '@/app/studio/page';
-import { PRODUCT_TYPE_LABEL, PRODUCT_TYPE_BADGE, STATUS_BADGE } from '@/config/project-labels';
+import type { FeaturedCard } from '@/app/studio/page';
+import type { ProjectCard } from '@/content/projects';
+import { KIND_LABEL, KIND_BADGE, STATUS_BADGE } from '@/content/labels';
 
 interface StudioClientProps {
-  projects: StudioProjectData[];
+  projects: ProjectCard[];
+  featured: FeaturedCard[];
 }
 
-const FEATURED_SLUGS = ['obsidian-erp-v3.0', 'threatmatrix-ai'];
-const FEATURED_HERO_IMAGES: Record<string, string> = {
-  'obsidian-erp-v3.0': '/Obsidian ERP/Mockups/New folder/obsidian-erp-2 (2).png',
-  'threatmatrix-ai': '/ThreatMatrix AI/Mockups/threatmatrix-ai-1.png',
-};
-
-export default function StudioClient({ projects }: StudioClientProps) {
+export default function StudioClient({ projects, featured }: StudioClientProps) {
   const [search, setSearch] = useState('');
   const [activeCategory, setActiveCategory] = useState<string>('all');
 
   const allCategories = ['all', ...Array.from(new Set(projects.map((p) => p.category)))];
-  const featuredProjects = projects.filter(p => FEATURED_SLUGS.includes(p.slug));
 
   const filtered = projects.filter((p) => {
     const matchesSearch = !search ||
@@ -120,7 +115,7 @@ export default function StudioClient({ projects }: StudioClientProps) {
           </div>
 
           <div className="flex flex-col gap-16">
-            {featuredProjects.map((project, idx) => (
+            {featured.map((project, idx) => (
               <FadeIn key={project.slug} delay={idx * 0.15}>
                 <Link href={`/projects/${project.slug}`} className="block group">
                   <div className="relative overflow-hidden rounded-2xl bg-[#111113] border border-white/[0.06]">
@@ -130,14 +125,16 @@ export default function StudioClient({ projects }: StudioClientProps) {
                         transition={{ type: "spring", stiffness: 200, damping: 30 }}
                         className="relative w-full h-full"
                       >
+                        {project.hero && (
                         <Image
-                          src={FEATURED_HERO_IMAGES[project.slug] || project.thumbnail || ''}
-                          alt={project.title}
+                          src={project.hero.src}
+                          alt={project.hero.alt}
                           fill
                           className="object-cover"
                           sizes="(max-width: 1280px) 100vw, 1280px"
                           priority={idx === 0}
                         />
+                        )}
                         <div className="absolute inset-0 bg-gradient-to-t from-[#111113] via-transparent to-transparent" />
                       </motion.div>
                     </div>
@@ -151,8 +148,8 @@ export default function StudioClient({ projects }: StudioClientProps) {
                           <span className={`text-[11px] font-medium px-2.5 py-1 rounded-sm ${STATUS_BADGE[project.status]}`}>
                             {project.status}
                           </span>
-                          <span className={`text-[11px] font-medium px-2.5 py-1 rounded-sm ${PRODUCT_TYPE_BADGE[project.productType]}`}>
-                            {PRODUCT_TYPE_LABEL[project.productType]}
+                          <span className={`text-[11px] font-medium px-2.5 py-1 rounded-sm ${KIND_BADGE[project.kind]}`}>
+                            {KIND_LABEL[project.kind]}
                           </span>
                         </div>
                         <h2 className="text-3xl md:text-5xl font-bold tracking-tighter text-white mb-3">
@@ -228,12 +225,12 @@ export default function StudioClient({ projects }: StudioClientProps) {
           {/* 2-Column Product Grid */}
           <StaggerContainer staggerDelay={0.08}>
             <div className="grid gap-8 md:grid-cols-2">
-              {filtered.map((project: StudioProjectData) => (
+              {filtered.map((project) => (
                 <StaggerItem key={project.slug}>
                   <Link href={`/projects/${project.slug}`} className="block h-full group">
                     <GlassCard className="h-full flex flex-col overflow-hidden transition-colors hover:border-white/[0.12]">
                       
-                      {project.thumbnail && (
+                      {project.cover && (
                         <div className="relative w-full aspect-[3/2] overflow-hidden bg-[#0E0E10]">
                           <motion.div
                             whileHover={{ scale: 1.03 }}
@@ -241,8 +238,8 @@ export default function StudioClient({ projects }: StudioClientProps) {
                             className="relative w-full h-full"
                           >
                             <Image
-                              src={project.thumbnail}
-                              alt={project.title}
+                              src={project.cover.src}
+                              alt={project.cover.alt}
                               fill
                               className="object-cover"
                               sizes="(max-width: 768px) 100vw, 50vw"
@@ -285,8 +282,8 @@ export default function StudioClient({ projects }: StudioClientProps) {
                               <span key={tag} className="text-xs text-zinc-500">#{tag}</span>
                             ))}
                           </div>
-                          <span className={`text-[10px] font-medium px-2 py-0.5 rounded-sm ${PRODUCT_TYPE_BADGE[project.productType]}`}>
-                            {PRODUCT_TYPE_LABEL[project.productType]}
+                          <span className={`text-[10px] font-medium px-2 py-0.5 rounded-sm ${KIND_BADGE[project.kind]}`}>
+                            {KIND_LABEL[project.kind]}
                           </span>
                         </div>
                       </div>

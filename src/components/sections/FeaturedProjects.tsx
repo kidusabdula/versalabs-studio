@@ -5,18 +5,26 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 import { FadeIn, MotionLink } from '@/components/ui/motion';
-import type { ProjectEntry } from '@/config/project-database';
-import { PRODUCT_TYPE_LABEL, PRODUCT_TYPE_BADGE, STATUS_BADGE } from '@/config/project-labels';
+import { KIND_LABEL, KIND_BADGE, STATUS_BADGE } from '@/content/labels';
+import type { GalleryImage, ProjectKind, ProjectStatus } from '@/content/schema';
+
+// Status, kind and screenshot come from the project files (see src/app/page.tsx),
+// so a badge or an image never drifts from the case study.
+export interface ShowcaseProject {
+  slug: string;
+  status: ProjectStatus;
+  kind: ProjectKind;
+  image?: GalleryImage;
+}
 
 interface FeaturedProjectsProps {
-  projects?: ProjectEntry[];
+  projects?: ShowcaseProject[];
 }
 
 const SHOWCASE_CONFIG = [
   { 
-    slug: 'obsidian-erp-v3.0',
+    slug: 'obsidian-erp',
     title: 'Obsidian ERP',
-    img: '/Obsidian ERP/Mockups/New folder/obsidian-erp-2 (2).png',
     invert: false,
     description: 'Run your entire business from one dashboard. Obsidian connects sales, customers, inventory, manufacturing, and accounting — so nothing falls through the cracks.',
     capabilities: ['Sales & Customer Management', 'Inventory Tracking', 'Manufacturing Control', 'Financial Reports'],
@@ -24,7 +32,6 @@ const SHOWCASE_CONFIG = [
   { 
     slug: 'threatmatrix-ai',
     title: 'ThreatMatrix AI',
-    img: '/ThreatMatrix AI/Mockups/threatmatrix-ai-1.png',
     invert: true,
     description: 'A network security command center built as a university senior project by a team of four. It watches live traffic, flags unusual activity with machine learning, and explains each alert in plain language.',
     capabilities: ['Live Threat Map', 'Machine-Learning Detection', 'AI Analyst Chat', 'Forensics Lab']
@@ -32,7 +39,6 @@ const SHOWCASE_CONFIG = [
   {
     slug: 'pana-sport',
     title: 'Pana Sports',
-    img: '/Pana Sport/Mockups/246shots_so.png',
     invert: false,
     description: 'A home for Ethiopian football fans. Live scores, league tables, team and player profiles, and news, in English and Amharic.',
     capabilities: ['Live Score Updates', 'League Standings', 'Bilingual Content', 'Match Control Panel']
@@ -40,7 +46,6 @@ const SHOWCASE_CONFIG = [
   {
     slug: 'oskaz-ecommerce',
     title: 'OSKAZ E-Commerce',
-    img: '/Oskaz Import/Mockups/937shots_so.png',
     invert: true,
     description: "An online store connected live to the company's ERP. Customers see real stock and prices, order in a few clicks, and pay on delivery.",
     capabilities: ['Sign In Once', 'ERP-Backed Inventory', 'Orders Straight Into the ERP', 'Cash on Delivery Checkout']
@@ -48,11 +53,10 @@ const SHOWCASE_CONFIG = [
 ];
 
 export default function FeaturedProjects({ projects = [] }: FeaturedProjectsProps) {
-  // Badges come from the project database, so status and type never drift
-  // from the case study. Entries missing from the database (hidden) are skipped.
+  // Entries missing from the project files (hidden ones) are skipped.
   const showcase = SHOWCASE_CONFIG.flatMap((item) => {
     const entry = projects.find((p) => p.slug === item.slug);
-    return entry ? [{ ...item, status: entry.status, productType: entry.productType }] : [];
+    return entry ? [{ ...item, ...entry }] : [];
   });
 
   return (
@@ -92,21 +96,23 @@ export default function FeaturedProjects({ projects = [] }: FeaturedProjectsProp
                     }}
                     className="w-full lg:w-[65%] relative group"
                   >
-                    <Link href={`/projects/${project.slug}`} className="block relative">
+                    <Link href={`/projects/${project.slug}`} aria-label={`${project.title} case study`} className="block relative">
                       <motion.div 
                         whileHover={{ scale: 1.02, y: -4 }}
                         transition={{ type: "spring", stiffness: 300, damping: 30 }}
                         className="relative w-full overflow-hidden shadow-[0_0_80px_rgba(255,255,255,0.03)]"
                       >
-                        <Image 
-                          src={project.img} 
-                          alt={project.title}
-                          width={1400}
-                          height={900}
+                        {project.image && (
+                        <Image
+                          src={project.image.src}
+                          alt={project.image.alt}
+                          width={project.image.width}
+                          height={project.image.height}
                           className="w-full h-auto rounded-xl border border-white/[0.04]"
                           sizes="(max-width: 1024px) 100vw, 65vw"
                           priority={projectIdx === 0}
                         />
+                        )}
                       </motion.div>
                     </Link>
                   </motion.div>
@@ -121,8 +127,8 @@ export default function FeaturedProjects({ projects = [] }: FeaturedProjectsProp
                   >
                     {/* Product Type Badge */}
                     <div className="mb-4 flex flex-wrap items-center gap-2">
-                      <span className={`text-[10px] uppercase tracking-wider font-semibold px-3 py-1.5 rounded-full ${PRODUCT_TYPE_BADGE[project.productType]}`}>
-                        {PRODUCT_TYPE_LABEL[project.productType]}
+                      <span className={`text-[10px] uppercase tracking-wider font-semibold px-3 py-1.5 rounded-full ${KIND_BADGE[project.kind]}`}>
+                        {KIND_LABEL[project.kind]}
                       </span>
                       <span className={`text-[10px] uppercase tracking-wider font-semibold px-3 py-1.5 rounded-full ${STATUS_BADGE[project.status]}`}>
                         {project.status}

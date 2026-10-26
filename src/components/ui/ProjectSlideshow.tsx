@@ -4,9 +4,10 @@ import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import type { GalleryImage } from '@/content/schema';
 
 interface ProjectSlideshowProps {
-  images: string[];
+  images: GalleryImage[];
   title: string;
   intervalMs?: number;
   hoverOnly?: boolean;
@@ -54,8 +55,6 @@ export default function ProjectSlideshow({
     );
   }
 
-  const slideLabel = `${title}, slide ${currentIndex + 1} of ${images.length}`;
-
   return (
     <div
       className="relative w-full aspect-[3/2] overflow-hidden rounded-xl border border-white/[0.04] bg-[#0A0A0C] group"
@@ -79,12 +78,12 @@ export default function ProjectSlideshow({
             <button
               type="button"
               onClick={() => onImageClick(currentIndex)}
-              aria-label={`View full size: ${slideLabel}`}
+              aria-label={`View full size, slide ${currentIndex + 1} of ${images.length}`}
               className="absolute inset-0 block w-full h-full cursor-pointer"
             >
               <Image
-                src={images[currentIndex]}
-                alt=""
+                src={images[currentIndex].src}
+                alt={images[currentIndex].alt}
                 fill
                 className="object-contain"
                 sizes="(max-width: 1200px) 100vw, 1200px"
@@ -93,8 +92,8 @@ export default function ProjectSlideshow({
             </button>
           ) : (
             <Image
-              src={images[currentIndex]}
-              alt={slideLabel}
+              src={images[currentIndex].src}
+              alt={images[currentIndex].alt}
               fill
               className="object-contain"
               sizes="(max-width: 1200px) 100vw, 1200px"
