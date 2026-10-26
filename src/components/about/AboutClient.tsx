@@ -62,7 +62,7 @@ const milestones = [
   { year: '2024', event: 'Minab Clothing demo storefront built' },
   { year: '2025', event: 'Pavilion360 built for an event production company in Indianapolis' },
   { year: '2025', event: "OSKAZ online store launched, connected live to the company's ERP" },
-  { year: '2026', event: 'Obsidian ERP v3.0 in production' },
+  { year: '2026', event: 'Obsidian ERP version 4 released' },
   { year: '2026', event: 'ThreatMatrix AI built as a university senior project' },
 ];
 
