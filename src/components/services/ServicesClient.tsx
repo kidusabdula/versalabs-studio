@@ -413,7 +413,7 @@ export default function ServicesClient({ projects }: ServicesClientProps) {
                               <div className="flex flex-wrap gap-4 items-center">
                                 <span className="text-[10px] uppercase tracking-widest font-semibold text-zinc-600">See in action:</span>
                                 {exampleProjects.slice(0, 2).map((proj) => (
-                                  <Link key={proj.slug} href={`/projects/${proj.slug}`}
+                                  <Link key={proj.slug} href={proj.href}
                                     className="text-xs text-violet-400 hover:text-violet-300 hover:underline transition-colors flex items-center gap-1">
                                     {proj.title} <ArrowRight className="h-3 w-3" />
                                   </Link>
@@ -494,7 +494,7 @@ export default function ServicesClient({ projects }: ServicesClientProps) {
                 viewport={{ once: true }}
                 transition={{ delay: idx * 0.06, duration: 0.6, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
               >
-                <Link href={`/projects/${proj.slug}`} className="block group">
+                <Link href={proj.href} className="block group">
                   <motion.div whileHover={{ y: -4, scale: 1.02 }} transition={SPRING}
                     className="relative aspect-[4/3] rounded-xl overflow-hidden border border-white/[0.04] bg-[#0E0E10]">
                     {proj.cover && (
@@ -537,7 +537,7 @@ export default function ServicesClient({ projects }: ServicesClientProps) {
                   <ArrowRight className="h-4 w-4" />
                 </motion.div>
               </Link>
-              <Link href="/studio">
+              <Link href="/work">
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }} transition={SPRING}
                   className="flex items-center justify-center h-12 px-8 rounded-full border border-white/[0.1] bg-white/[0.03] text-white text-[15px] font-medium transition-colors hover:bg-white/[0.08]">
                   See Our Work

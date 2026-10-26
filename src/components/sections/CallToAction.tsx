@@ -32,7 +32,7 @@ export default function CallToAction() {
                 Start a Project
               </motion.div>
             </Link>
-            <Link href="/studio">
+            <Link href="/work">
               <motion.div
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}

@@ -12,6 +12,7 @@ import type { GalleryImage, ProjectKind, ProjectStatus } from '@/content/schema'
 // so a badge or an image never drifts from the case study.
 export interface ShowcaseProject {
   slug: string;
+  href: string;
   status: ProjectStatus;
   kind: ProjectKind;
   image?: GalleryImage;
@@ -96,7 +97,7 @@ export default function FeaturedProjects({ projects = [] }: FeaturedProjectsProp
                     }}
                     className="w-full lg:w-[65%] relative group"
                   >
-                    <Link href={`/projects/${project.slug}`} aria-label={`${project.title} case study`} className="block relative">
+                    <Link href={project.href} aria-label={`${project.title} case study`} className="block relative">
                       <motion.div 
                         whileHover={{ scale: 1.02, y: -4 }}
                         transition={{ type: "spring", stiffness: 300, damping: 30 }}
@@ -161,7 +162,7 @@ export default function FeaturedProjects({ projects = [] }: FeaturedProjectsProp
 
                     <div>
                       <MotionLink
-                        href={`/projects/${project.slug}`}
+                        href={project.href}
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                         className="inline-flex items-center justify-center px-6 py-3.5 text-[13px] font-semibold tracking-wide text-black bg-white rounded-full transition-colors hover:bg-zinc-200 group"
@@ -178,7 +179,7 @@ export default function FeaturedProjects({ projects = [] }: FeaturedProjectsProp
         </div>
 
         <div className="mt-40 text-center pt-16 border-t border-white/[0.04]">
-          <Link href="/studio" className="inline-flex items-center gap-2 text-sm text-zinc-400 hover:text-white transition-colors">
+          <Link href="/work" className="inline-flex items-center gap-2 text-sm text-zinc-400 hover:text-white transition-colors">
             View All Work
             <ArrowUpRight className="h-4 w-4" />
           </Link>

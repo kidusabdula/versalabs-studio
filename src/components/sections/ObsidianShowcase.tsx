@@ -15,7 +15,7 @@ const FEATURES = [
   { label: 'Built on ERPNext', delay: 0.4 },
 ];
 
-export default function ObsidianShowcase({ image }: { image?: GalleryImage }) {
+export default function ObsidianShowcase({ href, image }: { href: string; image?: GalleryImage }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -52,7 +52,7 @@ export default function ObsidianShowcase({ image }: { image?: GalleryImage }) {
         {/* Asymmetric Bento Container */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Cinematic Image Pane */}
-          <Link href="/projects/obsidian-erp" aria-label="Obsidian ERP case study" className="lg:col-span-2 block group relative rounded-2xl overflow-hidden border border-white/[0.06] shadow-2xl shadow-violet-500/5 aspect-[4/3] sm:aspect-[16/9] lg:aspect-auto min-h-[400px]">
+          <Link href={href} aria-label="Obsidian ERP case study" className="lg:col-span-2 block group relative rounded-2xl overflow-hidden border border-white/[0.06] shadow-2xl shadow-violet-500/5 aspect-[4/3] sm:aspect-[16/9] lg:aspect-auto min-h-[400px]">
             <motion.div
               style={{ scale: imageScale, y: imageY }}
               className="absolute inset-0"
@@ -109,7 +109,7 @@ export default function ObsidianShowcase({ image }: { image?: GalleryImage }) {
               </div>
 
               <MotionLink
-                href="/projects/obsidian-erp"
+                href={href}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 className="w-full inline-flex items-center justify-center gap-2 px-6 py-4 text-[14px] font-semibold tracking-wide text-black bg-white rounded-xl transition-colors hover:bg-zinc-200"

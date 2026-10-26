@@ -137,7 +137,7 @@ export default function Hero() {
           {/* Action Buttons — stagger */}
           <motion.div variants={slideInRight} className="mt-10 flex flex-wrap items-center justify-center gap-4">
             <MotionLink
-              href="/studio"
+              href="/work"
               whileHover={{ scale: 1.05, backgroundColor: "rgba(255,255,255,0.9)" }}
               whileTap={{ scale: 0.97 }}
               transition={SPRING}

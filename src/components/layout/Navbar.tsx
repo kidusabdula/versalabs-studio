@@ -8,11 +8,11 @@ import { useState } from 'react';
 import { MotionLink } from '@/components/ui/motion';
 
 const navLinks = [
-  { href: '/studio', label: 'Studio' },
+  { href: '/work', label: 'Work' },
+  { href: '/products', label: 'Products' },
   { href: '/services', label: 'Services' },
   { href: '/about', label: 'About' },
   { href: '/contact', label: 'Contact' },
-  { href: '/blog', label: 'Blog' },
 ];
 
 const SPRING = { stiffness: 300, damping: 30 };
