@@ -15,7 +15,7 @@ export default defineProject({
   },
   heroGradient: "from-zinc-500/20 via-transparent to-neutral-500/10",
   gallery: [],
-  description: "SafeFrame checks a video for adult content without sending it anywhere. You drop in a file or paste a link. A small model screens the video frame by frame inside the browser, and a larger model double-checks only the unclear frames. You get a clear verdict, a confidence score and the exact moments that were flagged. The same engine also runs in an Android app and a browser extension.",
+  description: "SafeFrame checks a video for adult content without sending it anywhere. You drop in a file or paste a link. A small model screens the video frame by frame inside the browser, and a larger model double-checks only the unclear frames. You get a clear verdict, a confidence score and the exact moments that were flagged. The same scoring core also runs in an Android app (one model) and a browser extension.",
   businessProblem: "Kids' browsers and parental tools need to catch adult content in videos. Sending a child's screen to a server is a privacy and legal risk. It also costs money per user and fails offline. Many families also use older phones with little memory.",
   architecturalSolution: "A fully client-side, static-export PWA with no server, database or inference API. A platform-agnostic TypeScript core (Zod payload schema, scoring, smoothing and device-tier policy) is shared unchanged by a Next.js 16 web app, an Expo app and a Manifest V3 extension. Detection is an adaptive cascade: an NSFWJS MobileNetV2 screener on TensorFlow.js checks every sampled frame, and only borderline frames go to a Vision Transformer verifier on ONNX Runtime Web inside a Web Worker. The verifier blends its score with the screener's but can never pull it below the screener's explicit-content score. A second pass over the raw scores catches short inserts that smoothing would hide.",
   systemFlow: "Upload / URL → Seek-Based Sampling (denser around suspect moments) → Downscale and Preprocess → Screener (every frame) → Verifier (borderline frames only, Web Worker) → Score Fusion → Smoothing + Hysteresis + Evidence Runs → Verdict JSON + Timeline → Blur / Pause / Parent Gate",
@@ -138,7 +138,7 @@ export default defineProject({
   ],
   features: [
     { title: "Nothing Leaves the Device", description: "Videos are checked inside the browser. No uploads, no account, no server. It even works offline after the first visit." },
-    { title: "A Quick Check, Then a Careful One", description: "A small, fast model checks every frame. A bigger model double-checks only the unclear ones, which saves time and battery." },
+    { title: "A Quick Check, Then a Careful One", description: "A small, fast model checks every frame. A bigger model double-checks only the unclear ones, which saves time." },
     { title: "Exact Flagged Moments", description: "A timeline shows where flagged content starts and ends, not just a yes or no." },
     { title: "Calm Response for Kids", description: "Flagged moments blur and pause right away, and a parent presses and holds to continue. Blur, pause, hide and skip modes are all available." },
     { title: "Works on Old and New Phones", description: "SafeFrame tests the device first, then adjusts. Older phones get a lighter check instead of a frozen screen." },
@@ -147,7 +147,7 @@ export default defineProject({
   ],
   adrs: [
     { id: "ADR-001", title: "Image Classifiers over a Vision LLM", status: "Accepted", rationale: "Small classifiers return per-class probabilities that support thresholds and hysteresis. Vision LLMs are far larger and much slower per frame on a phone." },
-    { id: "ADR-002", title: "Adaptive Cascade", status: "Accepted", rationale: "Close to ensemble accuracy while paying the large-model cost only on borderline frames, capped per video. Low-end devices never download the verifier." },
+    { id: "ADR-002", title: "Adaptive Cascade", status: "Accepted", rationale: "Pays the large-model cost only on borderline frames, capped per video. Low-end devices never download the verifier." },
     { id: "ADR-003", title: "The Verifier Arbitrates, Never Overwrites", status: "Accepted", rationale: "Replacing the screener's score gave the verifier a veto and produced false negatives. A weighted blend floored at the explicit-content score fixes it without re-flagging swimwear or cartoons." },
     { id: "ADR-004", title: "Float Weights on WebGPU, Quantized Weights Only on WASM", status: "Accepted", rationale: "Quantized weights on the WebGPU execution provider silently returned wrong scores, so the data type is chosen per backend with a fallback chain." },
     { id: "ADR-005", title: "A Second Verdict Path from the Raw Scores", status: "Accepted", rationale: "Smoothing pushed a short explicit insert below the threshold. A sustained-evidence pass flags it, while smoothing still draws the segment boundaries." },

@@ -13,7 +13,7 @@ export default defineProject({
   links: {},
   heroGradient: "from-zinc-500/20 via-transparent to-neutral-500/10",
   gallery: [],
-  description: "Eventology is an event platform built for Addis Ababa. Attendees browse events by category, date and sub-city, register in a few taps, and get a QR ticket that works offline. Organizers create events with several ticket tiers, manage their guest list, scan tickets at the door, and see how each event performs. Admins review events before they go live, verify organizers, and choose featured events for the homepage. It works in English and Amharic, on the web and in a companion iPhone and Android app that is in internal testing. Payments, email, SMS and AI features are built behind switches and run on stand-in providers until launch.",
+  description: "Eventology is an event platform built for Addis Ababa. Attendees browse events by category, date and sub-city, register in a few taps, and get a QR ticket that works offline. Organizers create events with several ticket tiers, manage their guest list, scan tickets at the door, and see how each event performs. Admins review events before they go live, verify organizers, and choose featured events for the homepage. It works in English and Amharic, on the web and in a companion Expo mobile app that is not yet released. Payments, email, SMS and AI features are built behind switches and run on stand-in providers until launch.",
   businessProblem: "Many events in Addis are promoted on social media and messaging apps, with sign-ups in spreadsheets and paper lists at the door. Organizers can't see who is coming, guests have no proper ticket, and it is hard to tell a real event from a fake one.",
   architecturalSolution: "A Turborepo monorepo with a Next.js 16 web app, an Expo mobile app, and shared packages for Zod schemas, locales, config and AI. Supabase PostgreSQL holds all data, with Row Level Security as the authorization layer. better-auth owns sessions and mints short-lived Supabase JWTs, so auth.uid() resolves inside every policy. Seat-sensitive work (registration, cancellation with waitlist promotion, ticket transfer) runs in locked, single-transaction SQL functions. Payments (Chapa), email (Resend), SMS (Africa's Talking), push (Expo), AI (OpenRouter) and wallet passes sit behind provider seams that default to stubs and switch to live providers by environment flag.",
   systemFlow: "Attendee Browse / Search (PostGIS nearby) → Register (atomic tier lock) → HMAC-Signed QR Ticket (cached offline) → Organizer Scans at the Door → Live Check-In Count (Supabase Realtime) → Analytics + Post-Event Reviews",
@@ -75,7 +75,7 @@ export default defineProject({
   ],
   architecture: {
     pattern: "Turborepo Monorepo (Web + Mobile + Shared Packages) on Supabase with Provider Seams",
-    diagram: "apps/web (Next.js 16) ─┐\napps/mobile (Expo SDK 54) ─┼─→ /api/public/* (read) · /api/protected/* (better-auth session → signed Supabase JWT) → Supabase PostgreSQL (RLS, PostGIS, Realtime, Storage)\npackages/{schemas, locales, config, utils, ai, wallet} shared by both apps\n\nProvider seams: payments (stub|chapa) · email (stub|resend) · sms (stub|africastalking) · push (expo) · ai (stub|openrouter) · wallet (stub)\nScheduled jobs: reminders, daily digest, moderation, push dispatch, recaps, stale drafts, trending",
+    diagram: "apps/web (Next.js 16) ─┐\napps/mobile (Expo SDK 54) ─┼─→ /api/public/* (read) · /api/protected/* (better-auth session → signed Supabase JWT) → Supabase PostgreSQL (RLS, PostGIS, Realtime, Storage)\npackages/{schemas, locales, config, utils, ai, wallet} shared by both apps\n\nProvider seams: payments (stub|chapa) · email (stub|resend) · sms (stub|africastalking) · push (expo) · ai (stub|openrouter) · wallet (stub)\nScheduled jobs: 2 on Vercel cron; 7 handlers in code (reminders, daily digest, moderation, push dispatch, recaps, stale drafts, trending)",
     designPatterns: [
       "Schema-first: SQL migrations → generated types → Zod entities",
       "Row Level Security as the authorization layer",
@@ -171,7 +171,7 @@ export default defineProject({
     { id: "ADR-003", title: "RLS as the Authorization Layer", status: "Accepted", rationale: "Access rules live in the database, so every client and route inherits them." },
     { id: "ADR-004", title: "Atomic SQL Functions for Seat-Sensitive Writes", status: "Accepted", rationale: "Row locks prevent overselling and double waitlist promotion when requests arrive at the same time." },
     { id: "ADR-005", title: "Stub-First Provider Seams", status: "Accepted", rationale: "Build and demo without live keys, then go live one provider at a time by flipping an environment flag." },
-    { id: "ADR-006", title: "HMAC-Signed, Versioned QR Payloads", status: "Accepted", rationale: "Tickets can't be forged, and a transferred ticket's old QR stops scanning." },
+    { id: "ADR-006", title: "HMAC-Signed, Versioned QR Payloads", status: "Accepted", rationale: "A forged ticket fails HMAC verification, and a transferred ticket's old QR stops scanning." },
     { id: "ADR-007", title: "Payments Behind a Feature Flag", status: "Accepted", rationale: "Launch free events first, then enable paid tickets later with no code change." },
   ],
 });

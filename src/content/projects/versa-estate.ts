@@ -169,7 +169,7 @@ export default defineProject({
     },
   ],
   features: [
-    { title: "Live Stacking Plan", description: "See every floor and unit at a glance: available, held, reserved, sold or leased." },
+    { title: "Stacking Plan", description: "See every floor and unit at a glance: available, held, reserved, sold or leased." },
     { title: "Sales Pipeline", description: "Drag leads from first call to site visit to signed deal, with follow-ups and won or lost reasons." },
     { title: "No Double Sales", description: "A unit can be reserved by only one buyer at a time. The database itself blocks the second reservation." },
     { title: "Construction-Linked Instalments", description: "Payment plans fall due on signing, at building milestones, on handover or when the bank loan pays out." },

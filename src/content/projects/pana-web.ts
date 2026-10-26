@@ -10,7 +10,10 @@ export default defineProject({
   year: "2025",
   status: "Production",
   kind: "client",
-  links: { live: "https://pana-web-nine.vercel.app/" },
+  // Live link held: the live site shows unverified ratings and project counts
+  // beside real client organisations (Ministry of Health, Ethiopian Athletics
+  // Federation). Restore it once the client confirms or removes those figures.
+  links: {},
   heroGradient: "from-emerald-500/20 via-transparent to-teal-500/10",
   cover: "/images/pana-web/mockup-01.webp",
   gallery: [
@@ -21,7 +24,6 @@ export default defineProject({
     { src: "/images/pana-web/screen-01.webp", alt: "Pana Web homepage hero with service highlights, desktop view", kind: "screen", width: 1920, height: 1080, reviewed: true },
     { src: "/images/pana-web/screen-02.webp", alt: "Pana Web services grid with eight print and branding services, desktop view", kind: "screen", width: 1920, height: 1080, reviewed: true },
     { src: "/images/pana-web/screen-03.webp", alt: "Pana Web about section with mission, vision and company stats, desktop view", kind: "screen", width: 1920, height: 1080, reviewed: true },
-    { src: "/images/pana-web/screen-04.webp", alt: "Pana Web trusted brands client cards and stats row, desktop view", kind: "screen", width: 1920, height: 1080, reviewed: true },
   ],
   description: "Pana Web is the company website for a printing and branding house in Addis Ababa. It presents eight services, from digital print and signage to merchandise and events, each with its own page. Visitors can read about the company, browse past clients, and find the office on the map. It works well on phones.",
   businessProblem: "Businesses operating with outdated or template-based websites lose credibility with potential clients, resulting in missed opportunities and a brand perception gap that undermines their actual service quality.",

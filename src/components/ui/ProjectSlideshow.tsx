@@ -57,6 +57,9 @@ export default function ProjectSlideshow({
 
   return (
     <div
+      role="region"
+      aria-roledescription="carousel"
+      aria-label={`${title} screenshots`}
       className="relative w-full aspect-[3/2] overflow-hidden rounded-xl border border-white/[0.04] bg-[#0A0A0C] group"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}

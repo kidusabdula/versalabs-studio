@@ -126,7 +126,7 @@ export default defineProject({
   features: [
     { title: "Building Dashboard", description: "See occupancy, rent collected, overdue payments and leases ending soon on one screen." },
     { title: "Lease Tracking", description: "Every lease shows its tenant, office, deposit, payments and utility bills together." },
-    { title: "Printable Invoices", description: "Print a clean invoice with service charges and VAT straight from the browser." },
+    { title: "Printable Invoices", description: "Print a clean invoice with VAT straight from the browser." },
     { title: "SMS Reminders", description: "Send rent, utility and lease-expiry reminders from ready-made templates. In the demo, delivery is simulated." },
     { title: "Utility Billing", description: "Turn water and electricity meter readings into bills linked to each lease." },
     { title: "Birr First", description: "Every amount is in ETB, with cash, bank transfer and mobile money payments." },

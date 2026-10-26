@@ -244,7 +244,7 @@ export default function ContactClient() {
                   )}
                 </motion.button>
                 <p className="text-center text-xs text-zinc-500">
-                  We use your details only to reply to you. See our{' '}
+                  We use your details to reply to you. See our{' '}
                   <Link href="/privacy" className="text-zinc-300 underline underline-offset-4 hover:text-white">privacy notice</Link>.
                 </p>
               </form>

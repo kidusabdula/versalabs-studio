@@ -10,7 +10,9 @@ export default defineProject({
   year: "2024",
   status: "Demo",
   kind: "internal",
-  links: {},
+  // The live demo dropped its invented facts and carries a "Demo storefront"
+  // label since 2026-10-24 (Minab track), so it can be linked.
+  links: { live: "https://minab-clothing.vercel.app" },
   heroGradient: "from-[#8B4513]/20 via-transparent to-[#D2B48C]/10",
   cover: "/images/minab-clothing/mockup-07.webp",
   gallery: [

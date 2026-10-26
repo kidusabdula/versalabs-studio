@@ -24,7 +24,8 @@ const INTEREST_COPY: Record<Project['kind'], (title: string) => string> = {
 const IN_DEVELOPMENT_COPY = (title: string) =>
   `${title} is still in development. If it fits a problem you have, tell us about it.`;
 
-// Live sites get "Visit"; demos, prototypes and products in development get "Open the Demo".
+// Live sites get "Visit"; demos, prototypes and products in development get
+// "Open the Demo". A product still in development runs on demo data, and says so.
 const LIVE_STATUSES: Project['status'][] = ['Production', 'Beta', 'MVP'];
 
 interface Props {
@@ -68,7 +69,11 @@ export default function ProjectDetailClient({ project, similarProjects }: Props)
   const primaryCTA = !isProduct ? 'Build Something Like This' : inDevelopment ? 'Ask About This Product' : 'Deploy This Platform';
   const secondaryCTA = !isProduct ? 'Get a Custom Version' : inDevelopment ? 'Get in Touch' : 'Schedule a Demo';
   const interestCopy = isProduct && inDevelopment ? IN_DEVELOPMENT_COPY(project.title) : INTEREST_COPY[project.kind](project.title);
-  const liveLabel = LIVE_STATUSES.includes(project.status) ? 'Visit the Live Site' : 'Open the Demo';
+  const liveLabel = LIVE_STATUSES.includes(project.status)
+    ? 'Visit the Live Site'
+    : isProduct && inDevelopment
+      ? 'Open the Demo (Demo Data)'
+      : 'Open the Demo';
 
   return (
     <div className="min-h-screen bg-[#0A0A0C] pb-32">
