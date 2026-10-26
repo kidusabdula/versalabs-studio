@@ -6,12 +6,12 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef, useState } from 'react';
 import { ArrowRight, Monitor, ShoppingCart, Brain, Smartphone, Globe } from 'lucide-react';
 import { FadeIn, SlideIn, ScaleIn, StaggerContainer, StaggerItem } from '@/components/ui/motion';
-import type { ProjectEntry } from '@/config/project-database';
+import type { ProjectCard } from '@/content/projects';
 
 const SPRING = { stiffness: 300, damping: 30 };
 
 interface ServicesClientProps {
-  projects: ProjectEntry[];
+  projects: ProjectCard[];
 }
 
 const services = [
@@ -20,7 +20,7 @@ const services = [
     description: 'ERPs, CRMs, and operational dashboards built from scratch — designed around the way your business actually works.',
     icon: Monitor,
     capabilities: ['Sales & customer management', 'Inventory and warehouse tracking', 'Financial reporting & invoicing', 'Manufacturing and production'],
-    exampleSlugs: ['obsidian-erp-v3.0'],
+    exampleSlugs: ['obsidian-erp'],
   },
   {
     title: 'Online Stores',
@@ -377,7 +377,7 @@ export default function ServicesClient({ projects }: ServicesClientProps) {
                   {services.map((service, idx) => {
                     const exampleProjects = service.exampleSlugs
                       .map(slug => projects.find(p => p.slug === slug))
-                      .filter(Boolean) as ProjectEntry[];
+                      .filter(Boolean) as ProjectCard[];
 
                     return (
                       <motion.div
@@ -486,7 +486,7 @@ export default function ServicesClient({ projects }: ServicesClientProps) {
           </FadeIn>
 
           <div className="grid gap-4 grid-cols-2 lg:grid-cols-4">
-            {projects.slice(0, 8).map((proj, idx) => (
+            {projects.filter((proj) => proj.cover).slice(0, 8).map((proj, idx) => (
               <motion.div
                 key={proj.slug}
                 initial={{ opacity: 0, y: 30, scale: 0.95 }}
@@ -497,8 +497,8 @@ export default function ServicesClient({ projects }: ServicesClientProps) {
                 <Link href={`/projects/${proj.slug}`} className="block group">
                   <motion.div whileHover={{ y: -4, scale: 1.02 }} transition={SPRING}
                     className="relative aspect-[4/3] rounded-xl overflow-hidden border border-white/[0.04] bg-[#0E0E10]">
-                    {proj.thumbnail && (
-                      <Image src={proj.thumbnail} alt={proj.title} fill
+                    {proj.cover && (
+                      <Image src={proj.cover.src} alt={proj.cover.alt} fill
                         className="object-cover group-hover:scale-105 transition-transform duration-700" sizes="(max-width: 1024px) 50vw, 25vw" />
                     )}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">

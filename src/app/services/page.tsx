@@ -1,4 +1,4 @@
-import { getAllProjects } from '@/config/project-database';
+import { getAllProjects, toCard } from '@/content/projects';
 import ServicesClient from '@/components/services/ServicesClient';
 import { pageMetadata } from '@/lib/site';
 
@@ -10,7 +10,5 @@ export const metadata = pageMetadata({
 });
 
 export default function ServicesPage() {
-  const projects = getAllProjects();
-
-  return <ServicesClient projects={projects} />;
+  return <ServicesClient projects={getAllProjects().map(toCard)} />;
 }
