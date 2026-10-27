@@ -13,6 +13,8 @@ export default defineProject({
   year: "2025",
   status: "Production",
   kind: "client",
+  industry: ["Events", "Blockchain"],
+  stack: ["Vite + React"],
   links: {},
   heroGradient: "from-[#AF8F6F]/20 via-transparent to-[#74512D]/10",
   cover: "/images/unlock-ethiopia-potential/mockup-01.webp",

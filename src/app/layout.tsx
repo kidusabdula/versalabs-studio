@@ -5,7 +5,8 @@ import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { MotionConfigProvider } from "@/components/ui/motion";
-import { SITE_URL, SITE_NAME, DEFAULT_DESCRIPTION } from "@/lib/site";
+import JsonLd from "@/components/case-study/JsonLd";
+import { SITE_URL, SITE_NAME, DEFAULT_DESCRIPTION, CONTACT_EMAIL } from "@/lib/site";
 
 const outfit = Outfit({
   variable: "--font-outfit",
@@ -61,6 +62,20 @@ export default function RootLayout({
       className={`${outfit.variable} ${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground font-sans">
+        <JsonLd
+          data={{
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            name: SITE_NAME,
+            url: SITE_URL,
+            logo: `${SITE_URL}/versalabs-logo.png`,
+            description: DEFAULT_DESCRIPTION,
+            email: CONTACT_EMAIL,
+            foundingDate: "2023",
+            address: { "@type": "PostalAddress", addressLocality: "Addis Ababa", addressCountry: "ET" },
+            sameAs: ["https://github.com/kidusabdula"],
+          }}
+        />
         <MotionConfigProvider>
           <Navbar />
           <Analytics />

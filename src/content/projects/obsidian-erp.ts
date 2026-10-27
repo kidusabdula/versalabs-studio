@@ -13,6 +13,8 @@ export default defineProject({
   year: "2026",
   status: "Production",
   kind: "product",
+  industry: ["Manufacturing"],
+  stack: ["Next.js", "ERPNext"],
   links: {},
   heroGradient: "from-violet-500/20 via-transparent to-indigo-500/10",
   cover: "/images/obsidian-erp/mockup-21.webp",

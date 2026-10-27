@@ -10,6 +10,8 @@ export default defineProject({
   year: "2024",
   status: "Demo",
   kind: "internal",
+  industry: ["E-Commerce"],
+  stack: ["Next.js"],
   // The live demo dropped its invented facts and carries a "Demo storefront"
   // label since 2026-10-24 (Minab track), so it can be linked.
   links: { live: "https://minab-clothing.vercel.app" },

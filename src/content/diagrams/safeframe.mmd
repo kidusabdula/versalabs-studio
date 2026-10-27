@@ -1,0 +1,14 @@
+flowchart TD
+  accTitle: SafeFrame architecture
+  accDescr: A shared TypeScript core (payload schema, scoring, aggregation and device-tier policy) is used unchanged by the web app, the Expo app and the browser extension. In the web app, a seek sampler feeds every sampled frame to the NSFWJS screener. Only borderline frames go on to the Vision Transformer verifier in a Web Worker, and both scores reach the aggregator, which produces the verdict. Everything runs on the device, with no server.
+
+  core["Shared core: schema, scoring, aggregation, device tier"]
+  core --> web["Web: Next.js static PWA"]
+  core --> mobile["Mobile: Expo"]
+  core --> ext["Extension: Manifest V3"]
+  web --> sampler["Seek sampler"]
+  sampler -- every sampled frame --> screener["Screener: NSFWJS on TensorFlow.js"]
+  screener -- borderline frames only --> verifier["Verifier: Vision Transformer on ONNX Runtime, in a Web Worker"]
+  screener --> agg["Aggregator"]
+  verifier --> agg
+  agg --> verdict["Verdict + response layer"]

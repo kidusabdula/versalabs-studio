@@ -1,0 +1,13 @@
+flowchart TD
+  accTitle: Obsidian ERP architecture
+  accDescr: ERPNext DocType metadata generates TypeScript types and Zod schemas, which fill a DocType registry. Generic hooks and factory API routes are built from the registry. Next.js pages use the hooks and the flow engine, and every API route calls ERPNext as the signed-in user, so ERPNext's own role permissions apply.
+
+  doctypes["ERPNext DocTypes"] -- generated from metadata --> types["TypeScript types + Zod schemas"]
+  types --> registry["DocType registry"]
+  registry --> hooks["Generic hooks"]
+  registry --> routes["Factory API routes"]
+  pages["Next.js App Router pages"] --> hooks
+  pages --> flow["Flow engine: FlowRail, one-click chains"]
+  hooks --> routes
+  flow --> routes
+  routes -- as the signed-in user --> erp[("ERPNext v15")]

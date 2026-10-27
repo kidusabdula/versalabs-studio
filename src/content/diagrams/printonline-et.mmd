@@ -1,0 +1,13 @@
+flowchart TD
+  accTitle: PrintOnline.et architecture
+  accDescr: The Next.js storefront and CMS call API routes that validate input with Zod and check the better-auth session before they read or write Supabase PostgreSQL and Storage under Row Level Security. Payment goes through Chapa's hosted checkout. The callback, webhook and verify paths re-verify each settlement with Chapa, then make a single conditional update and send email through Resend.
+
+  app["Next.js: storefront + CMS"] --> api["API routes: Zod + session checks"]
+  api --> auth["better-auth: sessions, Google sign-in"]
+  api --> db[("Supabase: PostgreSQL + Storage, RLS")]
+  app -- checkout --> chapa["Chapa hosted checkout"]
+  chapa --> cb["Callback, webhook, verify"]
+  cb --> reverify["Re-verify with Chapa"]
+  reverify --> update["Single conditional update"]
+  update --> db
+  update --> email["Resend email"]

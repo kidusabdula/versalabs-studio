@@ -10,6 +10,8 @@ export default defineProject({
   year: "2026",
   status: "Beta",
   kind: "client",
+  industry: ["Hospitality"],
+  stack: ["Next.js", "Supabase", "PostgreSQL"],
   client: "Tamem Kitfo",
   links: {},
   heroGradient: "from-zinc-500/20 via-transparent to-neutral-500/10",

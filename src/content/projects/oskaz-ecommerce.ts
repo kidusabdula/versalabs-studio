@@ -10,6 +10,8 @@ export default defineProject({
   year: "2025",
   status: "Production",
   kind: "client",
+  industry: ["E-Commerce"],
+  stack: ["Next.js", "ERPNext"],
   links: {},
   heroGradient: "from-blue-500/20 via-transparent to-cyan-500/10",
   cover: "/images/oskaz-ecommerce/mockup-12.webp",

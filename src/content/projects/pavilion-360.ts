@@ -10,6 +10,8 @@ export default defineProject({
   year: "2025",
   status: "Production",
   kind: "client",
+  industry: ["Events"],
+  stack: ["Next.js", "Supabase", "PostgreSQL"],
   links: { live: "https://www.pavilion360.events/" },
   heroGradient: "from-purple-500/20 via-transparent to-pink-500/10",
   cover: "/images/pavilion-360/mockup-12.webp",

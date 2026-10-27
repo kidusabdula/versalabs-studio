@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 // The one public origin for canonical URLs, Open Graph, robots and the sitemap.
 export const SITE_URL = 'https://www.versalabs-studio.com';
 export const SITE_NAME = 'VersaLabs Studio';
+export const CONTACT_EMAIL = 'contact@versalabs-studio.com';
 export const DEFAULT_DESCRIPTION =
   'VersaLabs Studio designs and builds custom business software: ERP systems, e-commerce stores, AI tools and websites. Based in Addis Ababa, Ethiopia.';
 
@@ -13,12 +14,15 @@ interface PageMetadataInput {
   description: string;
   path: string;
   image?: { url: string; width?: number; height?: number; alt: string };
+  // The page has its own opengraph-image file (case studies), which Next adds
+  // to the head itself; set this so no other image competes with it.
+  generatedImage?: boolean;
   noindex?: boolean;
 }
 
 // Next merges metadata shallowly, so a page that sets openGraph or twitter
 // replaces the layout's object. Build the full set here for every page.
-export function pageMetadata({ title, description, path, image, noindex }: PageMetadataInput): Metadata {
+export function pageMetadata({ title, description, path, image, generatedImage, noindex }: PageMetadataInput): Metadata {
   const fullTitle = `${title} | ${SITE_NAME}`;
   const ogImage = image ?? DEFAULT_OG_IMAGE;
   return {
@@ -32,13 +36,13 @@ export function pageMetadata({ title, description, path, image, noindex }: PageM
       url: path,
       title: fullTitle,
       description,
-      images: [ogImage],
+      ...(generatedImage ? {} : { images: [ogImage] }),
     },
     twitter: {
-      card: image ? 'summary_large_image' : 'summary',
+      card: image || generatedImage ? 'summary_large_image' : 'summary',
       title: fullTitle,
       description,
-      images: [ogImage.url],
+      ...(generatedImage ? {} : { images: [ogImage.url] }),
     },
     ...(noindex ? { robots: { index: false, follow: true } } : {}),
   };

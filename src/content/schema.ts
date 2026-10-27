@@ -8,6 +8,39 @@ import { z } from 'zod';
 export const PROJECT_STATUSES = ['Production', 'Beta', 'MVP', 'Prototype', 'Demo', 'Development'] as const;
 export const PROJECT_KINDS = ['client', 'product', 'internal', 'research'] as const;
 
+// Where a project's page lives: /work/<slug> or /products/<slug>. A product
+// defaults to /products and everything else to /work; `section` overrides that.
+export const SECTIONS = ['work', 'products'] as const;
+
+// The filter vocabularies on /work. Each project picks from these lists, so two
+// projects never spell the same filter differently.
+export const INDUSTRIES = [
+  'Manufacturing',
+  'E-Commerce',
+  'Printing',
+  'Events',
+  'Finance',
+  'Real Estate',
+  'Hospitality',
+  'Sports & Media',
+  'Cybersecurity',
+  'Online Safety',
+  'Developer Tools',
+  'Blockchain',
+  'Nonprofit',
+] as const;
+
+export const STACK = [
+  'Next.js',
+  'React Native',
+  'Vite + React',
+  'Supabase',
+  'PostgreSQL',
+  'ERPNext',
+  'Python',
+  'Machine Learning',
+] as const;
+
 const text = z.string().trim().min(1);
 
 const techDependency = z.strictObject({
@@ -58,6 +91,14 @@ const galleryImage = z.strictObject({
   reviewed: z.literal(true),
 });
 
+// An outcome shown on a case study. Only verified numbers belong here, and
+// `evidence` says where each one comes from (it is not shown on the page).
+const metric = z.strictObject({
+  label: text,
+  value: text,
+  evidence: text,
+});
+
 const links = z.strictObject({
   live: z.url({ protocol: /^https$/ }).optional(),
   repo: z.url({ protocol: /^https$/, hostname: /^github\.com$/ }).optional(),
@@ -74,9 +115,14 @@ export const projectSchema = z
     year: z.string().regex(/^20\d\d$/),
     status: z.enum(PROJECT_STATUSES),
     kind: z.enum(PROJECT_KINDS),
+    section: z.enum(SECTIONS).optional(),
+    industry: z.array(z.enum(INDUSTRIES)).min(1),
+    stack: z.array(z.enum(STACK)),
+    // Shown on the case study when set. Leave it out to keep a client unnamed.
     client: text.optional(),
     links,
     visibility: z.enum(['show', 'hide']).default('show'),
+    metrics: z.array(metric).default([]),
     heroGradient: text,
     cover: z.string().optional(),
     gallery: z.array(galleryImage),
@@ -105,12 +151,25 @@ export const projectSchema = z
     if (project.cover && !srcs.includes(project.cover)) {
       ctx.addIssue({ code: 'custom', path: ['cover'], message: 'the cover must be one of the gallery images' });
     }
-  });
+    for (const field of ['industry', 'stack'] as const) {
+      if (new Set(project[field]).size !== project[field].length) {
+        ctx.addIssue({ code: 'custom', path: [field], message: 'a value is listed twice' });
+      }
+    }
+  })
+  .transform((project) => ({
+    ...project,
+    section: project.section ?? (project.kind === 'product' ? 'products' : 'work'),
+  }));
 
 export type ProjectInput = z.input<typeof projectSchema>;
 export type Project = z.output<typeof projectSchema>;
 export type ProjectStatus = Project['status'];
 export type ProjectKind = Project['kind'];
+export type ProjectSection = Project['section'];
+export type Industry = (typeof INDUSTRIES)[number];
+export type StackItem = (typeof STACK)[number];
+export type Metric = Project['metrics'][number];
 export type TechLayer = Project['techStack'][number];
 export type BoundedContext = Project['boundedContexts'][number];
 export type SchemaTable = Project['schema'][number];

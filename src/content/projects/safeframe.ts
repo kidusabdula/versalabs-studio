@@ -10,6 +10,8 @@ export default defineProject({
   year: "2026",
   status: "MVP",
   kind: "internal",
+  industry: ["Online Safety"],
+  stack: ["Next.js", "React Native", "Machine Learning"],
   links: {
     live: "https://safeframe-livid.vercel.app",
   },

@@ -10,6 +10,8 @@ export default defineProject({
   year: "2026",
   status: "Development",
   kind: "product",
+  industry: ["Finance"],
+  stack: ["Next.js"],
   links: {
     live: "https://versa-fx.vercel.app",
   },

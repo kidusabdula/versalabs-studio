@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { pageMetadata } from '@/lib/site';
+import { CONTACT_EMAIL, pageMetadata } from '@/lib/site';
 
 export const metadata = pageMetadata({
   title: 'Privacy',
@@ -14,8 +14,6 @@ export const metadata = pageMetadata({
 // Google Analytics only loads when NEXT_PUBLIC_GA_ID is set at build time, so
 // its paragraph appears only then.
 const LAST_UPDATED = '26 October 2026';
-
-const CONTACT_EMAIL = 'contact@versalabs-studio.com';
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (

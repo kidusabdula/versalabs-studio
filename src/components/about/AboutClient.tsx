@@ -6,6 +6,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef } from 'react';
 import { FadeIn, GlassCard, StaggerContainer, StaggerItem, SlideIn, ScaleIn } from '@/components/ui/motion';
 import { ArrowRight } from 'lucide-react';
+import { VISIBLE_TEAM } from '@/content/team';
 
 const SPRING = { stiffness: 300, damping: 30 };
 
@@ -16,37 +17,6 @@ const drawLine = {
     transition: { duration: 1.5, delay: i * 0.2, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] },
   }),
 };
-
-const team = [
-  {
-    name: 'Kidus Abdula',
-    role: 'Founder & Engineer',
-    portrait: '/images/team/kidus-abdula.webp',
-    hasImage: true,
-    bio: 'Full-stack engineer leading VersaLabs Studio. Designs and builds business platforms from the ground up, from database schema to production deployment. Cares about clean architecture and shipping fast.',
-  },
-  {
-    name: 'Caleb Demelash',
-    role: 'Senior Full Stack Engineer',
-    portrait: '/images/team/caleb-demelash.webp',
-    hasImage: true,
-    bio: 'Experienced full-stack developer and business liaison. Bridges the gap between technical implementation and client needs, delivering polished user experiences across web and mobile platforms.',
-  },
-  {
-    name: 'Bemnet Kibret',
-    role: 'Full Stack Engineer & Designer',
-    portrait: '/images/team/bemnet-kibret.webp',
-    hasImage: true,
-    bio: 'Product designer and front-end specialist. Creates the visual identity and interactive experiences that make VersaLabs platforms feel premium and intuitive to every user.',
-  },
-  {
-    name: 'Naol Girma',
-    role: 'Backend Engineer & Project Manager',
-    portrait: '',
-    hasImage: false,
-    bio: 'Backend systems specialist and project management lead. Orchestrates delivery timelines, manages client communication, and architects the server-side infrastructure that powers our platforms at scale.',
-  },
-];
 
 const principles = [
   { icon: '◆', title: 'Data-Driven Design', desc: 'Every system starts with a clear data model. We define the structure first, then build everything around it — ensuring reliability at any scale.' },
@@ -171,17 +141,14 @@ export default function AboutClient() {
                   About VersaLabs Studio
                 </span>
               </SlideIn>
-              <FadeIn>
-                <h1 className="text-5xl md:text-7xl font-bold tracking-tighter text-white mb-6">
-                  The Team Behind{' '}
-                  <span className="bg-gradient-to-r from-white via-white to-zinc-500 bg-clip-text text-transparent">VersaLabs.</span>
-                </h1>
-              </FadeIn>
-              <FadeIn delay={0.15}>
-                <p className="text-[17px] text-zinc-400 leading-relaxed max-w-xl">
-                  We&apos;re a small, focused team based in Addis Ababa, Ethiopia. We build business software (ERP systems, AI tools, e-commerce stores, and custom business tools) for clients in Ethiopia and abroad.
-                </p>
-              </FadeIn>
+              {/* No entrance fade on the heading and intro: they are the LCP. */}
+              <h1 className="text-5xl md:text-7xl font-bold tracking-tighter text-white mb-6">
+                The Team Behind{' '}
+                <span className="bg-gradient-to-r from-white via-white to-zinc-500 bg-clip-text text-transparent">VersaLabs.</span>
+              </h1>
+              <p className="text-[17px] text-zinc-400 leading-relaxed max-w-xl">
+                We&apos;re a small, focused team based in Addis Ababa, Ethiopia. We build business software (ERP systems, AI tools, e-commerce stores, and custom business tools) for clients in Ethiopia and abroad.
+              </p>
             </div>
 
             {/* Right: Animated Stats Bento */}
@@ -217,7 +184,7 @@ export default function AboutClient() {
           </FadeIn>
           
           <StaggerContainer staggerDelay={0.12} className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {team.map((member) => (
+            {VISIBLE_TEAM.map((member) => (
               <StaggerItem key={member.name}>
                 <motion.div 
                   whileHover={{ y: -6 }}
@@ -226,7 +193,7 @@ export default function AboutClient() {
                 >
                   {/* Portrait or Placeholder Avatar */}
                   <div className="relative w-full aspect-[4/5] overflow-hidden bg-[#0E0E10]">
-                    {member.hasImage ? (
+                    {member.portrait ? (
                       <Image
                         src={member.portrait}
                         alt={member.name}

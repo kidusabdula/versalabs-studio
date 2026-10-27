@@ -1,21 +1,23 @@
-'use client';
-
 import Link from 'next/link';
 import Image from 'next/image';
-import FooterCTA from '../ui/FooterCTA';
+import { getProjectBySlug, projectPath } from '@/content/projects';
+import { CONTACT_EMAIL } from '@/lib/site';
 
-const projectLinks = [
-  { label: 'Obsidian ERP', href: '/projects/obsidian-erp' },
-  { label: 'ThreatMatrix AI', href: '/projects/threatmatrix-ai' },
-  { label: 'JARVIS', href: '/projects/jarvis' },
-  { label: 'Pana Sports', href: '/projects/pana-sport' },
-];
+// The projects linked in the footer. Their URLs come from the project files, and
+// a hidden project simply drops out of the list.
+const FOOTER_PROJECTS = ['obsidian-erp', 'safeframe', 'eventology', 'threatmatrix-ai'];
+
+const projectLinks = FOOTER_PROJECTS.flatMap((slug) => {
+  const project = getProjectBySlug(slug);
+  return project ? [{ label: project.title, href: projectPath(project) }] : [];
+});
 
 const companyLinks = [
-  { label: 'About', href: '/about' },
+  { label: 'Work', href: '/work' },
+  { label: 'Products', href: '/products' },
   { label: 'Services', href: '/services' },
-  { label: 'Studio', href: '/studio' },
-  { label: 'Blog', href: '/blog' },
+  { label: 'About', href: '/about' },
+  { label: 'Notes', href: '/notes' },
   { label: 'Contact', href: '/contact' },
   { label: 'Privacy', href: '/privacy' },
 ];
@@ -26,12 +28,7 @@ const socialLinks = [
   { label: 'Telegram', href: 'https://t.me/kidusabdula', icon: 'M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z' },
 ];
 
-interface FooterProps {
-  showCTA?: boolean;
-  ctaProps?: React.ComponentProps<typeof FooterCTA>;
-}
-
-export default function Footer({ showCTA = false, ctaProps }: FooterProps = {}) {
+export default function Footer() {
   return (
     <footer className="border-t border-white/[0.04] bg-[#0A0A0C]">
       <div className="mx-auto max-w-7xl px-6 pt-16 pb-8">
@@ -82,7 +79,7 @@ export default function Footer({ showCTA = false, ctaProps }: FooterProps = {}) 
                 </li>
               ))}
               <li>
-                <a href="mailto:contact@versalabs-studio.com" className="text-sm text-zinc-500 hover:text-white transition-colors">
+                <a href={`mailto:${CONTACT_EMAIL}`} className="text-sm text-zinc-500 hover:text-white transition-colors">
                   Email Us
                 </a>
               </li>
@@ -90,13 +87,6 @@ export default function Footer({ showCTA = false, ctaProps }: FooterProps = {}) 
           </div>
 
         </div>
-
-        {/* Optional CTA Section */}
-        {showCTA && (
-          <div className="border-t border-white/[0.04] -mx-6">
-            <FooterCTA {...ctaProps} />
-          </div>
-        )}
 
         {/* Bottom Bar */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 pt-8 border-t border-white/[0.04]">

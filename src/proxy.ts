@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server';
 
-// Project slugs are lowercase. Old links such as /projects/Unlock-Ethiopia-Potential
-// get a permanent redirect to the lowercase URL. This can't live in next.config
+// Project slugs are lowercase. A mixed-case URL such as /work/SafeFrame gets a
+// permanent redirect to the lowercase URL. This can't live in next.config
 // redirects: their matching ignores case, so a lowercase target would loop.
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -14,5 +14,5 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: '/projects/:path*',
+  matcher: ['/work/:path*', '/products/:path*', '/projects/:path*'],
 };

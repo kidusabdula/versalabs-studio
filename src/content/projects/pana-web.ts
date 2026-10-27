@@ -10,6 +10,8 @@ export default defineProject({
   year: "2025",
   status: "Production",
   kind: "client",
+  industry: ["Printing"],
+  stack: ["Next.js"],
   // Live link held: the live site shows unverified ratings and project counts
   // beside real client organisations (Ministry of Health, Ethiopian Athletics
   // Federation). Restore it once the client confirms or removes those figures.
