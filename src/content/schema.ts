@@ -5,7 +5,9 @@ import { z } from 'zod';
 // site builds, so a missing field or a bad link fails the build instead of
 // shipping.
 
-export const PROJECT_STATUSES = ['Production', 'Beta', 'MVP', 'Prototype', 'Demo', 'Development'] as const;
+// `Coming Soon` is a product in development that is close to launch; it shares
+// the in-development badge colour and calls to action with `Development`.
+export const PROJECT_STATUSES = ['Production', 'Beta', 'MVP', 'Prototype', 'Demo', 'Development', 'Coming Soon'] as const;
 export const PROJECT_KINDS = ['client', 'product', 'internal', 'research'] as const;
 
 // Where a project's page lives: /work/<slug> or /products/<slug>. A product

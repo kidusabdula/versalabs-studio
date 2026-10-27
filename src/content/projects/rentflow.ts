@@ -8,7 +8,7 @@ export default defineProject({
   category: "Real Estate",
   tags: ["Real Estate", "Property Management", "Lab"],
   year: "2026",
-  status: "Development",
+  status: "Coming Soon",
   kind: "product",
   industry: ["Real Estate"],
   stack: ["Next.js"],

@@ -11,7 +11,9 @@ sitemap all read from `src/content/projects/index.ts`.
 - `src/content/projects/index.ts` lists every file in listing order and validates each one with the Zod schema when the
   site builds. A missing field, a bad slug, an `http` link or a duplicate image fails the build with a readable error.
 - `kind` is `client`, `product`, `internal` or `research`; `status` is one of `Production`, `Beta`, `MVP`, `Prototype`,
-  `Demo` or `Development`. Badges for both come from `src/content/labels.ts`.
+  `Demo`, `Development` or `Coming Soon` (a product in development that is close to launch). Badges for both come from
+  `src/content/labels.ts`; `Development` and `Coming Soon` share the violet badge and the in-development calls to
+  action.
 - `industry` (at least one) and `stack` take values from the fixed lists `INDUSTRIES` and `STACK` in the schema, so
   the `/work` filters only ever offer real values. Add a new value to the list first, then use it.
 - `section` is optional: products default to `/products`, everything else to `/work`. Set it to move a project

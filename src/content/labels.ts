@@ -18,7 +18,7 @@ export const KIND_BADGE: Record<ProjectKind, string> = {
 };
 
 // Emerald: running in production. Amber: early or partial (beta, MVP,
-// prototype, demo). Violet: still in development.
+// prototype, demo). Violet: still in development (Development, Coming Soon).
 const EMERALD = 'text-emerald-400 bg-emerald-500/10 border border-emerald-500/20';
 const AMBER = 'text-amber-400 bg-amber-500/10 border border-amber-500/20';
 const VIOLET = 'text-violet-400 bg-violet-500/10 border border-violet-500/20';
@@ -30,4 +30,9 @@ export const STATUS_BADGE: Record<ProjectStatus, string> = {
   Prototype: AMBER,
   Demo: AMBER,
   Development: VIOLET,
+  'Coming Soon': VIOLET,
 };
+
+// Statuses for software that isn't released yet. Case studies show these with
+// "Ask About ..." instead of "Request a Demo", and demo links say "Demo Data".
+export const IN_DEVELOPMENT: ProjectStatus[] = ['Development', 'Coming Soon'];
