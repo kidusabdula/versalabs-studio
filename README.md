@@ -51,7 +51,9 @@ not in the sitemap) until notes are published.
 `next.config.ts` builds the permanent redirects from the content, so each old URL reaches its page in one hop:
 `/studio` and `/projects` go to `/work`, `/blog` to `/notes`, `/projects/<slug>` and renamed slugs to the
 project's current URL, and a project's URL under the other section to its own. Moving a project between
-sections is a one-line change in its file, and its old links keep working.
+sections is a one-line change in its file, and its old links keep working. Projects taken off the site are
+listed in `REMOVED`, and their old URLs (`/work/<slug>`, `/products/<slug>`, `/projects/<slug>`) go straight
+to `/work`.
 
 ## Architecture Diagrams
 

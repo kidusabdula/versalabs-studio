@@ -14,13 +14,9 @@ import versaEstate from './versa-estate';
 import rentflow from './rentflow';
 import versalabsAde from './versalabs-ade';
 import jarvis from './jarvis';
-import fastpay from './fastpay';
 import unlockEthiopiaPotential from './unlock-ethiopia-potential';
-import panaWeb from './pana-web';
-import potentia from './potentia';
 import liveAddis from './live-addis';
 import minabClothing from './minab-clothing';
-import tibeb from './tibeb';
 
 // Every project on the site, in listing order. This is the single source of
 // truth: the home page, the work listing, the case study pages and the sitemap
@@ -41,13 +37,9 @@ const ENTRIES: ProjectInput[] = [
   rentflow,
   versalabsAde,
   jarvis,
-  fastpay,
   unlockEthiopiaPotential,
-  panaWeb,
-  potentia,
   liveAddis,
   minabClothing,
-  tibeb,
 ];
 
 function load(entries: ProjectInput[]): Project[] {

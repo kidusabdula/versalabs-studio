@@ -27,7 +27,7 @@ const services = [
     description: 'Fast, good-looking online stores with online or cash-on-delivery payments, stock tied to your inventory, and a checkout that converts.',
     icon: ShoppingCart,
     capabilities: ['Online payments with Chapa or Stripe', 'Stock synced with your ERP', 'Mobile-optimized design', 'Order status emails'],
-    exampleSlugs: ['oskaz-ecommerce', 'minab-clothing', 'tibeb'],
+    exampleSlugs: ['oskaz-ecommerce', 'minab-clothing'],
   },
   {
     title: 'AI & Intelligent Systems',
@@ -41,14 +41,14 @@ const services = [
     description: 'Cross-platform mobile apps for payments, services, and on-the-go business management — smooth, fast, and reliable.',
     icon: Smartphone,
     capabilities: ['iOS & Android support', 'Offline-capable design', 'PIN sign-in', 'Smooth native animations'],
-    exampleSlugs: ['fastpay'],
+    exampleSlugs: [],
   },
   {
     title: 'Corporate Websites',
     description: 'Professional, polished websites that represent your brand. SEO-optimized, mobile-friendly, and built to impress.',
     icon: Globe,
     capabilities: ['Responsive design', 'Search engine optimization', 'Content management', 'Analytics integration'],
-    exampleSlugs: ['pana-web', 'live-addis', 'unlock-ethiopia-potential'],
+    exampleSlugs: ['live-addis', 'unlock-ethiopia-potential'],
   },
 ];
 
