@@ -14,7 +14,9 @@ interface Props {
 }
 
 // One listing card for /work, /products and related work. Every card shows the
-// status, year and type, so a demo never reads like a production system.
+// status, year and type, so a demo never reads like a production system. The
+// cover is decorative here (alt=""): the title already names the link, and the
+// case study shows the same image with its full description.
 export default function ProjectCardView({
   project,
   headingLevel = 'h2',
@@ -31,7 +33,7 @@ export default function ProjectCardView({
         {project.cover ? (
           <Image
             src={project.cover.src}
-            alt={project.cover.alt}
+            alt=""
             fill
             className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
             sizes={sizes}
