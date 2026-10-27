@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
@@ -32,12 +33,13 @@ export default function Navbar() {
         <div className="mx-auto max-w-7xl flex h-[72px] items-center justify-between px-6 lg:px-8">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3 group">
-            <img
+            <Image
               src="/versalabs-logo-light.png"
               alt=""
               width={32}
               height={32}
-              className="h-8 w-auto transition-transform group-hover:scale-105"
+              priority
+              className="h-8 w-8 transition-transform group-hover:scale-105"
             />
             <span className="text-[16px] font-semibold tracking-wide text-white">
               VersaLabs

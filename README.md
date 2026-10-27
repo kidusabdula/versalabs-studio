@@ -1,69 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# VersaLabs Studio
+
+The studio site at [www.versalabs-studio.com](https://www.versalabs-studio.com): a Next.js 16 App Router site with
+Tailwind CSS v4 and Framer Motion, deployed on Vercel.
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
+pnpm dev          # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+| Script | What it does |
+|---|---|
+| `pnpm dev` | Development server |
+| `pnpm build` | Runs `scripts/check-images.mjs`, then `next build` |
+| `pnpm start` | Serves the production build |
+| `pnpm lint` | ESLint (`eslint.config.mjs`) |
+| `pnpm typecheck` | `tsc --noEmit` |
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Where Things Live
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Path | Contents |
+|---|---|
+| `src/content/projects/<slug>.ts` | One file per project or product: the single source of truth for listings, case studies and the sitemap |
+| `src/content/schema.ts` | The Zod schema every project file is validated against at build time |
+| `src/content/projects/index.ts` | Listing order, validation, and the `getAllProjects` / `getProjectBySlug` / `toCard` helpers |
+| `public/images/<slug>/` | WebP mockups and screenshots, each listed in its project's `gallery` |
+| `src/app/` | Routes: `/`, `/studio`, `/projects/[slug]`, `/services`, `/about`, `/blog`, `/contact`, `/privacy`, `/api/contact`, plus `sitemap.ts` and `robots.ts` |
+| `src/lib/site.ts` | `SITE_URL` and `pageMetadata()`, which sets title, description, canonical, Open Graph and Twitter tags per page |
+| `src/proxy.ts` | Lowercases mixed-case `/projects/*` URLs with a 308 |
+| `next.config.ts` | Permanent redirects for renamed URLs |
+| `docs/` | Content, tone and UI guidelines |
 
-## Learn More
+How to add or change a project, and the image review rule, are in `docs/04-CONTENT-MANAGEMENT.md`.
 
-To learn more about Next.js, take a look at the following resources:
+## Contact Form
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+`/contact` posts to `src/app/api/contact/route.ts`, which:
+- validates the input with Zod (`src/lib/contact-schema.ts`);
+- answers a filled honeypot field with a success response and sends nothing;
+- rate-limits each IP to 5 messages per 10 minutes, in memory, per serverless instance (best effort);
+- HTML-escapes every value it puts in the email, and sends one email through SMTP with Nodemailer to `SMTP_USER`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deployment
-
-### Prerequisites
-- Vercel project `versalabs-studio`, linked to the GitHub repository `kidusabdula/versalabs-studio`
-- Domain: `www.versalabs-studio.com` (set as `SITE_URL` in `src/lib/site.ts`)
-- An SMTP mailbox for the contact form
+`/privacy` describes exactly this. When the form, analytics or hosting change, update that page in the same commit.
 
 ### Environment Variables
+
 Create `.env.local` with:
+
 ```
 SMTP_HOST=mail.versalabs-studio.com   # optional, this is the default
 SMTP_PORT=465                         # optional, this is the default
 SMTP_USER=contact@versalabs-studio.com
 SMTP_PASS=your_smtp_password
+NEXT_PUBLIC_GA_ID=                    # optional; loads Google Analytics, and /privacy then mentions it
 ```
-The contact form (`src/app/api/contact/route.ts`) validates input with Zod (`src/lib/contact-schema.ts`), drops honeypot submissions, rate-limits each IP on a best-effort basis, and HTML-escapes everything it puts in the email.
 
-### Vercel Deployment
-1. Add the environment variables in the Vercel dashboard
-2. Push a branch to get a preview deployment
-3. Merging to `main` deploys production
+## Deployment
 
-### Production Checklist
-- [ ] Static generation enabled for project pages
-- [ ] Images optimized with Next.js Image component
-- [ ] SEO meta tags and structured data added
-- [ ] Google Analytics integrated
-- [ ] Sitemap.xml generated
-- [ ] Error boundaries implemented
-- [ ] Loading states added
-- [ ] Cross-browser tested
-- [ ] Mobile responsive validated
-- [ ] Accessibility audited (WCAG AA)
-- [ ] Lighthouse score >95
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Vercel project `versalabs-studio`, linked to `kidusabdula/versalabs-studio`. The production branch is `main`.
+- **A push to `main` deploys production.** Any other branch gets a preview deployment; previews are `noindex`.
+- Add the environment variables above in the Vercel dashboard.
+- Vercel Web Analytics (`@vercel/analytics`) is on in the root layout. It sets no cookies.

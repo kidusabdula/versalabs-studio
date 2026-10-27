@@ -4,9 +4,10 @@ import { useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
+import type { GalleryImage } from '@/content/schema';
 
 interface ImageLightboxProps {
-  images: string[];
+  images: GalleryImage[];
   currentIndex: number;
   isOpen: boolean;
   onClose: () => void;
@@ -113,8 +114,8 @@ export default function ImageLightbox({
             className="relative z-10 w-[90vw] h-[80vh] max-w-[1400px]"
           >
             <Image
-              src={images[currentIndex]}
-              alt={`${title} — View ${currentIndex + 1}`}
+              src={images[currentIndex].src}
+              alt={images[currentIndex].alt}
               fill
               className="object-contain"
               sizes="90vw"

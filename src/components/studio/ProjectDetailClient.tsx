@@ -3,27 +3,34 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowLeft, ExternalLink, ArrowRight, X, Layers } from 'lucide-react';
+import { ArrowLeft, ExternalLink, ArrowRight, X, Layers, Code2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FadeIn, GlassCard, StaggerContainer, StaggerItem } from '@/components/ui/motion';
 import ProjectSlideshow from '@/components/ui/ProjectSlideshow';
 import ImageLightbox from '@/components/ui/ImageLightbox';
-import type { DetailProjectData } from '@/app/projects/[slug]/page';
-import type { SimilarProject } from '@/app/projects/[slug]/page';
-import type { TechLayer, BoundedContext, SchemaTable, Feature, ADRRecord } from '@/config/project-database';
-import { PRODUCT_TYPE_LABEL, PRODUCT_TYPE_BADGE, STATUS_BADGE } from '@/config/project-labels';
+import type { Project, TechLayer, BoundedContext, SchemaTable, Feature, ADRRecord } from '@/content/schema';
+import type { ProjectCard } from '@/content/projects';
+import { KIND_LABEL, KIND_BADGE, STATUS_BADGE } from '@/content/labels';
 
-// Closing line for the inline call to action, by project type.
-const INTEREST_COPY: Record<DetailProjectData['productType'], (title: string) => string> = {
-  saas: (title) => `Deploy ${title} for your organization, or let us customize it for your specific industry needs.`,
-  'client-project': () => 'We built this for a client, and we can build something like it for you. Tell us what you need.',
+// Closing line for the inline call to action, by project kind.
+const INTEREST_COPY: Record<Project['kind'], (title: string) => string> = {
+  product: (title) => `Deploy ${title} for your organization, or let us customize it for your specific industry needs.`,
+  client: () => 'We built this for a client, and we can build something like it for you. Tell us what you need.',
   internal: () => 'We built this in-house, and we can build something like it for you. Tell us what you need.',
   research: () => 'This began as a university research project. If you need something similar, we can build it for you. Tell us what you need.',
 };
 
+// A product still in development can't be deployed yet, so it gets its own copy.
+const IN_DEVELOPMENT_COPY = (title: string) =>
+  `${title} is still in development. If it fits a problem you have, tell us about it.`;
+
+// Live sites get "Visit"; demos, prototypes and products in development get
+// "Open the Demo". A product still in development runs on demo data, and says so.
+const LIVE_STATUSES: Project['status'][] = ['Production', 'Beta', 'MVP'];
+
 interface Props {
-  project: DetailProjectData;
-  similarProjects: SimilarProject[];
+  project: Project;
+  similarProjects: ProjectCard[];
 }
 
 const INITIAL_GALLERY_COUNT = 6;
@@ -34,7 +41,11 @@ export default function ProjectDetailClient({ project, similarProjects }: Props)
   const [lightboxIndex, setLightboxIndex] = useState(0);
   const [showAllGallery, setShowAllGallery] = useState(false);
 
-  const allGalleryImages = [...project.mockupImages, ...project.screenshotImages];
+  // Mockups play in the slideshow and screenshots fill the gallery, so no image
+  // shows twice. The lightbox steps through both, slideshow first.
+  const slides = project.gallery.filter((image) => image.kind === 'mockup');
+  const allGalleryImages = project.gallery.filter((image) => image.kind === 'screen');
+  const lightboxImages = [...slides, ...allGalleryImages];
   const visibleGallery = showAllGallery ? allGalleryImages : allGalleryImages.slice(0, INITIAL_GALLERY_COUNT);
   const hasMoreImages = allGalleryImages.length > INITIAL_GALLERY_COUNT;
 
@@ -52,10 +63,17 @@ export default function ProjectDetailClient({ project, similarProjects }: Props)
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [showTechnical]);
 
-  // Product-type-aware CTA text
-  const isSaaS = project.productType === 'saas';
-  const primaryCTA = isSaaS ? 'Deploy This Platform' : 'Build Something Like This';
-  const secondaryCTA = isSaaS ? 'Schedule a Demo' : 'Get a Custom Version';
+  // Kind-aware CTA text
+  const isProduct = project.kind === 'product';
+  const inDevelopment = project.status === 'Development';
+  const primaryCTA = !isProduct ? 'Build Something Like This' : inDevelopment ? 'Ask About This Product' : 'Deploy This Platform';
+  const secondaryCTA = !isProduct ? 'Get a Custom Version' : inDevelopment ? 'Get in Touch' : 'Schedule a Demo';
+  const interestCopy = isProduct && inDevelopment ? IN_DEVELOPMENT_COPY(project.title) : INTEREST_COPY[project.kind](project.title);
+  const liveLabel = LIVE_STATUSES.includes(project.status)
+    ? 'Visit the Live Site'
+    : isProduct && inDevelopment
+      ? 'Open the Demo (Demo Data)'
+      : 'Open the Demo';
 
   return (
     <div className="min-h-screen bg-[#0A0A0C] pb-32">
@@ -83,8 +101,8 @@ export default function ProjectDetailClient({ project, similarProjects }: Props)
               <span className={`text-xs font-medium px-3 py-1.5 rounded-sm ${STATUS_BADGE[project.status]}`}>
                 {project.status}
               </span>
-              <span className={`text-xs font-medium px-3 py-1.5 rounded-sm ${PRODUCT_TYPE_BADGE[project.productType]}`}>
-                {PRODUCT_TYPE_LABEL[project.productType]}
+              <span className={`text-xs font-medium px-3 py-1.5 rounded-sm ${KIND_BADGE[project.kind]}`}>
+                {KIND_LABEL[project.kind]}
               </span>
             </div>
           </FadeIn>
@@ -103,11 +121,20 @@ export default function ProjectDetailClient({ project, similarProjects }: Props)
 
           <FadeIn delay={0.3}>
             <div className="flex flex-wrap items-center gap-4">
-              {project.liveUrl && (
-                <a href={project.liveUrl} target="_blank" rel="noopener noreferrer"
+              {project.links.live && (
+                <a href={project.links.live} target="_blank" rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 rounded-full bg-white text-black px-6 py-3 text-sm font-semibold transition-all hover:bg-zinc-200 hover:scale-[1.02]">
-                  View Live Platform
-                  <ExternalLink className="h-4 w-4" />
+                  {liveLabel}
+                  <ExternalLink className="h-4 w-4" aria-hidden="true" />
+                  <span className="sr-only">(opens in a new tab)</span>
+                </a>
+              )}
+              {project.links.repo && (
+                <a href={project.links.repo} target="_blank" rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-[#1C1C1F] px-6 py-3 text-sm font-medium text-white transition-all hover:bg-[#27272A] hover:scale-[1.02]">
+                  <Code2 className="h-4 w-4" aria-hidden="true" />
+                  View the Code
+                  <span className="sr-only">(opens in a new tab)</span>
                 </a>
               )}
               <button type="button" onClick={() => setShowTechnical(true)}
@@ -128,11 +155,11 @@ export default function ProjectDetailClient({ project, similarProjects }: Props)
       <div className="mx-auto max-w-[1400px] px-6 pt-16">
 
         {/* SLIDESHOW */}
-        {project.mockupImages.length > 0 && (
+        {slides.length > 0 && (
           <FadeIn delay={0.4}>
             <div className="mb-24 max-w-[1200px] mx-auto rounded-2xl overflow-hidden shadow-2xl border border-white/[0.04]">
               <ProjectSlideshow
-                images={project.mockupImages}
+                images={slides}
                 title={project.title}
                 intervalMs={4500}
                 hoverOnly={false}
@@ -165,6 +192,7 @@ export default function ProjectDetailClient({ project, similarProjects }: Props)
         </StaggerContainer>
 
         {/* KEY FEATURES */}
+        {project.features.length > 0 && (
         <FadeIn>
           <div className="mb-24">
             <span className="text-[11px] uppercase tracking-widest font-semibold text-zinc-500 block mb-4">Capabilities</span>
@@ -186,6 +214,7 @@ export default function ProjectDetailClient({ project, similarProjects }: Props)
             </div>
           </div>
         </FadeIn>
+        )}
 
         {/* INLINE CTA */}
         <FadeIn>
@@ -196,7 +225,7 @@ export default function ProjectDetailClient({ project, similarProjects }: Props)
                 Interested in {project.title}?
               </h3>
               <p className="text-[16px] text-zinc-400 mb-8 max-w-lg">
-                {INTEREST_COPY[project.productType](project.title)}
+                {interestCopy}
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link href="/contact">
@@ -226,20 +255,20 @@ export default function ProjectDetailClient({ project, similarProjects }: Props)
                 {visibleGallery.map((img, idx) => (
                   <motion.button
                     type="button"
-                    key={idx}
+                    key={img.src}
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ delay: idx * 0.04, duration: 0.5 }}
                     viewport={{ once: true }}
-                    onClick={() => openLightbox(project.mockupImages.length + idx)}
-                    aria-label={`View full size: ${project.title}, image ${idx + 1}`}
+                    onClick={() => openLightbox(slides.length + idx)}
+                    aria-label={`View full size: ${img.alt}`}
                     className={`block w-full relative overflow-hidden rounded-xl border border-white/[0.04] bg-[#0E0E10] cursor-pointer group ${
                       idx === 0 ? 'md:col-span-2 aspect-[21/9]' : 'aspect-[3/2]'
                     }`}
                   >
                     <Image
-                      src={img}
-                      alt={`${project.title} — View ${idx + 1}`}
+                      src={img.src}
+                      alt=""
                       fill
                       className="object-contain group-hover:scale-[1.02] transition-transform duration-700"
                       sizes={idx === 0 ? '100vw' : '50vw'}
@@ -275,14 +304,14 @@ export default function ProjectDetailClient({ project, similarProjects }: Props)
               <span className="text-[11px] uppercase tracking-widest font-semibold text-zinc-500 block mb-4">Related Work</span>
               <h2 className="text-3xl font-bold text-white mb-12">You May Also Like</h2>
               <div className="grid gap-6 md:grid-cols-3">
-                {similarProjects.map((sp: SimilarProject) => (
+                {similarProjects.map((sp) => (
                   <Link key={sp.slug} href={`/projects/${sp.slug}`} className="block group">
                     <div className="rounded-xl border border-white/[0.06] bg-[#141417] overflow-hidden hover:border-white/[0.12] transition-colors">
-                      {sp.thumbnail && (
+                      {sp.cover && (
                         <div className="relative aspect-[3/2] overflow-hidden">
                           <Image
-                            src={sp.thumbnail}
-                            alt={sp.title}
+                            src={sp.cover.src}
+                            alt={sp.cover.alt}
                             fill
                             className="object-cover group-hover:scale-105 transition-transform duration-500"
                             sizes="(max-width: 768px) 100vw, 33vw"
@@ -376,6 +405,7 @@ export default function ProjectDetailClient({ project, similarProjects }: Props)
                         {project.systemFlow}
                       </div>
                     </div>
+                    {project.architecture.designPatterns.length > 0 && (
                     <div>
                       <span className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-4 block">Design Patterns</span>
                       <div className="flex flex-wrap gap-2">
@@ -386,9 +416,12 @@ export default function ProjectDetailClient({ project, similarProjects }: Props)
                         ))}
                       </div>
                     </div>
+                    )}
                   </GlassCard>
 
+                  {(project.boundedContexts.length > 0 || project.schema.length > 0) && (
                   <div className="grid lg:grid-cols-2 gap-8">
+                    {project.boundedContexts.length > 0 && (
                     <div>
                       <h3 className="text-lg font-semibold text-white mb-6">Bounded Contexts</h3>
                       <div className="flex flex-col gap-4">
@@ -408,6 +441,9 @@ export default function ProjectDetailClient({ project, similarProjects }: Props)
                       </div>
                     </div>
 
+                    )}
+
+                    {project.schema.length > 0 && (
                     <div>
                       <h3 className="text-lg font-semibold text-white mb-6">Core Schema</h3>
                       <div className="flex flex-col gap-4">
@@ -426,8 +462,11 @@ export default function ProjectDetailClient({ project, similarProjects }: Props)
                         ))}
                       </div>
                     </div>
+                    )}
                   </div>
+                  )}
 
+                  {project.techStack.length > 0 && (
                   <div>
                     <h3 className="text-lg font-semibold text-white mb-6">Technology Stack</h3>
                     <div className="grid sm:grid-cols-2 gap-6">
@@ -450,6 +489,9 @@ export default function ProjectDetailClient({ project, similarProjects }: Props)
                     </div>
                   </div>
 
+                  )}
+
+                  {project.adrs.length > 0 && (
                   <div>
                     <h3 className="text-lg font-semibold text-white mb-6">Architecture Decision Records</h3>
                     <div className="flex flex-col gap-3">
@@ -473,6 +515,7 @@ export default function ProjectDetailClient({ project, similarProjects }: Props)
                       ))}
                     </div>
                   </div>
+                  )}
 
                   </div>
                 </div>
@@ -485,7 +528,7 @@ export default function ProjectDetailClient({ project, similarProjects }: Props)
 
       {/* Lightbox */}
       <ImageLightbox
-        images={[...project.mockupImages, ...allGalleryImages]}
+        images={lightboxImages}
         currentIndex={lightboxIndex}
         isOpen={lightboxOpen}
         onClose={() => setLightboxOpen(false)}

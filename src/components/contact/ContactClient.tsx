@@ -210,7 +210,7 @@ export default function ContactClient() {
                 </div>
 
                 {/* Honeypot: hidden from people and screen readers, filled in by bots. */}
-                <div className="absolute -left-[10000px] top-auto h-px w-px overflow-hidden" aria-hidden="true">
+                <div className="sr-only" aria-hidden="true">
                   <label htmlFor={HONEYPOT_FIELD}>Leave this field empty</label>
                   <input type="text" id={HONEYPOT_FIELD} name={HONEYPOT_FIELD} value={formData[HONEYPOT_FIELD]}
                     onChange={handleChange} tabIndex={-1} autoComplete="off" />
@@ -243,6 +243,10 @@ export default function ContactClient() {
                     </>
                   )}
                 </motion.button>
+                <p className="text-center text-xs text-zinc-500">
+                  We use your details to reply to you. See our{' '}
+                  <Link href="/privacy" className="text-zinc-300 underline underline-offset-4 hover:text-white">privacy notice</Link>.
+                </p>
               </form>
             </GlassCard>
           </FadeIn>

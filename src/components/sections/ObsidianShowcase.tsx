@@ -5,6 +5,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import { MotionLink } from '@/components/ui/motion';
+import type { GalleryImage } from '@/content/schema';
 
 const FEATURES = [
   { label: 'CRM & Sales', delay: 0 },
@@ -14,7 +15,7 @@ const FEATURES = [
   { label: 'Built on ERPNext', delay: 0.4 },
 ];
 
-export default function ObsidianShowcase() {
+export default function ObsidianShowcase({ image }: { image?: GalleryImage }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -51,19 +52,21 @@ export default function ObsidianShowcase() {
         {/* Asymmetric Bento Container */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Cinematic Image Pane */}
-          <Link href="/projects/obsidian-erp-v3.0" className="lg:col-span-2 block group relative rounded-2xl overflow-hidden border border-white/[0.06] shadow-2xl shadow-violet-500/5 aspect-[4/3] sm:aspect-[16/9] lg:aspect-auto min-h-[400px]">
+          <Link href="/projects/obsidian-erp" aria-label="Obsidian ERP case study" className="lg:col-span-2 block group relative rounded-2xl overflow-hidden border border-white/[0.06] shadow-2xl shadow-violet-500/5 aspect-[4/3] sm:aspect-[16/9] lg:aspect-auto min-h-[400px]">
             <motion.div
               style={{ scale: imageScale, y: imageY }}
               className="absolute inset-0"
             >
+              {image && (
               <Image
-                src="/Obsidian ERP/Mockups/New folder/obsidian-erp-2 (2).png"
-                alt="Obsidian ERP v3.0 — All-in-One Business Platform"
+                src={image.src}
+                alt={image.alt}
                 fill
                 className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                 sizes="(max-width: 1024px) 100vw, 66vw"
                 priority
               />
+              )}
             </motion.div>
             {/* Subtle inner shadow */}
             <div className="absolute inset-0 rounded-2xl ring-1 ring-inset ring-white/[0.06] pointer-events-none" />
@@ -106,7 +109,7 @@ export default function ObsidianShowcase() {
               </div>
 
               <MotionLink
-                href="/projects/obsidian-erp-v3.0"
+                href="/projects/obsidian-erp"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 className="w-full inline-flex items-center justify-center gap-2 px-6 py-4 text-[14px] font-semibold tracking-wide text-black bg-white rounded-xl transition-colors hover:bg-zinc-200"

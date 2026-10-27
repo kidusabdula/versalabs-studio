@@ -8,7 +8,8 @@ const nextConfig: NextConfig = {
     return [
       { source: "/projects", destination: "/studio", permanent: true },
       { source: "/projects/pavillion-360", destination: "/projects/pavilion-360", permanent: true },
-      { source: "/projects/oskaz-erp", destination: "/projects/obsidian-erp-v3.0", permanent: true },
+      { source: "/projects/oskaz-erp", destination: "/projects/obsidian-erp", permanent: true },
+      { source: "/projects/obsidian-erp-v3.0", destination: "/projects/obsidian-erp", permanent: true },
     ];
   },
 };

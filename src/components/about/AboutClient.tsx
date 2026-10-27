@@ -21,21 +21,21 @@ const team = [
   {
     name: 'Kidus Abdula',
     role: 'Founder & Engineer',
-    portrait: '/Kidus.jpg',
+    portrait: '/images/team/kidus-abdula.webp',
     hasImage: true,
     bio: 'Full-stack engineer leading VersaLabs Studio. Designs and builds business platforms from the ground up, from database schema to production deployment. Cares about clean architecture and shipping fast.',
   },
   {
     name: 'Caleb Demelash',
     role: 'Senior Full Stack Engineer',
-    portrait: '/Caleb.jpg',
+    portrait: '/images/team/caleb-demelash.webp',
     hasImage: true,
     bio: 'Experienced full-stack developer and business liaison. Bridges the gap between technical implementation and client needs, delivering polished user experiences across web and mobile platforms.',
   },
   {
     name: 'Bemnet Kibret',
     role: 'Full Stack Engineer & Designer',
-    portrait: '/kino.png',
+    portrait: '/images/team/bemnet-kibret.webp',
     hasImage: true,
     bio: 'Product designer and front-end specialist. Creates the visual identity and interactive experiences that make VersaLabs platforms feel premium and intuitive to every user.',
   },
@@ -62,11 +62,11 @@ const milestones = [
   { year: '2024', event: 'Minab Clothing demo storefront built' },
   { year: '2025', event: 'Pavilion360 built for an event production company in Indianapolis' },
   { year: '2025', event: "OSKAZ online store launched, connected live to the company's ERP" },
-  { year: '2026', event: 'Obsidian ERP v3.0 in production' },
+  { year: '2026', event: 'Obsidian ERP version 4 released' },
   { year: '2026', event: 'ThreatMatrix AI built as a university senior project' },
 ];
 
-// Tools used in the projects on this site (see src/config/project-database.ts).
+// Tools used in the projects on this site (see src/content/projects/).
 const techStack = [
   {
     label: 'Frontend & Mobile',
