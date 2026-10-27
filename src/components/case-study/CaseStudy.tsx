@@ -198,11 +198,16 @@ export default function CaseStudy({ project, related }: { project: Project; rela
 
           {diagram && (
             <figure className="mb-12 rounded-2xl border border-white/[0.06] bg-[#0E0E10] p-4 md:p-8">
-              {/* Our own SVG, rendered from src/content/diagrams/<slug>.mmd and checked at build. */}
-              <div className="diagram mx-auto max-w-[900px]" dangerouslySetInnerHTML={{ __html: diagram }} />
-              <figcaption className="mt-6 text-center text-[13px] text-zinc-400">
-                {project.title} architecture. The steps below describe the same flow in text.
-              </figcaption>
+              {/* Our own SVG, rendered from src/content/diagrams/<slug>.mmd and checked at build.
+                  Below md it scrolls sideways, so the frame is focusable for keyboard scrolling. */}
+              <div
+                className="diagram mx-auto max-w-[900px] rounded-lg"
+                role="region"
+                aria-label={`${project.title} architecture diagram`}
+                tabIndex={0}
+                dangerouslySetInnerHTML={{ __html: diagram }}
+              />
+              <figcaption className="mt-6 text-center text-[13px] text-zinc-400">{project.title} architecture</figcaption>
             </figure>
           )}
 

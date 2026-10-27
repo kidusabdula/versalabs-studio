@@ -1,0 +1,16 @@
+flowchart TD
+  accTitle: Tamem Kitfo architecture
+  accDescr: The public site, prerendered in English and Amharic, reads through one query module that falls back to bundled fixtures if Supabase is down. Public forms post to server-only API routes that use the service role. Staff use the CMS through a cookie-bound Supabase client, so Row Level Security checks the signed-in staff member. Orders post a Telegram card with status buttons, and a secret-checked webhook updates the status, redraws the card and revalidates the CMS.
+
+  site["Public site: English + Amharic, prerendered"]
+  cms["Staff CMS"]
+  site -- reads --> queries["Query module"]
+  queries --> db[("Supabase Postgres, RLS")]
+  queries -. on failure .-> fixtures["Bundled fixtures"]
+  site -- forms --> api["API routes: service role, server-only"]
+  api --> db
+  cms -- signed-in staff --> db
+  api -- order card --> tg["Telegram bot"]
+  tg -- status button --> hook["Webhook: secret header"]
+  hook --> db
+  hook -- redraw card --> tg
