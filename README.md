@@ -29,6 +29,7 @@ pnpm dev          # http://localhost:3000
 | `src/content/diagrams/<slug>.mmd` | Architecture diagram sources (Mermaid), each with its rendered `<slug>.svg` committed next to it |
 | `src/content/team.ts` | The team on `/about`, with a `visibility` flag per person |
 | `public/images/<slug>/` | WebP mockups and screenshots, each listed in its project's `gallery` |
+| `public/media/<slug>/` | Short silent screen recordings (MP4), each listed in its project's `loops` |
 | `src/app/` | Routes: `/`, `/work`, `/work/[slug]`, `/products`, `/products/[slug]`, `/services`, `/about`, `/notes`, `/contact`, `/privacy`, `/api/contact`, plus `sitemap.ts` and `robots.ts` |
 | `src/components/case-study/` | The case-study template shared by `/work/[slug]` and `/products/[slug]`, and the project card |
 | `src/components/work/WorkIndex.tsx` | The `/work` filters (type, industry, stack, search), kept in the URL |
@@ -51,7 +52,9 @@ not in the sitemap) until notes are published.
 `next.config.ts` builds the permanent redirects from the content, so each old URL reaches its page in one hop:
 `/studio` and `/projects` go to `/work`, `/blog` to `/notes`, `/projects/<slug>` and renamed slugs to the
 project's current URL, and a project's URL under the other section to its own. Moving a project between
-sections is a one-line change in its file, and its old links keep working.
+sections is a one-line change in its file, and its old links keep working. Projects taken off the site are
+listed in `REMOVED`, and their old URLs (`/work/<slug>`, `/products/<slug>`, `/projects/<slug>`) go straight
+to `/work`.
 
 ## Architecture Diagrams
 

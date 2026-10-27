@@ -10,12 +10,15 @@ interface ProjectSlideshowProps {
   images: GalleryImage[];
   title: string;
   onImageClick?: (index: number) => void;
+  // Fetch the first slide early (it is the first image on the page). Off when
+  // something above it on the page comes first.
+  priority?: boolean;
 }
 
 // A manual carousel: it moves only when someone presses an arrow, so there is no
 // timer to pause (WCAG 2.2.2). The first slide is painted as it is, without a
 // fade, because on a phone it can be the largest thing in the first view.
-export default function ProjectSlideshow({ images, title, onImageClick }: ProjectSlideshowProps) {
+export default function ProjectSlideshow({ images, title, onImageClick, priority = true }: ProjectSlideshowProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   if (images.length === 0) return null;
@@ -31,7 +34,7 @@ export default function ProjectSlideshow({ images, title, onImageClick }: Projec
       fill
       className="object-contain"
       sizes="(max-width: 1200px) 100vw, 1200px"
-      priority={currentIndex === 0}
+      priority={priority && currentIndex === 0}
     />
   );
 

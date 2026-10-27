@@ -8,6 +8,11 @@ const RENAMED: Record<string, string> = {
   "obsidian-erp-v3.0": "obsidian-erp",
 };
 
+// Projects taken off the site. Their old URLs (case study, other section and
+// legacy /projects) go straight to /work, so an old link lands on the listing
+// instead of a 404.
+const REMOVED = ["tibeb", "potentia", "pana-web", "fastpay"];
+
 const OTHER_SECTION = { work: "products", products: "work" } as const;
 
 const nextConfig: NextConfig = {
@@ -18,6 +23,9 @@ const nextConfig: NextConfig = {
   async redirects() {
     const routes = getProjectRoutes();
     const sectionOf = new Map(routes.map(({ slug, section }) => [slug, section]));
+    for (const slug of REMOVED) {
+      if (sectionOf.has(slug)) throw new Error(`"${slug}" is on the site again; take it out of REMOVED in next.config.ts`);
+    }
 
     return [
       { source: "/studio", destination: "/work", permanent: true },
@@ -32,6 +40,15 @@ const nextConfig: NextConfig = {
         { source: `/projects/${slug}`, destination: `/${section}/${slug}`, permanent: true },
         { source: `/${OTHER_SECTION[section]}/${slug}`, destination: `/${section}/${slug}`, permanent: true },
       ]),
+      // Removed projects: one hop to the listing. These come before the /projects
+      // fallback below, which would otherwise send /projects/<slug> to a dead /work/<slug>.
+      ...REMOVED.flatMap((slug) =>
+        ["work", "products", "projects"].map((prefix) => ({
+          source: `/${prefix}/${slug}`,
+          destination: "/work",
+          permanent: true,
+        })),
+      ),
       // Anything else under /projects lands on /work, where an unknown slug is a 404.
       { source: "/projects/:path*", destination: "/work/:path*", permanent: true },
     ];

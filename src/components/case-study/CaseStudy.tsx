@@ -2,21 +2,23 @@ import Link from 'next/link';
 import { ArrowLeft, ArrowRight, Code2, ExternalLink, Layers, X } from 'lucide-react';
 import type { Project } from '@/content/schema';
 import { projectPath, type ProjectCard } from '@/content/projects';
-import { KIND_LABEL, KIND_BADGE, STATUS_BADGE } from '@/content/labels';
+import { IN_DEVELOPMENT, KIND_LABEL, KIND_BADGE, STATUS_BADGE } from '@/content/labels';
 import { getDiagramSvg } from '@/lib/diagrams';
 import { SITE_NAME, SITE_URL } from '@/lib/site';
 import DialogOpenButton from './DialogOpenButton';
 import JsonLd from './JsonLd';
 import ProjectCardView from './ProjectCardView';
 import { MockupCarousel, ScreenGallery } from './Galleries';
+import LoopShowcase from './LoopShowcase';
 
 // The case study template for /work/<slug> and /products/<slug>. It renders on
 // the server with no entrance animation, so the title and summary paint at once
-// (they are the largest content in a phone's first view). Only the carousel,
-// the gallery and the dialog's open button need JavaScript.
+// (they are the largest content in a phone's first view). Only the loops, the
+// carousel, the gallery and the dialog's open button need JavaScript.
 //
-// Order: what it is → why it exists → what we built → what you get →
-// architecture → outcomes → screenshots → stack → call to action.
+// Order: what it is → screen recordings → mockups → why it exists → what we
+// built → what you get → architecture → outcomes → screenshots → stack → call
+// to action.
 
 const LIVE_STATUSES: Project['status'][] = ['Production', 'Beta', 'MVP'];
 
@@ -38,7 +40,7 @@ const BUTTON_SECONDARY =
 
 export default function CaseStudy({ project, related }: { project: Project; related: ProjectCard[] }) {
   const isProduct = project.section === 'products';
-  const inDevelopment = project.status === 'Development';
+  const inDevelopment = IN_DEVELOPMENT.includes(project.status);
   const path = projectPath(project);
 
   const mockups = project.gallery.filter((image) => image.kind === 'mockup');
@@ -59,7 +61,7 @@ export default function CaseStudy({ project, related }: { project: Project; rela
   const primaryCta = isProduct ? (inDevelopment ? `Ask About ${project.title}` : 'Request a Demo') : 'Build Something Like This';
   const interestCopy =
     project.kind === 'product' && inDevelopment
-      ? `${project.title} is still in development. If it fits a problem you have, tell us about it.`
+      ? `${project.title} ${project.status === 'Coming Soon' ? 'is coming soon' : 'is still in development'}. If it fits a problem you have, tell us about it.`
       : INTEREST_COPY[project.kind](project.title);
 
   const cover = project.cover ? project.gallery.find((image) => image.src === project.cover) : undefined;
@@ -156,9 +158,18 @@ export default function CaseStudy({ project, related }: { project: Project; rela
       </header>
 
       <div className="mx-auto max-w-[1400px] px-6 pt-16">
+        {project.loops.length > 0 && (
+          <section aria-labelledby="in-motion" className="mx-auto mb-24 max-w-[1200px]">
+            <span className={SECTION_LABEL}>In Motion</span>
+            <h2 id="in-motion" className={SECTION_TITLE}>Watch It Work</h2>
+            <LoopShowcase loops={project.loops} />
+          </section>
+        )}
+
         {mockups.length > 0 && (
           <div className="mx-auto mb-24 max-w-[1200px] overflow-hidden rounded-2xl border border-white/[0.04] shadow-2xl">
-            <MockupCarousel images={mockups} title={project.title} />
+            {/* The first slide is fetched early only when it is the first image on the page. */}
+            <MockupCarousel images={mockups} title={project.title} priority={project.loops.length === 0} />
           </div>
         )}
 

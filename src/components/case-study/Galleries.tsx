@@ -5,11 +5,20 @@ import Image from 'next/image';
 import ProjectSlideshow from '@/components/ui/ProjectSlideshow';
 import ImageLightbox from '@/components/ui/ImageLightbox';
 import type { GalleryImage } from '@/content/schema';
+import MediaCredit from './MediaCredit';
 
 // Mockups play in the carousel near the top and screenshots fill the gallery
 // further down, so no image shows twice. Each has its own full-size viewer.
 
-export function MockupCarousel({ images, title }: { images: GalleryImage[]; title: string }) {
+export function MockupCarousel({
+  images,
+  title,
+  priority = true,
+}: {
+  images: GalleryImage[];
+  title: string;
+  priority?: boolean;
+}) {
   const [open, setOpen] = useState(false);
   const [index, setIndex] = useState(0);
   if (images.length === 0) return null;
@@ -19,6 +28,7 @@ export function MockupCarousel({ images, title }: { images: GalleryImage[]; titl
       <ProjectSlideshow
         images={images}
         title={title}
+        priority={priority}
         onImageClick={(i) => {
           setIndex(i);
           setOpen(true);
@@ -69,7 +79,10 @@ export function ScreenGallery({ images, title }: { images: GalleryImage[]; title
                   sizes="(max-width: 768px) 100vw, 50vw"
                 />
               </button>
-              <figcaption className="mt-3 text-[13px] leading-relaxed text-zinc-400">{image.alt}</figcaption>
+              <figcaption className="mt-3 text-[13px] leading-relaxed text-zinc-400">
+                {image.alt}
+                {image.credit && <MediaCredit credit={image.credit} className="mt-1 block" />}
+              </figcaption>
             </figure>
           </li>
         ))}

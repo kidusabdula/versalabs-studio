@@ -1,5 +1,17 @@
 import { defineProject } from '../schema';
 
+// The clip SafeFrame scans in the loops and the results screenshots. Its
+// licence (CC BY 4.0) requires this credit wherever they appear.
+const TORONTO_SKYLINE = {
+  label: "Sample video",
+  title: "Toronto Skyline",
+  author: "Lucastphotography",
+  license: "CC BY 4.0",
+  licenseUrl: "https://creativecommons.org/licenses/by/4.0/",
+  source: "Wikimedia Commons",
+  sourceUrl: "https://commons.wikimedia.org/wiki/File:Toronto_Skyline.webm",
+};
+
 export default defineProject({
   slug: "safeframe",
   title: "SafeFrame",
@@ -16,7 +28,39 @@ export default defineProject({
     live: "https://safeframe-livid.vercel.app",
   },
   heroGradient: "from-zinc-500/20 via-transparent to-neutral-500/10",
-  gallery: [],
+  cover: "/images/safeframe/screen-home-desktop.webp",
+  gallery: [
+    { src: "/images/safeframe/screen-home-desktop.webp", alt: "SafeFrame home page: video safety that never leaves the device", kind: "screen", width: 1440, height: 900, reviewed: true },
+    { src: "/images/safeframe/screen-detect-desktop.webp", alt: "SafeFrame detector, ready for a video file or a link", kind: "screen", width: 1440, height: 900, reviewed: true },
+    { src: "/images/safeframe/screen-results-desktop.webp", alt: "SafeFrame result for a sample clip: no inappropriate content found, with per-category scores, a score timeline and on-device timings", kind: "screen", width: 1440, height: 900, credit: TORONTO_SKYLINE, reviewed: true },
+    { src: "/images/safeframe/screen-architecture-desktop.webp", alt: "SafeFrame architecture page explaining how it decides, with a numbered table of contents", kind: "screen", width: 1440, height: 900, reviewed: true },
+    { src: "/images/safeframe/screen-home-dark-desktop.webp", alt: "SafeFrame home page in the dark theme", kind: "screen", width: 1440, height: 900, reviewed: true },
+    { src: "/images/safeframe/screen-home-mobile.webp", alt: "SafeFrame home page on a phone", kind: "screen", width: 780, height: 1688, reviewed: true },
+    { src: "/images/safeframe/screen-detect-mobile.webp", alt: "SafeFrame detector on a phone, ready for a file or a link", kind: "screen", width: 780, height: 1688, reviewed: true },
+    { src: "/images/safeframe/screen-results-mobile.webp", alt: "SafeFrame result for a sample clip on a phone, with the score timeline", kind: "screen", width: 780, height: 1688, credit: TORONTO_SKYLINE, reviewed: true },
+  ],
+  loops: [
+    {
+      src: "/media/safeframe/loop-desktop-960.mp4",
+      poster: "/images/safeframe/screen-detect-desktop.webp",
+      caption: "A real scan in the browser: pasting a link to a sample clip, pre-scanning it on the device, and the result, with no inappropriate content found.",
+      view: "desktop",
+      width: 960,
+      height: 600,
+      credit: TORONTO_SKYLINE,
+      reviewed: true,
+    },
+    {
+      src: "/media/safeframe/loop-mobile.mp4",
+      poster: "/images/safeframe/screen-detect-mobile.webp",
+      caption: "The same scan on a phone, ending on the scores and the result payload.",
+      view: "mobile",
+      width: 780,
+      height: 1688,
+      credit: TORONTO_SKYLINE,
+      reviewed: true,
+    },
+  ],
   description: "SafeFrame checks a video for adult content without sending it anywhere. You drop in a file or paste a link. A small model screens the video frame by frame inside the browser, and a larger model double-checks only the unclear frames. You get a clear verdict, a confidence score and the exact moments that were flagged. The same scoring core also runs in an Android app (one model) and a browser extension.",
   businessProblem: "Kids' browsers and parental tools need to catch adult content in videos. Sending a child's screen to a server is a privacy and legal risk. It also costs money per user and fails offline. Many families also use older phones with little memory.",
   architecturalSolution: "A fully client-side, static-export PWA with no server, database or inference API. A platform-agnostic TypeScript core (Zod payload schema, scoring, smoothing and device-tier policy) is shared unchanged by a Next.js 16 web app, an Expo app and a Manifest V3 extension. Detection is an adaptive cascade: an NSFWJS MobileNetV2 screener on TensorFlow.js checks every sampled frame, and only borderline frames go to a Vision Transformer verifier on ONNX Runtime Web inside a Web Worker. The verifier blends its score with the screener's but can never pull it below the screener's explicit-content score. A second pass over the raw scores catches short inserts that smoothing would hide.",
