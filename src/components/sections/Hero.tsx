@@ -6,9 +6,12 @@ import { MotionLink } from '@/components/ui/motion';
 
 const SPRING = { stiffness: 300, damping: 30 };
 
+// The container only orchestrates the stagger. It must not fade: the heading
+// and subtitle inside it are the LCP, and an opacity-0 parent hides them until
+// hydration.
 const heroVariants = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { staggerChildren: 0.12, delayChildren: 0.2 } },
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.12, delayChildren: 0.2 } },
 };
 
 const slideUp = {

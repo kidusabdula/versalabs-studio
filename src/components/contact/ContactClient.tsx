@@ -108,17 +108,16 @@ export default function ContactClient() {
     <div className="min-h-screen px-6 pt-40 pb-24">
       <div className="mx-auto max-w-6xl">
 
-        {/* Header */}
-        <FadeIn>
-          <div className="mb-16 max-w-2xl">
-            <h1 className="text-5xl md:text-6xl font-bold tracking-tighter text-white mb-6">
-              Let&apos;s Talk.
-            </h1>
-            <p className="text-xl text-zinc-400 leading-relaxed">
-              Tell us about your project and we&apos;ll get back to you with a plan.
-            </p>
-          </div>
-        </FadeIn>
+        {/* Header: no entrance fade, so the heading and intro (the LCP) paint
+            with the server HTML instead of after hydration. */}
+        <div className="mb-16 max-w-2xl">
+          <h1 className="text-5xl md:text-6xl font-bold tracking-tighter text-white mb-6">
+            Let&apos;s Talk.
+          </h1>
+          <p className="text-xl text-zinc-400 leading-relaxed">
+            Tell us about your project and we&apos;ll get back to you with a plan.
+          </p>
+        </div>
 
         <div className="grid lg:grid-cols-5 gap-12">
 

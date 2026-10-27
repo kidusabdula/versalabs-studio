@@ -141,17 +141,14 @@ export default function AboutClient() {
                   About VersaLabs Studio
                 </span>
               </SlideIn>
-              <FadeIn>
-                <h1 className="text-5xl md:text-7xl font-bold tracking-tighter text-white mb-6">
-                  The Team Behind{' '}
-                  <span className="bg-gradient-to-r from-white via-white to-zinc-500 bg-clip-text text-transparent">VersaLabs.</span>
-                </h1>
-              </FadeIn>
-              <FadeIn delay={0.15}>
-                <p className="text-[17px] text-zinc-400 leading-relaxed max-w-xl">
-                  We&apos;re a small, focused team based in Addis Ababa, Ethiopia. We build business software (ERP systems, AI tools, e-commerce stores, and custom business tools) for clients in Ethiopia and abroad.
-                </p>
-              </FadeIn>
+              {/* No entrance fade on the heading and intro: they are the LCP. */}
+              <h1 className="text-5xl md:text-7xl font-bold tracking-tighter text-white mb-6">
+                The Team Behind{' '}
+                <span className="bg-gradient-to-r from-white via-white to-zinc-500 bg-clip-text text-transparent">VersaLabs.</span>
+              </h1>
+              <p className="text-[17px] text-zinc-400 leading-relaxed max-w-xl">
+                We&apos;re a small, focused team based in Addis Ababa, Ethiopia. We build business software (ERP systems, AI tools, e-commerce stores, and custom business tools) for clients in Ethiopia and abroad.
+              </p>
             </div>
 
             {/* Right: Animated Stats Bento */}

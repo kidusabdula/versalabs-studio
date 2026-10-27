@@ -99,19 +99,16 @@ export default function ServicesClient({ projects }: ServicesClientProps) {
                 <span className="text-xs font-semibold tracking-widest text-zinc-300 uppercase">What We Do</span>
               </div>
             </SlideIn>
-            <FadeIn>
-              <h1 className="text-5xl md:text-7xl font-bold tracking-tighter text-white mb-6">
-                Business Software,{' '}
-                <span className="bg-gradient-to-b from-white to-white/40 bg-clip-text text-transparent">
-                  Delivered.
-                </span>
-              </h1>
-            </FadeIn>
-            <FadeIn delay={0.15}>
-              <p className="text-xl text-zinc-400 leading-relaxed max-w-2xl">
-                From a single idea to a fully operational business platform. We design, build, and deploy the software that powers your organization — no shortcuts, no templates, no excuses.
-              </p>
-            </FadeIn>
+            {/* No entrance fade on the heading and intro: they are the LCP. */}
+            <h1 className="text-5xl md:text-7xl font-bold tracking-tighter text-white mb-6">
+              Business Software,{' '}
+              <span className="bg-gradient-to-b from-white to-white/40 bg-clip-text text-transparent">
+                Delivered.
+              </span>
+            </h1>
+            <p className="text-xl text-zinc-400 leading-relaxed max-w-2xl">
+              From a single idea to a fully operational business platform. We design, build, and deploy the software that powers your organization — no shortcuts, no templates, no excuses.
+            </p>
           </div>
         </motion.div>
       </section>
