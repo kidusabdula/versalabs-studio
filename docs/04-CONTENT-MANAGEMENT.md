@@ -14,28 +14,39 @@ sitemap all read from `src/content/projects/index.ts`.
   `Demo`, `Development` or `Coming Soon` (a product in development that is close to launch). Badges for both come from
   `src/content/labels.ts`; `Development` and `Coming Soon` share the violet badge and the in-development calls to
   action.
-- `industry` (at least one) and `stack` take values from the fixed lists `INDUSTRIES` and `STACK` in the schema, so
-  the `/work` filters only ever offer real values. Add a new value to the list first, then use it.
+- `industry` (at least one) takes values from the fixed list `INDUSTRIES` in the schema, so the `/work` filter only
+  ever offers real values. Add a new value to the list first, then use it.
+- Every project tells its story in plain business words: `summary`, `description`, `need` (the problem a product
+  solves, or what the client needed) and `features`. A product adds `audience` (who it's for) and lists 3 to 6
+  benefit-led features. Client work adds `delivered` (what we delivered, in plain terms) and lists up to 4
+  highlights. The schema enforces both shapes.
+- There are no fields for technology, engineering detail or diagrams. The loader also checks every text field
+  against `src/content/plain-language.ts`, so a technology name or a piece of jargon fails the build. The rules are
+  in `docs/05-CONTENT-TONE-GUIDE.md`.
 - `section` is optional: products default to `/products`, everything else to `/work`. Set it to move a project
   (Jarvis sets `section: "products"`). The redirects follow automatically.
-- `client` is optional and appears on the case study only when set. Leave it out when the client has not agreed to
-  be named.
+- `client` is optional: the client's name when it differs from the project title (PrintOnline.et is for Pana
+  Promotion). It appears on the card and the client page, and names the client on the home page and in service
+  examples.
 - `metrics` (outcome numbers) default to empty. Each one needs a `label`, a `value` and the `evidence` behind it
   (where the number comes from). The Outcomes section appears only when there is at least one.
-- `links.live` and `links.repo` are optional. Leave `repo` out for private repositories, and leave `live` out until the
-  live site is something we stand behind.
+- `links.live` is optional. Leave it out until the live site or demo is something we stand behind. A product with a
+  live link gets "Try the Live Demo" as its call to action.
 - `visibility: 'hide'` removes a project everywhere at once: listings, its case study (a hard 404 via
   `dynamicParams = false`), the footer, the redirects and the sitemap.
 - Listing pages receive a slim `ProjectCard` (`toCard()`), not the whole project, so case study text stays out of their
   payload.
 
 ### Sections, URLs and the Sitemap
-- `/work` lists every project, products included, with filters for type, industry and stack plus a search box. The
-  filters live in the URL (`/work?type=client&industry=events`), so a filtered view can be shared.
+- `/work` lists client work (section `work`), with an industry filter and a search box. The filters live in the
+  URL (`/work?industry=events&q=store`), so a filtered view can be shared.
 - `/products` lists the projects whose section is `products`, with their status badges.
-- Case studies live at `/work/[slug]` or `/products/[slug]`, both rendered by one template
-  (`src/components/case-study/CaseStudy.tsx`). Products get a "Request a Demo" button; client work gets
-  "Build Something Like This". `src/proxy.ts` lowercases mixed-case URLs with a 308.
+- Pages live at `/products/[slug]` (a product landing page: value, who it's for, features, visuals, status, one
+  call to action) or `/work/[slug]` (a short client story: their need, what we delivered, visuals, "Start a Similar
+  Project"), both rendered by `src/components/case-study/CaseStudy.tsx`. `callToAction()` in
+  `src/content/labels.ts` picks the button: "Try the Live Demo" when a product has a live link, "Get Notified" while
+  it is in development, otherwise "Request a Demo". The contact links carry `?topic=<slug>&interest=…`, and the
+  form starts the message for the visitor. `src/proxy.ts` lowercases mixed-case URLs with a 308.
 - `projectPath()` in `src/content/projects/index.ts` is the one place a project's URL is built.
 - `next.config.ts` generates the permanent redirects from the content: `/studio` and `/projects` → `/work`,
   `/blog` → `/notes`, `/projects/<slug>` → the project's page, a project's URL under the other section → its own,
@@ -49,13 +60,10 @@ sitemap all read from `src/content/projects/index.ts`.
   visible projects. `/notes` stays out of it (and is noindex) until notes are published. `src/app/robots.ts` points
   to the sitemap.
 
-### Architecture Diagrams
-- A case study shows a diagram when `src/content/diagrams/<slug>.mmd` exists. Draw only what the project file
-  already says (`architecturalSolution` and `architecture.diagram`), as a `flowchart TD` with `accTitle` and
-  `accDescr`. Keep it narrow (at most three boxes side by side), so it stays readable on a phone.
-- Run `pnpm diagrams <slug>` and commit the `.mmd` and the rendered `.svg` together. The build fails if the SVG is
-  missing or older than its source. The README explains the pipeline.
-- The numbered "Flow, Step by Step" list comes from `systemFlow` and is always shown, diagram or not.
+### Services
+- The four services on the home page and `/services` live in `src/content/services.ts`, with their example pages
+  by slug. An example that no longer resolves (deleted or hidden) fails the build. Each service's `id` is also the
+  contact form's project type, so "Talk to Us About …" preselects it (`/contact?service=erp`).
 
 ### Team
 - The team on `/about` lives in `src/content/team.ts`. `visibility: 'hide'` takes a person off the page, so a
@@ -66,10 +74,8 @@ sitemap all read from `src/content/projects/index.ts`.
 - Status labels are honest: `Production` only for software real users rely on today.
 
 ### Tone & Voice
-- **Plain and specific:** say what the software does and for whom, in words a business owner understands.
-- **Factual:** describe what was built and how. Numbers appear only with evidence behind them.
-- **Narrative Structure:** every project defines `businessProblem`, `architecturalSolution`, `systemFlow` and its
-  `features`.
+- Follow `docs/05-CONTENT-TONE-GUIDE.md`: say what the software does for the business and for whom, in words a
+  business owner understands, and never how it is built. Numbers appear only with evidence behind them.
 
 ## 2. Images
 
@@ -98,8 +104,8 @@ sitemap all read from `src/content/projects/index.ts`.
 - Each loop lists `src`, `poster`, `caption`, `view` (`desktop` or `mobile`), `width`, `height`, `reviewed: true` and,
   when needed, `credit`. The `poster` must be one of the project's gallery screenshots with the same shape, showing
   the page the loop opens on, so a loop adds no poster file.
-- The case study shows them under the header in "Watch It Work": each desktop loop beside the phone loop of the
-  same row. The poster paints first; the video loads only when it scrolls into view (`preload="none"`), plays muted
+- The page shows them in its visuals section ("See It Work" on a product, "What It Looks Like" on a client
+  story): each desktop loop beside the phone loop of the same row. The poster paints first; the video loads only when it scrolls into view (`preload="none"`), plays muted
   and looping while in view, has a pause button, and never appears with `prefers-reduced-motion: reduce` (the
   poster stays). The caption below each loop says what it shows; the video itself is `aria-hidden`.
 

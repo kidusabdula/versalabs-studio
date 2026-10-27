@@ -13,11 +13,10 @@ pnpm dev          # http://localhost:3000
 | Script | What it does |
 |---|---|
 | `pnpm dev` | Development server |
-| `pnpm build` | Runs `scripts/check-images.mjs` and `scripts/check-diagrams.mjs`, then `next build` |
+| `pnpm build` | Runs `scripts/check-images.mjs`, then `next build` |
 | `pnpm start` | Serves the production build |
 | `pnpm lint` | ESLint (`eslint.config.mjs`) |
 | `pnpm typecheck` | `tsc --noEmit` |
-| `pnpm diagrams [slug...]` | Renders architecture diagrams from Mermaid to SVG with a local Chrome or Edge (see below) |
 
 ## Where Things Live
 
@@ -25,14 +24,17 @@ pnpm dev          # http://localhost:3000
 |---|---|
 | `src/content/projects/<slug>.ts` | One file per project or product: the single source of truth for listings, case studies and the sitemap |
 | `src/content/schema.ts` | The Zod schema every project file is validated against at build time |
-| `src/content/projects/index.ts` | Listing order, validation, and the helpers: `getAllProjects`, `getProjectBySlug`, `getProjectsInSection`, `projectPath`, `toCard` |
-| `src/content/diagrams/<slug>.mmd` | Architecture diagram sources (Mermaid), each with its rendered `<slug>.svg` committed next to it |
+| `src/content/projects/index.ts` | Listing order, validation (schema plus the plain-language check), and the helpers: `getAllProjects`, `getProjectBySlug`, `getProjectsInSection`, `projectPath`, `toCard` |
+| `src/content/plain-language.ts` | The words public copy may not use (technology names and engineering jargon); a project that uses one fails the build |
+| `src/content/services.ts` | The four services on `/` and `/services`, their example pages, and the How We Work steps |
+| `src/content/labels.ts` | Status and kind badges, and `callToAction()`: the one button each product or client page ends with |
 | `src/content/team.ts` | The team on `/about`, with a `visibility` flag per person |
 | `public/images/<slug>/` | WebP mockups and screenshots, each listed in its project's `gallery` |
 | `public/media/<slug>/` | Short silent screen recordings (MP4), each listed in its project's `loops` |
 | `src/app/` | Routes: `/`, `/work`, `/work/[slug]`, `/products`, `/products/[slug]`, `/services`, `/about`, `/notes`, `/contact`, `/privacy`, `/api/contact`, plus `sitemap.ts` and `robots.ts` |
-| `src/components/case-study/` | The case-study template shared by `/work/[slug]` and `/products/[slug]`, and the project card |
-| `src/components/work/WorkIndex.tsx` | The `/work` filters (type, industry, stack, search), kept in the URL |
+| `src/components/case-study/` | The page template shared by `/products/[slug]` (a product landing page) and `/work/[slug]` (a client story), and the card |
+| `src/components/sections/` | The home page: hero, products, services, clients, how we work, and the closing call to action |
+| `src/components/work/WorkIndex.tsx` | The `/work` filters (industry and search), kept in the URL |
 | `src/lib/site.ts` | `SITE_URL`, `CONTACT_EMAIL` and `pageMetadata()`, which sets title, description, canonical, Open Graph and Twitter tags per page |
 | `src/lib/project-page.ts` | Static params, metadata and related projects for the case-study routes |
 | `src/lib/og.tsx` | The per-project Open Graph image, generated at build time by each route's `opengraph-image.tsx` |
@@ -45,9 +47,9 @@ How to add or change a project, and the image review rule, are in `docs/04-CONTE
 ## Sections and Redirects
 
 A project's `section` decides its URL: `/work/<slug>` or `/products/<slug>`. It defaults to `products` for
-`kind: 'product'` and `work` for everything else, and a project file can override it. `/work` lists every
-project, products included, and each card links to the project's own URL. `/notes` is a placeholder (noindex,
-not in the sitemap) until notes are published.
+`kind: 'product'` and `work` for everything else, and a project file can override it. `/products` lists the
+products and `/work` lists client work. `/notes` is a placeholder (noindex, not in the sitemap) until notes are
+published.
 
 `next.config.ts` builds the permanent redirects from the content, so each old URL reaches its page in one hop:
 `/studio` and `/projects` go to `/work`, `/blog` to `/notes`, `/projects/<slug>` and renamed slugs to the
@@ -56,18 +58,13 @@ sections is a one-line change in its file, and its old links keep working. Proje
 listed in `REMOVED`, and their old URLs (`/work/<slug>`, `/products/<slug>`, `/projects/<slug>`) go straight
 to `/work`.
 
-## Architecture Diagrams
+## Plain Language
 
-A case study shows an architecture diagram when `src/content/diagrams/<slug>.mmd` exists. Write the diagram in
-Mermaid (`flowchart TD`, with `accTitle` and `accDescr` for screen readers), from what the project file
-already says, then run `pnpm diagrams <slug>` and commit both files. The script renders with Mermaid in a
-local headless Chrome or Edge (`CHROME_PATH` if neither is found). It downloads Mermaid at a pinned version and
-checks the file against a pinned SHA-384 first, so no Mermaid code reaches the site. The SVG has no styles of
-its own; `.diagram` in `src/app/globals.css` colours it.
-
-`pnpm build` runs `scripts/check-diagrams.mjs`, which fails when an SVG is missing, was rendered from an older
-source (the SVG records its source's SHA-256), belongs to no project, or contains anything active (scripts,
-event handlers, `foreignObject`, external references or styles).
+The site sells products and services, so public copy never says how the software is built: no technology names,
+no engineering jargon (the full list is in `src/content/plain-language.ts`, the rules in
+`docs/05-CONTENT-TONE-GUIDE.md`). The project schema has no fields for technology or engineering detail, and the
+loader checks every text field of every project against the list, so a banned word fails the build with the
+project, the field and the word.
 
 ## Search and Social Metadata
 

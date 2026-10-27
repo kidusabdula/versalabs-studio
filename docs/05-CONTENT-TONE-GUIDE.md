@@ -1,137 +1,147 @@
-# VersaLabs Studio — Content & Tone Guide (V4)
+# VersaLabs Studio: Content and Tone Guide (V5)
 
-> **Purpose**: This document defines the content strategy, tone of voice, and text patterns used across the VersaLabs Studio website. All future copy should follow these guidelines to maintain consistency and maximize audience reach.
-
----
-
-## Core Tone Principles
-
-### 1. Accessible, Not Dumbed Down
-
-**Content Tone Shift**: Lowering reading difficulty across all text while keeping the premium narrative. Jargon like "autonomous", "bounded contexts", "schema-first" will be simplified or contextualized for non-technical visitors. Example: "Engineering Autonomous Enterprise Systems" → "We Build Smart Systems That Power Your Business".
-
-We lowered the reading difficulty across the entire platform without losing our premium, professional positioning. The goal: **any business owner in Addis Ababa should understand what we do within 5 seconds of landing on the site**, while a CTO in San Francisco should still see us as enterprise-grade.
-
-**Before (V3):**
-> "Self-hosted autonomous SWE platform orchestrating multi-model LLM agents via OpenClaw gateway, with MCP integrations for GitHub, Vercel, Notion, and Gmail — deployed on Docker."
-
-**After (V4):**
-> "Our in-house AI assistant that automates development workflows — managing code, deployments, documentation, and communication across all our projects through intelligent AI agents."
-
-### 2. Action-Oriented, Not Feature-Listing
-
-Every product summary leads with **what it does for the user**, not what technology it uses. Technical details are accessible via the "View Architecture" modal on each project detail page.
-
-**Pattern:**
-- ❌ "Built on Next.js App Router with strict three-tier architecture and dual-theme OKLCH color system"
-- ✅ "A gallery-worthy digital storefront for contemporary Ethiopian fashion. Beautiful dark and light themes, smooth animations, and a complete shopping experience."
-
-### 3. Locally Rooted, Globally Ready
-
-We explicitly acknowledge our Ethiopian identity as a strength, not a limitation. The phrase **"Based in Addis Ababa, building for the world"** appears in the footer, metadata, and About page.
-
-Key phrases that reinforce this:
-- "Software that speaks your language — literally."
-- "Telebirr integrations, Amharic support, and design that resonates locally."
-- "Stripe payments, multi-currency support, and infrastructure that serves users from Addis Ababa to New York."
+> **Purpose:** how every word on versalabs-studio.com should sound. VersaLabs is a product studio: it sells its
+> own products and builds software for other businesses. The site sells those products and services. It is not a
+> portfolio, and it is not an engineering showcase.
 
 ---
 
-## Page-by-Page Tone Map
+## The One Rule
 
-### Home Page
-| Section | Tone | Key Message |
-|---------|------|-------------|
-| Hero | Bold, warm, inviting | "We Build Smart Systems That Power Your Business" |
-| ObsidianShowcase | Premium, immersive | Flagship product, visual-first, minimal text |
-| CoreCapabilities | Confident, simple | "Built different — by design." with accessible descriptions |
-| Why Businesses Choose Us | Trust-building | "Your idea deserves more than a template." |
-| Featured Products | Visual, action-oriented | Each product described by what it solves, not how it's built |
-| From Addis to the World | Local pride + global reach | Bilingual support, local payment integration, global infrastructure |
-| CTA | Direct, friendly | "Ready to Get Started? Let's build something great together." |
+**Say what the software does for the people who use it. Never say how it is built.**
 
-### Studio Page
-- **Hero**: "Our Best Work." — confident, not boastful
-- **Product Cards**: Each shows category badge, year, status, and product type (SaaS/Custom/Internal)
-- **Search/Filter**: Functional, no marketing copy needed
+A visitor is a business owner, an operations lead or a manager. They want to know three things: what this is, whether
+it is for them, and what to do next. They don't buy a framework, a database or an architecture, so the site never
+names one.
 
-### Services Page
-- **Hero**: "Business Software, Delivered." — direct, professional
-- **Service Cards**: Each service described in one sentence of plain language
-- **Process Steps**: 4-step flow (Discover → Design → Build → Launch) — transparent, no jargon
-- **Trust Signals**: Plain statements with no numbers we can't back up (Real, Scoped, Custom, Ongoing)
-
-### About Page
-- **Hero**: "The Team Behind VersaLabs." — personal, approachable
-- **Team Bios**: 2-3 sentences each, focused on what they do, not credentials
-- **Philosophy**: "Small team. Big impact." — lean, focused, quality-driven
-- **Timeline**: Simple milestone list showing growth trajectory
-
-### Contact Page
-- **Hero**: "Let's Talk." — warm, inviting, no barriers
-- **Form**: 8 fields with clear labels, nothing ambiguous
-- **Sidebar**: Email, location, how replies work, social links (no response-time promise)
-
-### Blog
-- **Coming Soon** with pulse indicator — "We're preparing articles about software architecture, AI development, and building products in the Ethiopian tech ecosystem."
+| Instead of | Write |
+|---|---|
+| "A multi-tenant Next.js app on Supabase with row-level security" | "Each business gets its own private workspace, with its own branding and its own data." |
+| "A two-tier model cascade runs on-device inference" | "It checks the video on your own device, so the video never leaves it." |
+| "ERPNext-backed inventory with webhook order sync" | "Customers see real stock and prices, and every order lands in your ERP." |
+| "Event-driven microservices" | (Leave it out. Say what the customer gets.) |
 
 ---
 
-## Product Type Labels
+## Voice
 
-| `productType` | UI Label (Studio) | UI Label (Detail) | Color |
-|---|---|---|---|
-| `saas` | "SaaS" | "Deploy Ready" | Emerald |
-| `client-project` | "Custom" | "Custom Built" | Violet |
-| `internal` | "Internal" | "Internal Tool" | Cyan |
-
-Detail page CTAs adapt based on product type:
-- **SaaS**: "Deploy This Platform" / "Schedule a Demo"
-- **Client**: "Build Something Like This" / "Get a Custom Version"
+- **Plain business language.** Short sentences in the active voice. Aim for 20 words or fewer.
+- **Benefit first.** Start with what the reader gets, then (only if it helps) what the software does to get it there.
+- **Confident, not loud.** No superlatives that nobody can check ("best", "fastest", "revolutionary").
+- **Specific.** "Prints receipts with the Ethiopian date and the amount in words" beats "powerful receipts".
+- **Local and global.** Amharic support, local payment methods and Ethiopian dates are selling points. Say them
+  plainly.
+- **Our voice is "we"; the reader is "you" and "your business".**
 
 ---
 
-## Vocabulary Rules
+## Banned Words
 
-### Words We Use
-- "Platform" (not "application" or "app" for enterprise products)
-- "Build" and "Ship" (not "develop" or "implement")
-- "Smart" (not "intelligent" or "AI-powered" — unless specifically about AI features)
-- "Your business" (not "the enterprise" or "the organization")
-- "Works" and "works for you" (not "functions" or "operates")
+`src/content/plain-language.ts` holds the list, and the build fails if any project file uses one. The same list
+applies to every other page (home, services, about, metadata), and the pre-release check scans the rendered HTML of
+every route for it. The one exception is `/privacy`, which names the web host because a privacy notice has to. The
+categories:
 
-### Words We Avoid
-- "Leverage" → use "use" or "powered by"
-- "Utilize" → use "use"
-- "Scalable" → describe what actually scales ("handles thousands of users")
-- "Robust" → describe what makes it reliable ("covered by tests", "validated at the server")
-- "Solution" → use "platform", "system", or "tool"
-- "Synergy" → never
-- "Cutting-edge" → use "modern" or "latest"
+- **How it is built:** architecture, multi-tenant, microservices, event-driven, schema, data model, API, webhook,
+  stack, tech stack, monorepo, serverless, bounded context, design pattern, DDD, CQRS, RLS, cron, PWA.
+- **Frameworks, languages and databases:** Next.js, React, React Native, Node.js, TypeScript, Python, Supabase,
+  PostgreSQL, MongoDB, Redis, ERPNext, Docker, Vercel, and the rest of the list.
+- **Models and AI plumbing:** LLM, GPT, MobileNet, ONNX, TensorFlow, model cascade, inference, embeddings.
 
-### Technical Terms (Use Only in Architecture Modal)
-These terms should only appear in the "View Architecture" modal on project detail pages, never in hero text, summaries, or card descriptions:
-- DDD, Bounded Context, Domain Events
-- OKLCH, HSL
-- Repository Pattern, Factory Pattern
-- MCP, OpenClaw, OpenRouter
-- SWR, TanStack Query
-- Row Level Security
-- CI/CD Pipeline
+"AI" is fine when it describes what the customer gets ("AI that writes the alert in plain language"). The model
+behind it is not.
+
+Also avoid these, even though the build allows them: leverage, utilize, robust, scalable, seamless, cutting-edge,
+solution, synergy, world-class, enterprise-grade.
 
 ---
 
-## Writing New Content
+## Hard Rules
 
-When writing new text for the website, follow this checklist:
-
-1. **Read it out loud.** If it sounds like a software documentation page, rewrite it.
-2. **The "mom test."** Would your non-technical parent understand what this product does? If not, simplify.
-3. **Lead with the benefit.** What does the user get? Then (optionally) explain how.
-4. **Keep sentences short.** Max 20 words per sentence is ideal.
-5. **Use active voice.** "We build" not "Systems are built by our team."
-6. **Include a CTA.** Every section should have a clear next action for the visitor.
+- **No invented numbers.** No metrics, user counts, client counts, ratings or testimonials unless they are already
+  verified in the content (a `metrics` entry with its `evidence`) or in `versa-career-ops/state/facts.md`.
+- **No credit wording** ("Built by…", "Credits") apart from licence credits a licence requires, such as SafeFrame's
+  CC BY sample video.
+- **No real organisation next to an unverified figure, and no personal data.**
+- **Honest status.** Every product and project shows its status. Something in development never reads as if it has
+  shipped. "Coming Soon" is for products close to launch.
+- **Name a client only when the content already does.** A client's own brand in the project title is fine.
+- **Title Case** for headings, buttons and labels.
 
 ---
 
-*Last updated: May 2026 — V4 Platform Overhaul*
+## Page Patterns
+
+### Home
+
+1. **Hero:** what we do, in one line, and one primary button.
+2. **Our Products:** each product's name, its value in one line, and its status.
+3. **Services:** the four things we build for clients (custom ERP, online stores, websites, AI tools), each with
+   the clients we built it for.
+4. **Clients:** the businesses we have worked with, as names.
+5. **How We Work:** Discover, Design, Build, Launch.
+6. **Contact:** one invitation to talk.
+
+### Product Pages (`/products/<slug>`)
+
+A product page is a landing page, in this order:
+
+1. **Value proposition:** the name, a one-line promise (`subtitle`) and two or three sentences on what it does for
+   you (`description`).
+2. **Who it's for** (`audience`, then the problem it solves, `need`).
+3. **What you can do** (`features`): 3 to 6, each a benefit in the title and one plain sentence under it.
+4. **See it work:** screen recordings, then screenshots.
+5. **Status:** the badge and one line on availability.
+6. **One call to action:**
+   - "Try the Live Demo" when there is a public demo (`links.live`);
+   - "Get Notified" while it is in development (Development or Coming Soon) and has no public demo;
+   - "Request a Demo" otherwise.
+
+No pricing.
+
+### Client Work (`/work/<slug>`)
+
+A client page is a short client story:
+
+1. **The client and their industry,** with a link to their live site where we may show it.
+2. **Their need** (`need`): the business problem, in plain terms.
+3. **What we delivered** (`delivered`, plus up to 4 short highlights in `features`): what changed for their
+   business, not how we built it.
+4. **Visuals:** recordings and screenshots.
+5. **"Start a Similar Project".**
+
+### Services, About and Contact
+
+- **Services:** what each offering gets you, which clients it was built for, and how to start.
+- **About:** the company. Who we are, where we are, how we work and the team. It is not a personal portfolio.
+- **Contact:** a warm, short invitation. No response-time promises we can't keep.
+
+---
+
+## Field Guide For Project Files
+
+| Field | What it holds | Example |
+|---|---|---|
+| `subtitle` | The promise, in under 10 words | "Run Your Forex Bureau From One Screen" |
+| `summary` | One or two sentences for cards and search results | "Rates, transactions and branches in one place…" |
+| `description` | The value proposition, or the story in brief | Two or three sentences |
+| `need` | The problem, in plain terms and in the third person, never as an unattributed quote (that reads as a testimonial) | "Many bureaus track rates on paper and in chat threads…" |
+| `audience` | Products only: who it's for | "Forex bureaus with one or more branches…" |
+| `delivered` | Client work only: what the client got | "An online store where customers…" |
+| `features` | Benefit-led title and one sentence | "Know Your Cash Position at a Glance" |
+| `tags` | Plain words a buyer would search | "Real Estate", "Rent Collection" |
+
+Image `alt` text and recording captions follow the same rules: describe what is on the screen in plain words.
+
+---
+
+## Before You Publish
+
+1. Read it out loud. If it sounds like documentation, rewrite it.
+2. Could a shop owner in Addis Ababa say what this does after reading the first line?
+3. Does every claim come from the content or the facts file?
+4. Is there exactly one next step?
+
+---
+
+*Last updated: October 2026, V5 (product studio).*
