@@ -77,10 +77,6 @@ export function getProjectBySlug(slug: string): Project | undefined {
   return VISIBLE.find((project) => project.slug === slug);
 }
 
-export function getAllSlugs(): string[] {
-  return VISIBLE.map((project) => project.slug);
-}
-
 export function getProjectsInSection(section: ProjectSection): Project[] {
   return VISIBLE.filter((project) => project.section === section);
 }
