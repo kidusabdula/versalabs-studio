@@ -9,14 +9,16 @@ import DialogOpenButton from './DialogOpenButton';
 import JsonLd from './JsonLd';
 import ProjectCardView from './ProjectCardView';
 import { MockupCarousel, ScreenGallery } from './Galleries';
+import LoopShowcase from './LoopShowcase';
 
 // The case study template for /work/<slug> and /products/<slug>. It renders on
 // the server with no entrance animation, so the title and summary paint at once
-// (they are the largest content in a phone's first view). Only the carousel,
-// the gallery and the dialog's open button need JavaScript.
+// (they are the largest content in a phone's first view). Only the loops, the
+// carousel, the gallery and the dialog's open button need JavaScript.
 //
-// Order: what it is → why it exists → what we built → what you get →
-// architecture → outcomes → screenshots → stack → call to action.
+// Order: what it is → screen recordings → mockups → why it exists → what we
+// built → what you get → architecture → outcomes → screenshots → stack → call
+// to action.
 
 const LIVE_STATUSES: Project['status'][] = ['Production', 'Beta', 'MVP'];
 
@@ -156,9 +158,18 @@ export default function CaseStudy({ project, related }: { project: Project; rela
       </header>
 
       <div className="mx-auto max-w-[1400px] px-6 pt-16">
+        {project.loops.length > 0 && (
+          <section aria-labelledby="in-motion" className="mx-auto mb-24 max-w-[1200px]">
+            <span className={SECTION_LABEL}>In Motion</span>
+            <h2 id="in-motion" className={SECTION_TITLE}>Watch It Work</h2>
+            <LoopShowcase loops={project.loops} />
+          </section>
+        )}
+
         {mockups.length > 0 && (
           <div className="mx-auto mb-24 max-w-[1200px] overflow-hidden rounded-2xl border border-white/[0.04] shadow-2xl">
-            <MockupCarousel images={mockups} title={project.title} />
+            {/* The first slide is fetched early only when it is the first image on the page. */}
+            <MockupCarousel images={mockups} title={project.title} priority={project.loops.length === 0} />
           </div>
         )}
 

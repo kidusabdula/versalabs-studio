@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import type { GalleryImage } from '@/content/schema';
+import MediaCredit from '@/components/case-study/MediaCredit';
 
 interface ImageLightboxProps {
   images: GalleryImage[];
@@ -47,6 +48,8 @@ export default function ImageLightbox({
       window.removeEventListener('keydown', handleKey);
     };
   }, [isOpen, goNext, goPrev, onClose]);
+
+  const credit = images[currentIndex]?.credit;
 
   return (
     <AnimatePresence>
@@ -122,6 +125,13 @@ export default function ImageLightbox({
               priority
             />
           </motion.div>
+
+          {/* A licence credit travels with its image. */}
+          {credit && (
+            <p className="absolute bottom-4 left-1/2 z-20 w-[90vw] max-w-[1400px] -translate-x-1/2 text-center">
+              <MediaCredit credit={credit} />
+            </p>
+          )}
         </div>
       )}
     </AnimatePresence>

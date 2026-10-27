@@ -74,17 +74,36 @@ sitemap all read from `src/content/projects/index.ts`.
 ## 2. Images
 
 - Images live in `public/images/<slug>/` as WebP, named `mockup-NN.webp` (device mockups) or `screen-NN.webp` (plain
-  screenshots), at most 1920px on the long side.
+  screenshots), at most 1920px on the long side. Captures from the media rig (`w/media`, shot on the live site) keep
+  their page in the name: `screen-<page>-desktop.webp` (1440x900) and `screen-<page>-mobile.webp` (780x1688).
 - Each one is listed in its project's `gallery` with a descriptive `alt`, its `kind`, `width`, `height`, and
   `reviewed: true`. `cover` must be one of the gallery images.
 - `reviewed: true` records that a person checked the image. Before adding one, check it for customer names, emails,
   phone numbers, addresses, TINs, orders, payment references, revenue, server addresses, admin screens, and claims the
   client's own site no longer makes (invented stats, ratings, testimonials). File names count too. When in doubt, leave
   it out.
-- `scripts/check-images.mjs` runs first in `pnpm build`. It fails when `public/images` holds a file no project lists, a
-  listed file is missing, or a folder passes 6 MB. Team portraits in `public/images/team/` are exempt from listing.
+- `credit` is required on an image that shows someone else's licensed material, such as SafeFrame's results screen,
+  which shows a CC BY 4.0 sample clip. The credit appears under the screenshot and in the full-size viewer. Only a
+  `screen` can carry one, and it can't be the `cover` (the carousel and the cards have no caption to show it in).
+- `scripts/check-images.mjs` runs first in `pnpm build`. It fails when `public/images` or `public/media` holds a file no
+  project lists, a listed file is missing, an image folder passes 6 MB, a media folder passes 3 MB, or a video passes
+  1.5 MB. Team portraits in `public/images/team/` are exempt from listing.
 - Pages render images with `next/image` and a `sizes` hint, so Vercel serves each visitor a resized WebP.
+
+### Screen Recordings (`loops`)
+- A project's `loops` are short, silent screen recordings from the media rig: MP4 (H.264) in `public/media/<slug>/`.
+  Use the 960x600 desktop loop (`loop-<name>-960.mp4`) and the 780x1688 phone loop; the 1440x900 desktop loop adds
+  weight without adding much at the size the page shows it. The WebM twins are left out: they are larger than the
+  MP4 for most loops, and every current browser plays H.264.
+- Each loop lists `src`, `poster`, `caption`, `view` (`desktop` or `mobile`), `width`, `height`, `reviewed: true` and,
+  when needed, `credit`. The `poster` must be one of the project's gallery screenshots with the same shape, showing
+  the page the loop opens on, so a loop adds no poster file.
+- The case study shows them under the header in "Watch It Work": each desktop loop beside the phone loop of the
+  same row. The poster paints first; the video loads only when it scrolls into view (`preload="none"`), plays muted
+  and looping while in view, has a pause button, and never appears with `prefers-reduced-motion: reduce` (the
+  poster stays). The caption below each loop says what it shows; the video itself is `aria-hidden`.
 
 ## 3. SEO & Web Vital Governance
 - Every page exports metadata through `pageMetadata()` in `src/lib/site.ts`, which sets the title, description, canonical URL, Open Graph and Twitter tags.
-- `<ProjectSlideshow />` marks only its first slide `priority`, so one image competes for the first paint.
+- `<ProjectSlideshow />` marks only its first slide `priority`, so one image competes for the first paint, and not even
+  that when loops sit above it. Loop posters load lazily and videos load only in view.
