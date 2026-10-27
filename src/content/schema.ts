@@ -32,52 +32,11 @@ export const INDUSTRIES = [
   'Nonprofit',
 ] as const;
 
-export const STACK = [
-  'Next.js',
-  'React Native',
-  'Vite + React',
-  'Supabase',
-  'PostgreSQL',
-  'ERPNext',
-  'Python',
-  'Machine Learning',
-] as const;
-
 const text = z.string().trim().min(1);
-
-const techDependency = z.strictObject({
-  name: text,
-  version: text.optional(),
-  purpose: text,
-});
-
-const techLayer = z.strictObject({
-  label: text,
-  items: z.array(techDependency).min(1),
-});
-
-const boundedContext = z.strictObject({
-  name: text,
-  responsibility: text,
-  entities: z.array(text),
-});
-
-const schemaTable = z.strictObject({
-  name: text,
-  description: text,
-  keyFields: z.array(text),
-});
 
 const feature = z.strictObject({
   title: text,
   description: text,
-});
-
-const adr = z.strictObject({
-  id: text,
-  title: text,
-  status: z.enum(['Accepted', 'Proposed', 'Deprecated']),
-  rationale: text,
 });
 
 // Credit for third-party material that appears in an image or a loop, such as
@@ -131,9 +90,9 @@ const metric = z.strictObject({
   evidence: text,
 });
 
+// A public link a visitor can open: a client's live site, or a product's demo.
 const links = z.strictObject({
   live: z.url({ protocol: /^https$/ }).optional(),
-  repo: z.url({ protocol: /^https$/, hostname: /^github\.com$/ }).optional(),
 });
 
 export const projectSchema = z
@@ -149,7 +108,6 @@ export const projectSchema = z
     kind: z.enum(PROJECT_KINDS),
     section: z.enum(SECTIONS).optional(),
     industry: z.array(z.enum(INDUSTRIES)).min(1),
-    stack: z.array(z.enum(STACK)),
     // Shown on the case study when set. Leave it out to keep a client unnamed.
     client: text.optional(),
     links,
@@ -160,21 +118,23 @@ export const projectSchema = z
     gallery: z.array(galleryImage),
     loops: z.array(loop).default([]),
 
+    // The words on the page, in plain business language: what it does for the
+    // people who use it, never how it is built (docs/05-CONTENT-TONE-GUIDE.md).
+    // There are deliberately no fields for architecture, technology or diagrams,
+    // and src/content/plain-language.ts fails the build if their names creep
+    // back into any text here.
+    //
+    // description: the value proposition (a product) or the story in brief (work).
+    // need: the problem a product solves, or what the client needed.
+    // audience: who a product is for. Products only.
+    // delivered: what we delivered for the client's business. Work only.
+    // features: what you can do with it, benefit first. A product has 3 to 6;
+    // client work has up to 4, shown as highlights of what we delivered.
     description: text,
-    businessProblem: text,
-    architecturalSolution: text,
-    systemFlow: text,
-
-    techStack: z.array(techLayer),
-    architecture: z.strictObject({
-      pattern: text,
-      diagram: text,
-      designPatterns: z.array(text),
-    }),
-    boundedContexts: z.array(boundedContext),
-    schema: z.array(schemaTable),
-    features: z.array(feature),
-    adrs: z.array(adr),
+    need: text,
+    audience: text.optional(),
+    delivered: text.optional(),
+    features: z.array(feature).max(6),
   })
   .superRefine((project, ctx) => {
     const srcs = project.gallery.map((image) => image.src);
@@ -206,10 +166,20 @@ export const projectSchema = z
         ctx.addIssue({ code: 'custom', path: ['loops', i, 'poster'], message: 'the poster and the loop must have the same shape' });
       }
     });
-    for (const field of ['industry', 'stack'] as const) {
-      if (new Set(project[field]).size !== project[field].length) {
-        ctx.addIssue({ code: 'custom', path: [field], message: 'a value is listed twice' });
-      }
+    if (new Set(project.industry).size !== project.industry.length) {
+      ctx.addIssue({ code: 'custom', path: ['industry'], message: 'a value is listed twice' });
+    }
+    // A product page is a landing page: it says who the product is for and
+    // what you can do with it. A client page says what we delivered.
+    const isProduct = (project.section ?? (project.kind === 'product' ? 'products' : 'work')) === 'products';
+    if (isProduct) {
+      if (!project.audience) ctx.addIssue({ code: 'custom', path: ['audience'], message: 'a product says who it is for' });
+      if (project.delivered) ctx.addIssue({ code: 'custom', path: ['delivered'], message: 'only client work has a "delivered" story' });
+      if (project.features.length < 3) ctx.addIssue({ code: 'custom', path: ['features'], message: 'a product lists 3 to 6 features' });
+    } else {
+      if (!project.delivered) ctx.addIssue({ code: 'custom', path: ['delivered'], message: 'client work says what we delivered' });
+      if (project.audience) ctx.addIssue({ code: 'custom', path: ['audience'], message: 'only a product has an audience' });
+      if (project.features.length > 4) ctx.addIssue({ code: 'custom', path: ['features'], message: 'client work lists up to 4 highlights' });
     }
   })
   .transform((project) => ({
@@ -223,13 +193,8 @@ export type ProjectStatus = Project['status'];
 export type ProjectKind = Project['kind'];
 export type ProjectSection = Project['section'];
 export type Industry = (typeof INDUSTRIES)[number];
-export type StackItem = (typeof STACK)[number];
 export type Metric = Project['metrics'][number];
-export type TechLayer = Project['techStack'][number];
-export type BoundedContext = Project['boundedContexts'][number];
-export type SchemaTable = Project['schema'][number];
 export type Feature = Project['features'][number];
-export type ADRRecord = Project['adrs'][number];
 export type GalleryImage = Project['gallery'][number];
 export type Loop = Project['loops'][number];
 export type Credit = NonNullable<GalleryImage['credit']>;

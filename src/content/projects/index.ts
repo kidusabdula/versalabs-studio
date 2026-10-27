@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { projectSchema, type GalleryImage, type Project, type ProjectInput, type ProjectSection } from '../schema';
+import { findBannedTerms } from '../plain-language';
 import obsidianErp from './obsidian-erp';
 import safeframe from './safeframe';
 import printonlineEt from './printonline-et';
@@ -42,11 +43,31 @@ const ENTRIES: ProjectInput[] = [
   minabClothing,
 ];
 
+// Fields that hold paths, links, class names or a licence credit, not copy.
+const NOT_COPY = new Set(['slug', 'src', 'poster', 'cover', 'live', 'heroGradient', 'credit', 'evidence']);
+
+// Every piece of copy in a project, with where it sits, for the plain-language check.
+function copyIn(value: unknown, at: string, out: { at: string; text: string }[] = []) {
+  if (typeof value === 'string') out.push({ at, text: value });
+  else if (Array.isArray(value)) value.forEach((item, i) => copyIn(item, `${at}[${i}]`, out));
+  else if (value && typeof value === 'object') {
+    for (const [key, item] of Object.entries(value)) if (!NOT_COPY.has(key)) copyIn(item, at ? `${at}.${key}` : key, out);
+  }
+  return out;
+}
+
 function load(entries: ProjectInput[]): Project[] {
   const projects = entries.map((entry) => {
     const result = projectSchema.safeParse(entry);
     if (!result.success) {
       throw new Error(`Project "${entry.slug}" is invalid:\n${z.prettifyError(result.error)}`);
+    }
+    // Hidden entries too: a project can be shown again with one line.
+    const jargon = copyIn(entry, '').flatMap(({ at, text }) => findBannedTerms(text).map((term) => `${at}: "${term}"`));
+    if (jargon.length) {
+      throw new Error(
+        `Project "${entry.slug}" names how it is built (see src/content/plain-language.ts):\n  ${jargon.join('\n  ')}`,
+      );
     }
     return result.data;
   });
@@ -90,11 +111,12 @@ export function getImage(project: Project, src: string): GalleryImage | undefine
 }
 
 // What a listing card needs, and nothing more. Client components receive this
-// instead of the full project, which keeps the case study text, tech stack and
-// gallery out of the listing pages' payload.
+// instead of the full project, which keeps the page text and the gallery out
+// of the listing pages' payload.
 export interface ProjectCard {
   slug: string;
   href: string;
+  section: ProjectSection;
   title: string;
   subtitle: string;
   summary: string;
@@ -104,7 +126,7 @@ export interface ProjectCard {
   status: Project['status'];
   kind: Project['kind'];
   industry: Project['industry'];
-  stack: Project['stack'];
+  client?: string;
   heroGradient: string;
   cover?: GalleryImage;
 }
@@ -113,6 +135,7 @@ export function toCard(project: Project): ProjectCard {
   return {
     slug: project.slug,
     href: projectPath(project),
+    section: project.section,
     title: project.title,
     subtitle: project.subtitle,
     summary: project.summary,
@@ -122,7 +145,7 @@ export function toCard(project: Project): ProjectCard {
     status: project.status,
     kind: project.kind,
     industry: project.industry,
-    stack: project.stack,
+    client: project.client,
     heroGradient: project.heroGradient,
     cover: project.cover ? getImage(project, project.cover) : undefined,
   };

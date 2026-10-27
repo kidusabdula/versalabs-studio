@@ -13,8 +13,9 @@ interface Props {
   sizes?: string;
 }
 
-// One listing card for /work, /products and related work. Every card shows the
-// status, year and type, so a demo never reads like a production system. The
+// One listing card for /work, /products, the home page and related pages. Every
+// card shows the status, and work cards also say what kind of work it was, so a
+// demo never reads like a client's production system. The
 // cover is decorative here (alt=""): the title already names the link, and the
 // case study shows the same image with its full description.
 export default function ProjectCardView({
@@ -51,12 +52,11 @@ export default function ProjectCardView({
           <span className={`rounded-sm px-2 py-0.5 text-[11px] font-medium ${STATUS_BADGE[project.status]}`}>
             {project.status}
           </span>
-          <span className="rounded-sm border border-white/[0.06] px-2 py-0.5 text-[11px] font-medium text-zinc-400">
-            {project.year}
-          </span>
-          <span className={`rounded-sm px-2 py-0.5 text-[11px] font-medium ${KIND_BADGE[project.kind]}`}>
-            {KIND_LABEL[project.kind]}
-          </span>
+          {project.section === 'work' && (
+            <span className={`rounded-sm px-2 py-0.5 text-[11px] font-medium ${KIND_BADGE[project.kind]}`}>
+              {KIND_LABEL[project.kind]}
+            </span>
+          )}
         </div>
 
         <Heading className="mb-2 flex items-start justify-between gap-3 text-xl font-semibold text-white">
@@ -66,6 +66,9 @@ export default function ProjectCardView({
             aria-hidden="true"
           />
         </Heading>
+        {project.client && project.client !== project.title && (
+          <p className="mb-1 text-[13px] font-medium text-zinc-300">For {project.client}</p>
+        )}
         <p className="mb-3 text-[13px] font-medium text-zinc-400">{project.subtitle}</p>
         <p className="mb-6 line-clamp-3 flex-1 text-sm leading-relaxed text-zinc-400">{project.summary}</p>
 

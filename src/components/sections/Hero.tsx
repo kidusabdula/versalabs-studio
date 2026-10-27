@@ -118,35 +118,35 @@ export default function Hero() {
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-white/40" />
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-white" />
               </span>
-               <span>Design, Build, Launch</span>
+               <span>Software Products and Custom Builds</span>
             </motion.div>
           </motion.div>
 
           {/* Huge Heading — staggered word reveal */}
           <h1 className="text-4xl leading-[1.1] font-semibold tracking-tighter sm:text-6xl md:text-7xl lg:text-[5.5rem]">
             <motion.span variants={headingLine} className="block text-white">
-              From a Business Problem
+              Software That Runs
             </motion.span>
             <motion.span variants={headingLine} className="block bg-gradient-to-b from-white to-white/40 bg-clip-text text-transparent">
-              To Working Platform
+              Your Business
             </motion.span>
           </h1>
 
           {/* Description — slides up with the heading */}
           <motion.p variants={headingLine} className="mx-auto mt-6 max-w-2xl text-[17px] leading-relaxed text-zinc-400">
-            Bring us the business problem. We shape the product, design the experience, build the system, and help launch software your team can actually use.
+            VersaLabs Studio makes ready-to-use business software and builds custom systems for companies: ERP, online stores, websites and AI tools. Based in Addis Ababa, working with clients in Ethiopia and abroad.
           </motion.p>
 
           {/* Action Buttons — stagger */}
           <motion.div variants={slideInRight} className="mt-10 flex flex-wrap items-center justify-center gap-4">
             <MotionLink
-              href="/work"
+              href="/products"
               whileHover={{ scale: 1.05, backgroundColor: "rgba(255,255,255,0.9)" }}
               whileTap={{ scale: 0.97 }}
               transition={SPRING}
               className="flex h-11 items-center gap-2 rounded-full bg-white px-6 text-[14px] font-semibold text-black transition-colors"
             >
-              See What We Build
+              Explore Our Products
               <motion.svg
                 animate={{ x: [0, 4, 0] }}
                 transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' as const }}
@@ -167,15 +167,15 @@ export default function Hero() {
             </MotionLink>
           </motion.div>
 
-          {/* Glassmorphic Stats Grid — scale in */}
+          {/* What we offer, in three words — scale in */}
           <motion.div 
             variants={scaleIn}
             className="mt-24 grid w-full max-w-4xl grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-white/[0.08] overflow-hidden rounded-2xl border border-white/[0.08] bg-[#0A0A0C]/40 backdrop-blur-2xl shadow-[0_0_40px_rgba(0,0,0,0.3)]"
           >
             {[
-              { val: 'Design', label: 'Product and interface design' },
-              { val: 'Build', label: 'Web, mobile and ERP engineering' },
-              { val: 'Launch', label: 'Deployment and handover' },
+              { val: 'Products', label: 'Ready to set up for your business' },
+              { val: 'Custom', label: 'ERP, online stores, websites, AI' },
+              { val: 'Support', label: 'Launch, training and support' },
             ].map((stat, i) => (
               <motion.div
                 key={i}

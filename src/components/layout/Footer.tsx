@@ -3,19 +3,19 @@ import Image from 'next/image';
 import { getProjectBySlug, projectPath } from '@/content/projects';
 import { CONTACT_EMAIL } from '@/lib/site';
 
-// The projects linked in the footer. Their URLs come from the project files, and
+// The products linked in the footer. Their URLs come from the project files, and
 // a hidden project simply drops out of the list.
-const FOOTER_PROJECTS = ['obsidian-erp', 'safeframe', 'eventology', 'threatmatrix-ai'];
+const FOOTER_PRODUCTS = ['obsidian-erp', 'versa-fx', 'versa-estate', 'rentflow'];
 
-const projectLinks = FOOTER_PROJECTS.flatMap((slug) => {
+const productLinks = FOOTER_PRODUCTS.flatMap((slug) => {
   const project = getProjectBySlug(slug);
   return project ? [{ label: project.title, href: projectPath(project) }] : [];
 });
 
 const companyLinks = [
-  { label: 'Work', href: '/work' },
   { label: 'Products', href: '/products' },
   { label: 'Services', href: '/services' },
+  { label: 'Client Work', href: '/work' },
   { label: 'About', href: '/about' },
   { label: 'Notes', href: '/notes' },
   { label: 'Contact', href: '/contact' },
@@ -36,11 +36,11 @@ export default function Footer() {
         {/* Top Grid: 3 Columns */}
         <div className="grid grid-cols-2 md:grid-cols-3 gap-10 mb-16">
 
-          {/* Projects */}
+          {/* Products */}
           <div>
-            <h3 className="text-[11px] font-semibold tracking-widest uppercase text-zinc-400 mb-5">Projects</h3>
+            <h3 className="text-[11px] font-semibold tracking-widest uppercase text-zinc-400 mb-5">Products</h3>
             <ul className="flex flex-col gap-3">
-              {projectLinks.map((link) => (
+              {productLinks.map((link) => (
                 <li key={link.href}>
                   <Link href={link.href} className="text-sm text-zinc-500 hover:text-white transition-colors">
                     {link.label}

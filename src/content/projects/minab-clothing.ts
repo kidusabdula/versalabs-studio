@@ -3,15 +3,14 @@ import { defineProject } from '../schema';
 export default defineProject({
   slug: "minab-clothing",
   title: "Minab Clothing",
-  subtitle: "Premium Ethiopian Fashion E-Commerce",
-  summary: "A demo storefront for contemporary Ethiopian fashion. Dark and light themes, smooth animations, and a full mock shopping flow from browsing to checkout.",
+  subtitle: "Our Demo Storefront for Ethiopian Fashion",
+  summary: "Our own demo storefront for contemporary Ethiopian fashion, stocked with sample products. It shows a fashion brand's full shopping experience, from browsing collections to checkout.",
   category: "E-Commerce",
-  tags: ["E-Commerce", "Fashion", "Retail"],
+  tags: ["Online Store", "Fashion", "Retail", "Demo"],
   year: "2024",
   status: "Demo",
   kind: "internal",
   industry: ["E-Commerce"],
-  stack: ["Next.js"],
   // The live demo dropped its invented facts and carries a "Demo storefront"
   // label since 2026-10-24 (Minab track), so it can be linked.
   links: { live: "https://minab-clothing.vercel.app" },
@@ -29,9 +28,9 @@ export default defineProject({
     { src: "/images/minab-clothing/mockup-14.webp", alt: "Minab Clothing cart order summary on a tilted phone against orange", kind: "mockup", width: 1920, height: 1280, reviewed: true },
     { src: "/images/minab-clothing/mockup-15.webp", alt: "Minab Clothing product colour, size and add-to-cart options on a phone, close-up", kind: "mockup", width: 1920, height: 1280, reviewed: true },
     { src: "/images/minab-clothing/mockup-16.webp", alt: "Minab Clothing shopping cart on a tilted phone against orange", kind: "mockup", width: 1920, height: 1280, reviewed: true },
-    { src: "/images/minab-clothing/screen-home-desktop.webp", alt: "Minab Clothing home page hero, under the bar that marks it as a demo storefront with sample data", kind: "screen", width: 1440, height: 900, reviewed: true },
+    { src: "/images/minab-clothing/screen-home-desktop.webp", alt: "Minab Clothing home page banner, under the bar that marks it as a demo storefront with sample data", kind: "screen", width: 1440, height: 900, reviewed: true },
     { src: "/images/minab-clothing/screen-collections-desktop.webp", alt: "Minab Clothing Collections page with the Summer Essence and Heritage Weave collections", kind: "screen", width: 1440, height: 900, reviewed: true },
-    { src: "/images/minab-clothing/screen-home-mobile.webp", alt: "Minab Clothing home page hero on a phone, under the demo storefront bar", kind: "screen", width: 780, height: 1688, reviewed: true },
+    { src: "/images/minab-clothing/screen-home-mobile.webp", alt: "Minab Clothing home page banner on a phone, under the demo storefront bar", kind: "screen", width: 780, height: 1688, reviewed: true },
     { src: "/images/minab-clothing/screen-collections-mobile.webp", alt: "Minab Clothing Collections page on a phone", kind: "screen", width: 780, height: 1688, reviewed: true },
     { src: "/images/minab-clothing/screen-01.webp", alt: "Minab Clothing This Week's Picks product grid, mobile screenshot", kind: "screen", width: 865, height: 1920, reviewed: true },
     { src: "/images/minab-clothing/screen-03.webp", alt: "Minab Clothing product page with jacket photo and thumbnails, mobile screenshot", kind: "screen", width: 865, height: 1920, reviewed: true },
@@ -70,74 +69,13 @@ export default defineProject({
       reviewed: true,
     },
   ],
-  description: "Minab Clothing is a demo storefront for contemporary Ethiopian fashion rooted in heritage craftsmanship. Built in 2024 on a mock data layer, it shows the full shopping flow with a dual-theme OKLCH color system, fluid Framer Motion transitions, and a strictly modular component structure.",
-  businessProblem: "Fashion brands require more than just an 'add to cart' button; they need a digital environment that reflects the quality of their physical products. Standard templates often feel cheap and fail to provide the immersive, premium feel necessary for luxury or heritage fashion.",
-  architecturalSolution: "Built on Next.js App Router, the platform employs a strict three-tier architecture (Public, Customer, Admin) and an 'Extreme Modularization' pattern. It utilizes a custom Radix-inspired UI primitive library, ensuring perfect accessibility while maintaining complete design freedom. State is managed locally with a robust mock data layer for instant interaction feedback.",
-  systemFlow: "Discovery (Collections/Home) → Product Detail (SSG) → Cart Management → 3-Step Checkout Flow → Order Confirmation",
-  techStack: [
-    {
-      label: "Frontend",
-      items: [
-        { name: "Next.js", version: "15.5", purpose: "App Router, SSR/SSG" },
-        { name: "TypeScript", version: "5.8", purpose: "Strict mode schemas" },
-        { name: "Tailwind CSS", version: "3.4", purpose: "OKLCH design tokens" },
-        { name: "Framer Motion", version: "12.3", purpose: "Spring animations" },
-      ],
-    },
-    {
-      label: "Forms & State",
-      items: [
-        { name: "React Hook Form", version: "7.55", purpose: "Checkout and account forms" },
-        { name: "Sonner", version: "2.0", purpose: "Toast notification system" },
-      ],
-    },
-  ],
-  architecture: {
-    pattern: "Extreme Modularization Hybrid SSG",
-    diagram: "Next.js Pages → Shared UI Primitives → Feature Components → Centralized Mock Data Layer",
-    designPatterns: [
-      "Three-Tier Architecture",
-      "Schema-First (typefile.d.ts)",
-      "Strict Import Direction (ui → shared → feature)",
-    ],
-  },
-  boundedContexts: [
-    {
-      name: "Shop",
-      responsibility: "Product discovery, filtering, and detail pages",
-      entities: ["Product", "Collection", "Category"],
-    },
-    {
-      name: "Account",
-      responsibility: "Order history, wishlists, and shipping profiles",
-      entities: ["Order", "Address", "WishlistItem"],
-    },
-    {
-      name: "Checkout",
-      responsibility: "Cart totals, promo codes, and multi-step payment",
-      entities: ["Cart", "CheckoutSession"],
-    },
-  ],
-  schema: [
-    {
-      name: "Product",
-      description: "Fashion items with variations",
-      keyFields: ["id", "name", "price", "colors", "sizes", "images"],
-    },
-    {
-      name: "Order",
-      description: "Customer purchases",
-      keyFields: ["id", "status", "total", "items", "shipping_address"],
-    },
-  ],
+  description: "Minab Clothing is a demo storefront we made in 2024 for contemporary Ethiopian fashion rooted in heritage craftsmanship. It runs on sample products and orders, and shows what a fashion brand's own shop can look and feel like, from the first collection to the order confirmation.",
+  need: "Fashion brands need more than an add-to-cart button. Their shop should feel as good as their clothes, and a cheap-looking template lets premium and heritage brands down.",
+  delivered: "A complete demo shop with sample products: themed collections, product pages with colour and size choices, a cart, and a checkout in three steps. Shoppers can switch between dark and light themes and see their past orders. Anyone can try it in the browser to picture their own brand's store.",
   features: [
-    { title: "OKLCH Dual Theme System", description: "Perceptually uniform color tokens provide perfect contrast ratios across both deep espresso dark mode and warm cream light mode." },
-    { title: "Fluid Spring Animations", description: "Framer Motion powers staggered entrances, layout transitions, and interactive micro-animations for a native app feel." },
-    { title: "Multi-Step Checkout", description: "A comprehensive mock checkout flow including shipping profiles, promo code validation, and order review." },
-    { title: "Custom UI Primitives", description: "A Radix-inspired component library built for accessibility and the brand's own look." },
-  ],
-  adrs: [
-    { id: "ADR-001", title: "OKLCH Color Space", status: "Accepted", rationale: "Provides predictable, accessible color scaling across light/dark themes impossible with standard RGB/HSL." },
-    { id: "ADR-002", title: "Extreme Modularization", status: "Accepted", rationale: "Strict downward-only import rules prevent dependency cycles and enforce clean boundaries." },
+    { title: "Collections That Tell a Story", description: "Shoppers browse themed collections, such as Summer Essence and Heritage Weave, before they shop." },
+    { title: "Clear Product Choices", description: "Each product page shows its photos, colours and sizes, with Add to Cart one tap away." },
+    { title: "A Simple Three-Step Checkout", description: "Shipping, payment and order review each get their own step, ending with an order confirmation." },
+    { title: "Dark and Light Themes", description: "Shoppers switch between a deep espresso dark theme and a warm cream light theme." },
   ],
 });

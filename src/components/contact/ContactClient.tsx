@@ -24,8 +24,42 @@ type Status = 'idle' | 'submitting' | 'success' | 'error';
 
 const FALLBACK_ERROR = "We couldn't send your message. Please try again, or email us at contact@versalabs-studio.com.";
 
-export default function ContactClient() {
+// What a product or client page sends the visitor here for
+// (/contact?topic=<slug>&interest=demo|notify|similar), or which service a
+// /services link asked about (/contact?service=erp). It only starts the
+// message for them; they can change it, and the server sees ordinary fields.
+export interface ContactTopic {
+  title: string;
+  projectType: keyof typeof PROJECT_TYPES;
+}
+
+function openingLine(interest: string, title: string): string | undefined {
+  if (interest === 'demo') return `I'd like a demo of ${title}.`;
+  if (interest === 'notify') return `Please let me know when ${title} is available.`;
+  if (interest === 'similar') return `I'm interested in something similar to ${title}.`;
+  return undefined;
+}
+
+export default function ContactClient({ topics = {} }: { topics?: Record<string, ContactTopic> }) {
   const [formData, setFormData] = useState(EMPTY_FORM);
+
+  // Start the message from the link that brought the visitor here, once, after
+  // the server-rendered form is on screen.
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const service = params.get('service') ?? '';
+    if (Object.hasOwn(PROJECT_TYPES, service)) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- the URL is only readable in the browser
+      setFormData((current) => (current.projectType ? current : { ...current, projectType: service }));
+      return;
+    }
+    const topic = topics[params.get('topic') ?? ''];
+    const line = topic && openingLine(params.get('interest') ?? '', topic.title);
+    if (!topic || !line) return;
+    setFormData((current) =>
+      current.scope ? current : { ...current, scope: `${line} `, projectType: current.projectType || topic.projectType },
+    );
+  }, [topics]);
   const [status, setStatus] = useState<Status>('idle');
   const [errorMessage, setErrorMessage] = useState('');
   const [fieldErrors, setFieldErrors] = useState<Partial<Record<FormField, string>>>({});

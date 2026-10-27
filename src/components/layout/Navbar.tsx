@@ -8,9 +8,9 @@ import { useState } from 'react';
 import { MotionLink } from '@/components/ui/motion';
 
 const navLinks = [
-  { href: '/work', label: 'Work' },
   { href: '/products', label: 'Products' },
   { href: '/services', label: 'Services' },
+  { href: '/work', label: 'Client Work' },
   { href: '/about', label: 'About' },
   { href: '/contact', label: 'Contact' },
 ];

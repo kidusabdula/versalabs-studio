@@ -7,7 +7,7 @@ const names = getProjectsInSection('products').map((product) => product.title);
 
 export const metadata = pageMetadata({
   title: 'Products',
-  description: `Software VersaLabs Studio builds and runs as its own products: ${names.slice(0, -1).join(', ')} and ${names.at(-1)}. Each shows its current status.`,
+  description: `Software from VersaLabs Studio, ready to set up for your business: ${names.slice(0, -1).join(', ')} and ${names.at(-1)}. Each one says whether it is available now or coming soon.`,
   path: '/products',
 });
 
@@ -18,10 +18,10 @@ export default function ProductsPage() {
     <div className="min-h-screen bg-[#0A0A0C]">
       <header className="px-6 pt-36 pb-12">
         <div className="mx-auto max-w-[1400px]">
-          <h1 className="mb-6 text-5xl font-bold tracking-tighter text-white md:text-7xl">Products</h1>
+          <h1 className="mb-6 text-5xl font-bold tracking-tighter text-white md:text-7xl">Our Products</h1>
           <p className="max-w-3xl text-lg leading-relaxed text-zinc-400 md:text-xl">
-            Software we build and run as our own products. Some are in production, others are still in development,
-            and each one says which.
+            Software we build and keep improving, ready to set up for your business. Each one says whether it is
+            available now, coming soon or still in development.
           </p>
         </div>
       </header>
@@ -39,10 +39,10 @@ export default function ProductsPage() {
       <section aria-labelledby="products-cta" className="border-t border-white/[0.04] px-6 py-24">
         <div className="mx-auto max-w-3xl text-center">
           <h2 id="products-cta" className="mb-6 text-4xl font-bold tracking-tighter text-white md:text-5xl">
-            Want to see one running?
+            Want to See One Running?
           </h2>
           <p className="mx-auto mb-10 max-w-xl text-lg text-zinc-400">
-            Ask for a walkthrough of a product, or tell us what you would change to fit your business.
+            Ask for a walkthrough, or tell us what you would change to fit how your business works.
           </p>
           <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Link
