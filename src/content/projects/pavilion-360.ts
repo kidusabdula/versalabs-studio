@@ -13,7 +13,7 @@ export default defineProject({
   industry: ["Events"],
   links: { live: "https://www.pavilion360.events/" },
   heroGradient: "from-purple-500/20 via-transparent to-pink-500/10",
-  cover: "/images/pavilion-360/mockup-12.webp",
+  cover: "/images/pavilion-360/screen-home-desktop.webp",
   gallery: [
     { src: "/images/pavilion-360/mockup-01.webp", alt: "Pavilion360 box truss rental detail on a phone, purple and green gradient", kind: "mockup", width: 1920, height: 1280, reviewed: true },
     { src: "/images/pavilion-360/mockup-03.webp", alt: "Pavilion360 admin settings for connecting the Instagram feed, in an angled browser window on green", kind: "mockup", width: 1920, height: 1280, reviewed: true },
