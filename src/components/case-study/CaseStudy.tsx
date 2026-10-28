@@ -96,11 +96,14 @@ function LeadShot({ project, lead, beside }: { project: Project; lead?: GalleryI
   if (isPhoneScreen(lead)) {
     const [left, right] = beside;
     const side = 'hidden w-full max-w-[260px] md:block';
+    // A phone lead is never the largest paint (the intro paragraph is), so it
+    // loads eagerly but is not preloaded at high priority: a high-priority
+    // preload only competes with the fonts and CSS that the paragraph waits for.
     return (
       <ShotPanel>
         <div className="flex items-start justify-center gap-10">
           {left && <ProductShot image={left} sizes="260px" className={side} />}
-          <ProductShot image={lead} sizes="(max-width: 768px) 280px, 260px" priority className="w-full max-w-[280px] md:max-w-[260px]" />
+          <ProductShot image={lead} sizes="(max-width: 768px) 280px, 260px" eager className="w-full max-w-[280px] md:max-w-[260px]" />
           {right && <ProductShot image={right} sizes="260px" className={side} />}
         </div>
       </ShotPanel>
