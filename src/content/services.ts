@@ -85,7 +85,7 @@ export const SERVICES: Service[] = [
       'Privacy first: data stays where it should',
       'Built around one clear job, not a demo',
     ],
-    examples: ['safeframe', 'jarvis'],
+    examples: ['safeframe'],
   },
 ];
 

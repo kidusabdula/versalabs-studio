@@ -11,6 +11,9 @@ export default defineProject({
   status: "Development",
   kind: "internal",
   section: "products",
+  // Hidden until it is for sale (Kidus, 2026-10-27). Its old URLs go to
+  // /products through PARKED in next.config.ts.
+  visibility: "hide",
   industry: ["Developer Tools"],
   links: {},
   heroGradient: "from-cyan-500/20 via-transparent to-teal-500/10",

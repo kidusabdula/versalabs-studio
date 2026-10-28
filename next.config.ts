@@ -1,5 +1,5 @@
 import type { NextConfig } from "next";
-import { getProjectRoutes } from "./src/content/projects";
+import { getHiddenSlugs, getProjectRoutes } from "./src/content/projects";
 
 // Slugs that were renamed, mapped to the current slug.
 const RENAMED: Record<string, string> = {
@@ -13,6 +13,14 @@ const RENAMED: Record<string, string> = {
 // instead of a 404.
 const REMOVED = ["tibeb", "potentia", "pana-web", "fastpay", "threatmatrix-ai"];
 
+// Projects kept in src/content/projects but hidden for now (visibility: 'hide'),
+// whose old URLs are linked from elsewhere (the GitHub profile READMEs link to
+// /products/jarvis). Each URL goes to the listing named here in one hop instead
+// of a 404. To show the project again, set it to 'show' and delete its line.
+const PARKED: Record<string, string> = {
+  jarvis: "/products",
+};
+
 const OTHER_SECTION = { work: "products", products: "work" } as const;
 
 const nextConfig: NextConfig = {
@@ -25,6 +33,11 @@ const nextConfig: NextConfig = {
     const sectionOf = new Map(routes.map(({ slug, section }) => [slug, section]));
     for (const slug of REMOVED) {
       if (sectionOf.has(slug)) throw new Error(`"${slug}" is on the site again; take it out of REMOVED in next.config.ts`);
+    }
+    const hidden = new Set(getHiddenSlugs());
+    for (const slug of Object.keys(PARKED)) {
+      if (sectionOf.has(slug)) throw new Error(`"${slug}" is on the site again; take it out of PARKED in next.config.ts`);
+      if (!hidden.has(slug)) throw new Error(`"${slug}" in PARKED is not a hidden project; a deleted one belongs in REMOVED`);
     }
 
     return [
@@ -48,6 +61,10 @@ const nextConfig: NextConfig = {
           destination: "/work",
           permanent: true,
         })),
+      ),
+      // Parked (hidden) projects: one hop to the listing PARKED names.
+      ...Object.entries(PARKED).flatMap(([slug, destination]) =>
+        ["work", "products", "projects"].map((prefix) => ({ source: `/${prefix}/${slug}`, destination, permanent: true })),
       ),
       // Anything else under /projects lands on /work, where an unknown slug is a 404.
       { source: "/projects/:path*", destination: "/work/:path*", permanent: true },

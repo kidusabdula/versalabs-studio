@@ -78,7 +78,8 @@ function load(entries: ProjectInput[]): Project[] {
   return projects;
 }
 
-const VISIBLE: Project[] = load(ENTRIES).filter((project) => project.visibility === 'show');
+const LOADED: Project[] = load(ENTRIES);
+const VISIBLE: Project[] = LOADED.filter((project) => project.visibility === 'show');
 
 export function getAllProjects(): Project[] {
   return VISIBLE;
@@ -102,6 +103,12 @@ export function projectPath(project: Pick<Project, 'section' | 'slug'>): string 
 // slug requested under the wrong section redirect to the project's real page.
 export function getProjectRoutes(): { slug: string; section: ProjectSection }[] {
   return VISIBLE.map(({ slug, section }) => ({ slug, section }));
+}
+
+// Hidden projects' slugs, for next.config.ts: a parked project must still be in
+// the content, hidden, so its redirect can't outlive it or shadow a live page.
+export function getHiddenSlugs(): string[] {
+  return LOADED.filter((project) => project.visibility === 'hide').map((project) => project.slug);
 }
 
 export function getImage(project: Project, src: string): GalleryImage | undefined {
