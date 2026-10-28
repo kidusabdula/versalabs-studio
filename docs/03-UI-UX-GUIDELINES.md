@@ -75,9 +75,18 @@ Status badge colours live in `src/content/labels.ts`: emerald for Production, am
   on a desktop loads at once without a preload (`eager`).
 
 Which images lead a page is decided in `src/lib/shots.ts`: the cover, paired with the same page on a
-phone when a `screen-<page>-desktop` capture has a `screen-<page>-mobile` twin. A feature can name the
+phone when a `screen-<page>-desktop` capture has a `screen-<page>-mobile` twin. A product shown only on
+phones (its cover is a phone screen) leads with three phone screens, the cover in the middle; on a phone
+the cover shows alone, and as the flagship card the three rise from a 16:9 stage. A feature can name the
 screenshot that shows it (`image` in the project file), and it gets its own row beside that screenshot.
 The gallery shows everything not already on the page.
+
+- **Image files:** WebP in `public/images/<slug>/`, listed in the project file (the build checks both
+  ways). `next/image` serves AVIF to browsers that take it and WebP to the rest (`next.config.ts`). A
+  desktop capture is 1440x900; a cover may use the 2x master (2880x1800) so the page's lead stays sharp
+  on a high-density screen. A phone capture is cropped to 9:19.5, so the outline shows all of it.
+- **Before a shot ships,** look at it: no real person's name, no client, no framework name, no
+  developer tool badge, and no figures that read as a real business's results.
 
 ## 5. Motion
 
