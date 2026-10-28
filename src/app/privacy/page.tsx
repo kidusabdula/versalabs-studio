@@ -85,7 +85,7 @@ export default function PrivacyPage() {
 
         <Section title="Links to Other Sites">
           <p>
-            Our case studies link to live client sites, demos and our profiles on LinkedIn, GitHub and Telegram. Those
+            Our pages link to live client sites, demos and our profiles on LinkedIn and Telegram. Those
             sites have their own privacy practices, which this notice doesn&apos;t cover.
           </p>
         </Section>

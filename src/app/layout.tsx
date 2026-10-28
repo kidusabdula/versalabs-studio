@@ -73,7 +73,6 @@ export default function RootLayout({
             email: CONTACT_EMAIL,
             foundingDate: "2023",
             address: { "@type": "PostalAddress", addressLocality: "Addis Ababa", addressCountry: "ET" },
-            sameAs: ["https://github.com/kidusabdula"],
           }}
         />
         <MotionConfigProvider>

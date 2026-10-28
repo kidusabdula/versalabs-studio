@@ -16,7 +16,7 @@ export interface ExampleLink {
 export interface Service {
   // Also the contact form's project type, so "Talk to Us" on /services can
   // preselect it (/contact?service=erp).
-  id: Exclude<keyof typeof PROJECT_TYPES, 'mobile' | 'custom'>;
+  id: Exclude<keyof typeof PROJECT_TYPES, 'custom'>;
   // The service's name in a sentence ("Talk to Us About Online Stores").
   short: string;
   title: string;
