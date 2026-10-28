@@ -1,7 +1,8 @@
 import Link from 'next/link';
 import { ArrowUpRight } from 'lucide-react';
 import type { ProjectCard } from '@/content/projects';
-import ProductShot, { ShotPlaceholder } from '@/components/ui/ProductShot';
+import type { GalleryImage } from '@/content/schema';
+import ProductShot, { isPortrait, ShotPlaceholder } from '@/components/ui/ProductShot';
 import { StatusBadge } from '@/components/ui/Badge';
 import { CARD_LINK } from '@/components/ui/styles';
 import { CardMedia } from '@/components/case-study/ProjectCardView';
@@ -25,13 +26,40 @@ function Title({ product, as: Heading }: { product: ProjectCard; as: 'h2' | 'h3'
   );
 }
 
+// A product shown only on phones: its cover between two more phone screens,
+// rising from the bottom of a fixed 16:9 stage.
+function PhoneStage({ cover, phones, lead }: { cover: GalleryImage; phones: GalleryImage[]; lead: 'priority' | 'eager' }) {
+  const [left, right] = phones;
+  const sizes = '(max-width: 1024px) 28vw, 210px';
+  const phone = 'w-[28%] shrink-0';
+  return (
+    <div className="relative aspect-[16/9] overflow-hidden rounded-xl border border-border bg-background">
+      <div className="absolute inset-x-0 top-6 flex justify-center gap-[5%] sm:top-10">
+        {left && <ProductShot image={left} alt="" sizes={sizes} eager className={phone} />}
+        <ProductShot
+          image={cover}
+          alt=""
+          sizes={sizes}
+          priority={lead === 'priority'}
+          eager={lead === 'eager'}
+          className={phone}
+        />
+        {right && <ProductShot image={right} alt="" sizes={sizes} eager className={phone} />}
+      </div>
+    </div>
+  );
+}
+
 function Flagship({ product, as, lead }: { product: ProjectCard; as: 'h2' | 'h3'; lead: 'priority' | 'eager' }) {
+  const cover = product.cover;
   return (
     <Link href={product.href} className={`${CARD_LINK} grid gap-8 p-5 sm:p-6 md:p-10 lg:grid-cols-12 lg:items-center lg:gap-10`}>
       <div className="lg:order-2 lg:col-span-8">
-        {product.cover ? (
+        {cover && isPortrait(cover) ? (
+          <PhoneStage cover={cover} phones={product.coverPhones} lead={lead} />
+        ) : cover ? (
           <ProductShot
-            image={product.cover}
+            image={cover}
             alt=""
             sizes="(max-width: 1024px) calc(100vw - 90px), 740px"
             priority={lead === 'priority'}

@@ -4,7 +4,7 @@ import type { Feature, GalleryImage, Project } from '@/content/schema';
 import { projectPath, type ProjectCard } from '@/content/projects';
 import { AVAILABILITY, callToAction, type CallToAction } from '@/content/labels';
 import { SITE_NAME, SITE_URL } from '@/lib/site';
-import { galleryRest, leadShots } from '@/lib/shots';
+import { galleryRest, isPhoneScreen, leadShots } from '@/lib/shots';
 import { Reveal } from '@/components/ui/motion';
 import ProductShot, { ShotPanel, ShotPlaceholder } from '@/components/ui/ProductShot';
 import { KindBadge, StatusBadge } from '@/components/ui/Badge';
@@ -75,10 +75,12 @@ function SectionTitle({ id, eyebrow, title }: { id: string; eyebrow: string; tit
 }
 
 // The screenshot that leads the page, in its frame on a surface panel, with
-// the same page on a phone beside it when there is one. A product with no
-// screenshots yet shows its name, status and availability in the frame.
-function LeadShot({ project, desktop, phone }: { project: Project; desktop?: GalleryImage; phone?: GalleryImage }) {
-  if (!desktop) {
+// the same page on a phone beside it when there is one. A product shown only
+// on phones leads with three phone screens, its cover in the middle (one on a
+// phone). A product with no screenshots yet shows its name, status and
+// availability in the frame.
+function LeadShot({ project, lead, beside }: { project: Project; lead?: GalleryImage; beside: GalleryImage[] }) {
+  if (!lead) {
     if (project.section !== 'products') return null;
     return (
       <ShotPanel>
@@ -91,17 +93,31 @@ function LeadShot({ project, desktop, phone }: { project: Project; desktop?: Gal
       </ShotPanel>
     );
   }
+  if (isPhoneScreen(lead)) {
+    const [left, right] = beside;
+    const side = 'hidden w-full max-w-[260px] md:block';
+    return (
+      <ShotPanel>
+        <div className="flex items-start justify-center gap-10">
+          {left && <ProductShot image={left} sizes="260px" className={side} />}
+          <ProductShot image={lead} sizes="(max-width: 768px) 280px, 260px" priority className="w-full max-w-[280px] md:max-w-[260px]" />
+          {right && <ProductShot image={right} sizes="260px" className={side} />}
+        </div>
+      </ShotPanel>
+    );
+  }
+  const [phone] = beside;
   if (!phone) {
     return (
       <ShotPanel>
-        <ProductShot image={desktop} sizes="(max-width: 1248px) calc(100vw - 64px), 1120px" priority />
+        <ProductShot image={lead} sizes="(max-width: 1248px) calc(100vw - 64px), 1120px" priority />
       </ShotPanel>
     );
   }
   return (
     <ShotPanel>
       <div className="grid items-end gap-6 md:grid-cols-[minmax(0,1fr)_minmax(0,0.3fr)] md:gap-8">
-        <ProductShot image={desktop} sizes="(max-width: 768px) calc(100vw - 64px), (max-width: 1248px) 72vw, 860px" priority />
+        <ProductShot image={lead} sizes="(max-width: 768px) calc(100vw - 64px), (max-width: 1248px) 72vw, 860px" priority />
         <ProductShot image={phone} sizes="260px" className="mx-auto hidden w-full max-w-[260px] md:block" />
       </div>
     </ShotPanel>
@@ -237,8 +253,8 @@ export default function CaseStudy({ project, related }: { project: Project; rela
   const path = projectPath(project);
   const cta = callToAction(project);
   const cover = project.cover ? project.gallery.find((image) => image.src === project.cover) : undefined;
-  const { desktop, phone } = leadShots(project);
-  const rest = galleryRest(project, [desktop, phone]);
+  const { lead, beside } = leadShots(project);
+  const rest = galleryRest(project, [lead, ...beside]);
 
   // Client work links to the client's live site; a demo link on a product is
   // the call to action itself, so it isn't repeated here.
@@ -307,9 +323,9 @@ export default function CaseStudy({ project, related }: { project: Project; rela
           </div>
         </div>
 
-        {(desktop || isProduct) && (
+        {(lead || isProduct) && (
           <div className={`${CONTAINER} mt-12 md:mt-16`}>
-            <LeadShot project={project} desktop={desktop} phone={phone} />
+            <LeadShot project={project} lead={lead} beside={beside} />
           </div>
         )}
       </header>
