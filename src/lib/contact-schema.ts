@@ -7,7 +7,6 @@ export const PROJECT_TYPES = {
   erp: 'ERP / Business Platform',
   ecommerce: 'E-Commerce / Online Store',
   ai: 'AI / Security System',
-  mobile: 'Mobile Application',
   website: 'Corporate Website',
   custom: 'Custom / Other',
 } as const;

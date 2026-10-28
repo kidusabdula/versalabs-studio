@@ -1,39 +1,24 @@
 import Hero from '@/components/sections/Hero';
-import ObsidianShowcase from '@/components/sections/ObsidianShowcase';
-import CoreCapabilities from '@/components/sections/CoreCapabilities';
-import WhyChooseUs from '@/components/sections/WhyChooseUs';
-import FeaturedProjects, { type ShowcaseProject } from '@/components/sections/FeaturedProjects';
-import GlobalReach from '@/components/sections/GlobalReach';
+import { ClientsSection, HowWeWork, ProductsSection, ServicesSection } from '@/components/sections/HomeSections';
 import CallToAction from '@/components/sections/CallToAction';
-import { getImage, getProjectBySlug, projectPath } from '@/content/projects';
+import { getProjectsInSection, toCard } from '@/content/projects';
+import { HOW_WE_WORK, SERVICES, clientLinks, serviceExamples } from '@/content/services';
 
-// The screenshot each home page showcase row uses.
-const SHOWCASE_IMAGES: Record<string, string> = {
-  'obsidian-erp': '/images/obsidian-erp/mockup-21.webp',
-  'threatmatrix-ai': '/images/threatmatrix-ai/mockup-06.webp',
-  'pana-sport': '/images/pana-sport/mockup-03.webp',
-  'oskaz-ecommerce': '/images/oskaz-ecommerce/mockup-12.webp',
-};
-
+// The home page reads like a product studio's front door: what we do, the
+// products we sell, the services we offer with clients as examples, who we've
+// worked with, how we work, and how to reach us
+// (docs/05-CONTENT-TONE-GUIDE.md, "Home").
 export default function Home() {
-  const showcase: ShowcaseProject[] = Object.entries(SHOWCASE_IMAGES).flatMap(([slug, src]) => {
-    const project = getProjectBySlug(slug);
-    return project
-      ? [{ slug, href: projectPath(project), status: project.status, kind: project.kind, image: getImage(project, src) }]
-      : [];
-  });
-  const obsidian = getProjectBySlug('obsidian-erp');
+  const products = getProjectsInSection('products').map(toCard);
+  const services = SERVICES.map((service) => ({ ...service, exampleLinks: serviceExamples(service) }));
 
   return (
     <>
       <Hero />
-      {obsidian && (
-        <ObsidianShowcase href={projectPath(obsidian)} image={getImage(obsidian, SHOWCASE_IMAGES['obsidian-erp'])} />
-      )}
-      <CoreCapabilities />
-      <WhyChooseUs />
-      <FeaturedProjects projects={showcase} />
-      <GlobalReach />
+      <ProductsSection products={products} />
+      <ServicesSection services={services} />
+      <ClientsSection clients={clientLinks()} />
+      <HowWeWork steps={HOW_WE_WORK} />
       <CallToAction />
     </>
   );

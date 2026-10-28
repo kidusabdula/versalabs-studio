@@ -3,28 +3,26 @@ import Image from 'next/image';
 import { getProjectBySlug, projectPath } from '@/content/projects';
 import { CONTACT_EMAIL } from '@/lib/site';
 
-// The projects linked in the footer. Their URLs come from the project files, and
+// The products linked in the footer. Their URLs come from the project files, and
 // a hidden project simply drops out of the list.
-const FOOTER_PROJECTS = ['obsidian-erp', 'safeframe', 'eventology', 'threatmatrix-ai'];
+const FOOTER_PRODUCTS = ['obsidian-erp', 'versa-fx', 'versa-estate', 'rentflow'];
 
-const projectLinks = FOOTER_PROJECTS.flatMap((slug) => {
+const productLinks = FOOTER_PRODUCTS.flatMap((slug) => {
   const project = getProjectBySlug(slug);
   return project ? [{ label: project.title, href: projectPath(project) }] : [];
 });
 
 const companyLinks = [
-  { label: 'Work', href: '/work' },
   { label: 'Products', href: '/products' },
   { label: 'Services', href: '/services' },
+  { label: 'Client Work', href: '/work' },
   { label: 'About', href: '/about' },
-  { label: 'Notes', href: '/notes' },
   { label: 'Contact', href: '/contact' },
   { label: 'Privacy', href: '/privacy' },
 ];
 
 const socialLinks = [
   { label: 'LinkedIn', href: 'https://linkedin.com/company/versalabs-studio', icon: 'M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z' },
-  { label: 'GitHub', href: 'https://github.com/kidusabdula', icon: 'M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4' },
   { label: 'Telegram', href: 'https://t.me/kidusabdula', icon: 'M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z' },
 ];
 
@@ -36,11 +34,11 @@ export default function Footer() {
         {/* Top Grid: 3 Columns */}
         <div className="grid grid-cols-2 md:grid-cols-3 gap-10 mb-16">
 
-          {/* Projects */}
+          {/* Products */}
           <div>
-            <h3 className="text-[11px] font-semibold tracking-widest uppercase text-zinc-400 mb-5">Projects</h3>
+            <h3 className="text-[11px] font-semibold tracking-widest uppercase text-zinc-400 mb-5">Products</h3>
             <ul className="flex flex-col gap-3">
-              {projectLinks.map((link) => (
+              {productLinks.map((link) => (
                 <li key={link.href}>
                   <Link href={link.href} className="text-sm text-zinc-500 hover:text-white transition-colors">
                     {link.label}

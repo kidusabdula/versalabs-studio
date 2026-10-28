@@ -5,7 +5,7 @@ export const SITE_URL = 'https://www.versalabs-studio.com';
 export const SITE_NAME = 'VersaLabs Studio';
 export const CONTACT_EMAIL = 'contact@versalabs-studio.com';
 export const DEFAULT_DESCRIPTION =
-  'VersaLabs Studio designs and builds custom business software: ERP systems, e-commerce stores, AI tools and websites. Based in Addis Ababa, Ethiopia.';
+  'VersaLabs Studio makes business software: ready-to-use products, and custom ERP systems, online stores, websites and AI tools built for your business. Based in Addis Ababa, Ethiopia.';
 
 const DEFAULT_OG_IMAGE = { url: '/versalabs-logo.png', width: 1000, height: 1000, alt: SITE_NAME };
 

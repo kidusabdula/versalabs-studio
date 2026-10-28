@@ -25,22 +25,21 @@ export function projectMetadata(project: Project): Metadata {
   });
 }
 
-// Up to three related projects: a shared industry counts most, then the same
-// category, then shared tags and stack. Ties keep the listing order.
+// Up to three related pages from the same section (products beside products,
+// client work beside client work): a shared industry counts most, then the
+// same category, then shared tags. Ties keep the listing order.
 export function relatedTo(project: Project, limit = 3): ProjectCard[] {
   const shared = (a: readonly string[], b: readonly string[]) => a.filter((value) => b.includes(value)).length;
   return getAllProjects()
-    .filter((other) => other.slug !== project.slug)
+    .filter((other) => other.slug !== project.slug && other.section === project.section)
     .map((other, order) => ({
       other,
       order,
       score:
         3 * shared(other.industry, project.industry) +
         2 * Number(other.category === project.category) +
-        shared(other.tags, project.tags) +
-        shared(other.stack, project.stack),
+        shared(other.tags, project.tags),
     }))
-    .filter(({ score }) => score > 0)
     .sort((a, b) => b.score - a.score || a.order - b.order)
     .slice(0, limit)
     .map(({ other }) => toCard(other));

@@ -24,7 +24,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const DEFAULT_TITLE = `${SITE_NAME} | Custom Software & Business Platforms`;
+const DEFAULT_TITLE = `${SITE_NAME} | Business Software Products and Custom Builds`;
 
 // Pages override title, description, canonical and social cards through
 // pageMetadata() in src/lib/site.ts; these are the home page and fallbacks.
@@ -73,7 +73,6 @@ export default function RootLayout({
             email: CONTACT_EMAIL,
             foundingDate: "2023",
             address: { "@type": "PostalAddress", addressLocality: "Addis Ababa", addressCountry: "ET" },
-            sameAs: ["https://github.com/kidusabdula"],
           }}
         />
         <MotionConfigProvider>
