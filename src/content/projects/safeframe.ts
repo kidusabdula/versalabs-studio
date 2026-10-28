@@ -22,6 +22,7 @@ export default defineProject({
   year: "2026",
   status: "MVP",
   kind: "internal",
+  section: "products",
   industry: ["Online Safety"],
   links: {
     live: "https://safeframe-livid.vercel.app",
@@ -59,13 +60,15 @@ export default defineProject({
       reviewed: true,
     },
   ],
-  description: "SafeFrame is our own video safety check. Drop in a video or paste a link, and it checks the video for inappropriate content on your own device, so the video never leaves it. You get a clear answer, a confidence score and the exact moments that were flagged.",
+  description: "SafeFrame checks videos for inappropriate content on your own phone or laptop, so the video never leaves it. Drop in a video or paste a link, and you get a clear answer, a confidence score and the exact moments that were flagged.",
   need: "Parents and kids' browsers need to catch inappropriate content in videos. Sending a child's screen to an outside server is a privacy and legal risk, costs money for every user and fails offline. Many families also use older phones with little memory.",
-  delivered: "We built a working check that runs entirely on the phone or laptop: no uploads, no account, and it still works offline after the first visit. Flagged moments blur and pause at once, and a parent presses and holds to continue. The same check also runs in an Android app and in a browser extension that guards any video on a page.",
+  audience: "Parents who want to know what their children watch, and teams building apps and browsers for children that need a private video check on the device itself.",
   features: [
     { title: "Nothing Leaves the Device", description: "Videos are checked on the phone or laptop itself, with no uploads and no account." },
     { title: "See Exactly What Was Flagged", description: "A timeline shows where flagged content starts and ends, not just a yes or no." },
     { title: "A Calm Response for Kids", description: "Choose to blur, pause, hide or skip flagged moments. A parent presses and holds to continue." },
     { title: "Works on Old and New Phones", description: "SafeFrame checks what the device can handle first, so older phones get a lighter check instead of a frozen screen." },
+    { title: "Keeps Working Offline", description: "After the first visit, the check still works without an internet connection." },
+    { title: "On the Web, on Android and in the Browser", description: "The same check runs on the website, in an Android app and in a browser extension that guards any video on a page." },
   ],
 });

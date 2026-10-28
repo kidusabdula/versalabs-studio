@@ -24,7 +24,7 @@ sitemap all read from `src/content/projects/index.ts`.
   against `src/content/plain-language.ts`, so a technology name or a piece of jargon fails the build. The rules are
   in `docs/05-CONTENT-TONE-GUIDE.md`.
 - `section` is optional: products default to `/products`, everything else to `/work`. Set it to move a project
-  (Jarvis sets `section: "products"`). The redirects follow automatically.
+  (SafeFrame sets `section: "products"`). The redirects follow automatically.
 - `client` is optional: the client's name when it differs from the project title (PrintOnline.et is for Pana
   Promotion). It appears on the card and the client page, and names the client on the home page and in service
   examples.
