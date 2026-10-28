@@ -34,9 +34,12 @@ export const INDUSTRIES = [
 
 const text = z.string().trim().min(1);
 
+// `image` (optional) is the screenshot that shows the feature: one of the
+// project's gallery screenshots, shown beside it on the page.
 const feature = z.strictObject({
   title: text,
   description: text,
+  image: z.string().optional(),
 });
 
 // Credit for third-party material that appears in an image or a loop, such as
@@ -152,6 +155,13 @@ export const projectSchema = z
       }
       if (image.credit && image.src === project.cover) {
         ctx.addIssue({ code: 'custom', path: ['cover'], message: 'the cover cannot be an image that needs a credit' });
+      }
+    });
+    project.features.forEach((feature, i) => {
+      if (!feature.image) return;
+      const image = project.gallery.find((entry) => entry.src === feature.image);
+      if (!image || image.kind !== 'screen') {
+        ctx.addIssue({ code: 'custom', path: ['features', i, 'image'], message: 'a feature image must be one of the gallery screenshots' });
       }
     });
     const loops = project.loops ?? [];

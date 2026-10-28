@@ -63,11 +63,11 @@ export default defineProject({
   need: "A licensed bureau has to serve customers fast at the counter and still pass the regulator's inspection. Every rate change, cash movement and customer check must be controlled and traceable, at every branch.",
   audience: "Licensed foreign exchange bureaus, from a single counter to several branches. It is made for owners, branch managers, tellers and compliance officers who need control without slowing the counter down.",
   features: [
-    { title: "Your Own Branded Workspace", description: "Each bureau sets its own name, logo, currencies and branches, keeps its data to itself, and every change is recorded." },
-    { title: "Serve Customers Fast at the Counter", description: "Quote live, count out the right notes and print a receipt, and the counter blocks any deal that fails a customer check." },
+    { title: "Your Own Branded Workspace", image: "/images/versa-fx/screen-workspace-desktop.webp", description: "Each bureau sets its own name, logo, currencies and branches, keeps its data to itself, and every change is recorded." },
+    { title: "Serve Customers Fast at the Counter", image: "/images/versa-fx/screen-transactions-desktop.webp", description: "Quote live, count out the right notes and print a receipt, and the counter blocks any deal that fails a customer check." },
     { title: "No Rate Goes Live Unchecked", description: "One person proposes a rate sheet and another approves it, and nobody can approve their own." },
-    { title: "The Right Screen for Every Role", description: "Cashiers, compliance officers and executives each see their own menu and actions." },
+    { title: "The Right Screen for Every Role", image: "/images/versa-fx/screen-login-desktop.webp", description: "Cashiers, compliance officers and executives each see their own menu and actions." },
     { title: "Stay Ready for Inspection", description: "Customer checks, compliance alerts and a record of every change sit in one place, ready to show the regulator." },
-    { title: "Amharic and the Ethiopian Calendar", description: "Switch the screens to Amharic, see every date in the Ethiopian calendar first, and get reports on the Ethiopian fiscal year." },
+    { title: "Amharic and the Ethiopian Calendar", image: "/images/versa-fx/screen-dashboard-amharic-desktop.webp", description: "Switch the screens to Amharic, see every date in the Ethiopian calendar first, and get reports on the Ethiopian fiscal year." },
   ],
 });

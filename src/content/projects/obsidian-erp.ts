@@ -16,7 +16,7 @@ export default defineProject({
   industry: ["Manufacturing"],
   links: {},
   heroGradient: "from-violet-500/20 via-transparent to-indigo-500/10",
-  cover: "/images/obsidian-erp/mockup-21.webp",
+  cover: "/images/obsidian-erp/screen-20.webp",
   gallery: [
     { src: "/images/obsidian-erp/mockup-01.webp", alt: "Obsidian ERP quotation list with status filters on a phone, dark striped backdrop", kind: "mockup", width: 1920, height: 1280, reviewed: true },
     { src: "/images/obsidian-erp/mockup-02.webp", alt: "Obsidian ERP sales order detail with artwork verification banner, close-up on an iMac", kind: "mockup", width: 1920, height: 1280, reviewed: true },
@@ -79,9 +79,9 @@ export default defineProject({
   need: "Many growing companies run sales, stock, production and accounts in separate spreadsheets and tools. Prices go wrong, stock runs out, and invoices go out late.",
   audience: "Growing companies, manufacturers especially, that have outgrown spreadsheets. It suits teams that quote, sell, buy, make and deliver goods and want one record of all of it.",
   features: [
-    { title: "Go From Quote to Cash in a Few Clicks", description: "Turn a quote into an order, then deliver, invoice and record the payment with one click each." },
+    { title: "Go From Quote to Cash in a Few Clicks", image: "/images/obsidian-erp/screen-32.webp", description: "Turn a quote into an order, then deliver, invoice and record the payment with one click each." },
     { title: "See Every Step of a Deal", description: "Every document shows where it came from and what comes next, so nothing gets lost." },
-    { title: "Run Production Without the Paperwork", description: "Start and finish jobs in one click, and your stock and job cards update for you." },
+    { title: "Run Production Without the Paperwork", image: "/images/obsidian-erp/screen-26.webp", description: "Start and finish jobs in one click, and your stock and job cards update for you." },
     { title: "Order What You're Short Of", description: "Spot missing stock and raise purchase orders to each item's usual supplier." },
     { title: "Know Your Numbers at a Glance", description: "See profit and loss, the balance sheet, money owed, sales and stock in one place." },
     { title: "Give Everyone the Right Access", description: "Each person sees and does only what their role allows." },

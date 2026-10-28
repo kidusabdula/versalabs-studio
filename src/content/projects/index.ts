@@ -42,7 +42,7 @@ const ENTRIES: ProjectInput[] = [
 ];
 
 // Fields that hold paths, links, class names or a licence credit, not copy.
-const NOT_COPY = new Set(['slug', 'src', 'poster', 'cover', 'live', 'heroGradient', 'credit', 'evidence']);
+const NOT_COPY = new Set(['slug', 'src', 'poster', 'cover', 'image', 'live', 'heroGradient', 'credit', 'evidence']);
 
 // Every piece of copy in a project, with where it sits, for the plain-language check.
 function copyIn(value: unknown, at: string, out: { at: string; text: string }[] = []) {
