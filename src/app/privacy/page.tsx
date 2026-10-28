@@ -18,8 +18,8 @@ const LAST_UPDATED = '26 October 2026';
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section className="mb-12">
-      <h2 className="text-xl font-semibold text-white mb-4">{title}</h2>
-      <div className="flex flex-col gap-4 text-[16px] leading-[1.8] text-zinc-400">{children}</div>
+      <h2 className="mb-4 text-[20px] font-semibold tracking-[-0.01em] text-foreground">{title}</h2>
+      <div className="flex flex-col gap-4 text-[16px] leading-[1.7] text-zinc-400">{children}</div>
     </section>
   );
 }
@@ -28,11 +28,11 @@ export default function PrivacyPage() {
   const googleAnalytics = Boolean(process.env.NEXT_PUBLIC_GA_ID);
 
   return (
-    <div className="min-h-screen bg-[#0A0A0C] px-6 pt-40 pb-32">
+    <div className="px-5 pt-14 pb-16 sm:px-6 md:pt-20 md:pb-28">
       <article className="mx-auto max-w-3xl">
-        <p className="text-[11px] uppercase tracking-widest font-semibold text-zinc-500 mb-4">Last updated {LAST_UPDATED}</p>
-        <h1 className="text-4xl md:text-5xl font-bold tracking-tighter text-white mb-6">Privacy Notice</h1>
-        <p className="text-lg leading-relaxed text-zinc-400 mb-16">
+        <p className="mb-4 font-mono text-[12px] uppercase tracking-[0.08em] text-zinc-400">Last updated {LAST_UPDATED}</p>
+        <h1 className="mb-6 text-[36px] font-semibold leading-[1.08] tracking-[-0.02em] text-foreground md:text-[48px]">Privacy Notice</h1>
+        <p className="mb-16 text-[18px] leading-[1.6] text-zinc-400">
           This page explains what VersaLabs Studio, a software studio in Addis Ababa, Ethiopia, collects through
           www.versalabs-studio.com, what we do with it and how to reach us about it. We keep it short because the site
           collects very little.

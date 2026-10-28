@@ -1,19 +1,20 @@
 'use client';
 
 import { useState } from 'react';
-import Image from 'next/image';
 import ProjectSlideshow from '@/components/ui/ProjectSlideshow';
 import ImageLightbox from '@/components/ui/ImageLightbox';
+import ProductShot, { isPortrait } from '@/components/ui/ProductShot';
+import { BUTTON_SECONDARY } from '@/components/ui/styles';
 import type { GalleryImage } from '@/content/schema';
 import MediaCredit from './MediaCredit';
 
-// Mockups play in the carousel near the top and screenshots fill the gallery
-// further down, so no image shows twice. Each has its own full-size viewer.
+// Mockups play in the carousel and screenshots fill the gallery, so no image
+// shows twice. Each has its own full-size viewer.
 
 export function MockupCarousel({
   images,
   title,
-  priority = true,
+  priority = false,
 }: {
   images: GalleryImage[];
   title: string;
@@ -46,60 +47,78 @@ export function MockupCarousel({
   );
 }
 
-const INITIAL_COUNT = 6;
+// How many of each kind show before "Show All".
+const INITIAL_DESKTOP = 4;
+const INITIAL_PHONE = 4;
 
+function Shot({ image, sizes, onOpen }: { image: GalleryImage; sizes: string; onOpen: () => void }) {
+  return (
+    <figure>
+      <button
+        type="button"
+        onClick={onOpen}
+        aria-label={`View full size: ${image.alt}`}
+        className="block w-full cursor-zoom-in rounded-xl text-left transition-opacity hover:opacity-90"
+      >
+        <ProductShot image={image} alt="" sizes={sizes} />
+      </button>
+      <figcaption className="mt-3 text-[13px] leading-[1.5] text-zinc-400">
+        {image.alt}
+        {image.credit && <MediaCredit credit={image.credit} className="mt-1 block" />}
+      </figcaption>
+    </figure>
+  );
+}
+
+// Desktop screenshots in browser frames, two to a row; phone screenshots in
+// phone outlines, up to four to a row.
 export function ScreenGallery({ images, title }: { images: GalleryImage[]; title: string }) {
   const [open, setOpen] = useState(false);
   const [index, setIndex] = useState(0);
   const [showAll, setShowAll] = useState(false);
   if (images.length === 0) return null;
 
-  const visible = showAll ? images : images.slice(0, INITIAL_COUNT);
+  const desktop = images.filter((image) => !isPortrait(image));
+  const phone = images.filter((image) => isPortrait(image));
+  // The viewer steps through the screenshots in the order they appear.
+  const ordered = [...desktop, ...phone];
+  const shownDesktop = showAll ? desktop : desktop.slice(0, INITIAL_DESKTOP);
+  const shownPhone = showAll ? phone : phone.slice(0, INITIAL_PHONE);
+  const hidden = ordered.length - shownDesktop.length - shownPhone.length;
+  const openAt = (image: GalleryImage) => {
+    setIndex(ordered.indexOf(image));
+    setOpen(true);
+  };
 
   return (
     <>
-      <ul className="grid gap-6 md:grid-cols-2">
-        {visible.map((image, i) => (
-          <li key={image.src}>
-            <figure>
-              <button
-                type="button"
-                onClick={() => {
-                  setIndex(i);
-                  setOpen(true);
-                }}
-                aria-label={`View full size: ${image.alt}`}
-                className="relative block aspect-[3/2] w-full cursor-zoom-in overflow-hidden rounded-xl border border-white/[0.06] bg-[#0E0E10]"
-              >
-                <Image
-                  src={image.src}
-                  alt=""
-                  fill
-                  className="object-contain"
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                />
-              </button>
-              <figcaption className="mt-3 text-[13px] leading-relaxed text-zinc-400">
-                {image.alt}
-                {image.credit && <MediaCredit credit={image.credit} className="mt-1 block" />}
-              </figcaption>
-            </figure>
-          </li>
-        ))}
-      </ul>
-      {images.length > INITIAL_COUNT && !showAll && (
-        <div className="mt-10 text-center">
-          <button
-            type="button"
-            onClick={() => setShowAll(true)}
-            className="inline-flex items-center gap-2 rounded-full border border-white/[0.08] bg-white/[0.03] px-6 py-3 text-sm font-medium text-zinc-300 transition-colors hover:bg-white/[0.06] hover:text-white"
-          >
+      {shownDesktop.length > 0 && (
+        <ul className="grid gap-x-6 gap-y-10 md:grid-cols-2">
+          {shownDesktop.map((image) => (
+            <li key={image.src}>
+              <Shot image={image} sizes="(max-width: 768px) calc(100vw - 40px), 590px" onOpen={() => openAt(image)} />
+            </li>
+          ))}
+        </ul>
+      )}
+      {shownPhone.length > 0 && (
+        <ul className={`grid grid-cols-2 gap-x-5 gap-y-10 sm:grid-cols-3 lg:grid-cols-4 ${shownDesktop.length > 0 ? 'mt-12' : ''}`}>
+          {shownPhone.map((image) => (
+            <li key={image.src}>
+              <Shot image={image} sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 280px" onOpen={() => openAt(image)} />
+            </li>
+          ))}
+        </ul>
+      )}
+      {hidden > 0 && (
+        <div className="mt-12 text-center">
+          <button type="button" onClick={() => setShowAll(true)} className={BUTTON_SECONDARY}>
             Show All {images.length} Screenshots
           </button>
         </div>
       )}
       <ImageLightbox
-        images={images}
+        images={ordered}
         currentIndex={index}
         isOpen={open}
         onClose={() => setOpen(false)}

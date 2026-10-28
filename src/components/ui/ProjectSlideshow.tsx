@@ -34,7 +34,7 @@ export default function ProjectSlideshow({ images, title, onImageClick, priority
       fill
       className="object-contain"
       sizes="(max-width: 1200px) 100vw, 1200px"
-      priority={priority && currentIndex === 0}
+      preload={priority && currentIndex === 0}
     />
   );
 
@@ -43,7 +43,7 @@ export default function ProjectSlideshow({ images, title, onImageClick, priority
       role="region"
       aria-roledescription="carousel"
       aria-label={`${title} screenshots`}
-      className="relative w-full aspect-[3/2] overflow-hidden rounded-xl border border-white/[0.04] bg-[#0A0A0C] group"
+      className="relative aspect-[3/2] w-full overflow-hidden rounded-xl border border-border bg-background"
     >
       <AnimatePresence initial={false}>
         <motion.div
@@ -77,7 +77,7 @@ export default function ProjectSlideshow({ images, title, onImageClick, priority
             type="button"
             onClick={goPrev}
             aria-label="Previous image"
-            className="absolute left-3 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-black/50 backdrop-blur-sm text-white hover:bg-black/70 transition-colors"
+            className="absolute left-3 top-1/2 z-10 -translate-y-1/2 rounded-full border border-border bg-background/80 p-2 text-foreground transition-colors hover:bg-background"
           >
             <ChevronLeft className="h-5 w-5" aria-hidden="true" />
           </button>
@@ -85,12 +85,12 @@ export default function ProjectSlideshow({ images, title, onImageClick, priority
             type="button"
             onClick={goNext}
             aria-label="Next image"
-            className="absolute right-3 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-black/50 backdrop-blur-sm text-white hover:bg-black/70 transition-colors"
+            className="absolute right-3 top-1/2 z-10 -translate-y-1/2 rounded-full border border-border bg-background/80 p-2 text-foreground transition-colors hover:bg-background"
           >
             <ChevronRight className="h-5 w-5" aria-hidden="true" />
           </button>
           {/* Position, for sighted users; the slide's own label carries it for screen readers. */}
-          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-10 rounded-full bg-black/50 px-3 py-1 text-xs font-medium text-white tabular-nums" aria-hidden="true">
+          <div className="absolute bottom-3 left-1/2 z-10 -translate-x-1/2 rounded-full bg-background/80 px-3 py-1 font-mono text-[12px] text-foreground tabular-nums" aria-hidden="true">
             {currentIndex + 1} / {images.length}
           </div>
         </>
