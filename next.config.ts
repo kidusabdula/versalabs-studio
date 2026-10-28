@@ -24,6 +24,12 @@ const PARKED: Record<string, string> = {
 const OTHER_SECTION = { work: "products", products: "work" } as const;
 
 const nextConfig: NextConfig = {
+  // Product screenshots are most of a page's weight. Browsers that take AVIF get
+  // it (smaller than WebP for flat interface screens); the rest get WebP.
+  images: {
+    formats: ["image/avif", "image/webp"],
+  },
+
   // Every redirect is a single permanent hop to the page's current URL, and the
   // project ones are generated from src/content/projects, so moving a project
   // between /work and /products (its `kind` or `section`) moves its redirects too.
