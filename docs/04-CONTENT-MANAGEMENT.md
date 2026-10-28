@@ -55,7 +55,7 @@ sitemap all read from `src/content/projects/index.ts`.
 - To take a project off the site for good, delete its file and its `public/images/<slug>/` folder, and add the
   slug to `REMOVED` in `next.config.ts`: its old `/work`, `/products` and `/projects` URLs then go to `/work` in one
   hop. (`visibility: 'hide'` is for a temporary removal: the page 404s and nothing redirects.) Removed so far:
-  Tibeb, Potentia, Pana Web and FastPay ET Wallet.
+  Tibeb, Potentia, Pana Web, FastPay ET Wallet and ThreatMatrix AI.
 - `src/app/sitemap.ts` builds the sitemap from `getAllProjects()` and `projectPath()`, so it always matches the
   visible projects. `/notes` stays out of it (and is noindex) until notes are published. `src/app/robots.ts` points
   to the sitemap.

@@ -11,7 +11,7 @@ const RENAMED: Record<string, string> = {
 // Projects taken off the site. Their old URLs (case study, other section and
 // legacy /projects) go straight to /work, so an old link lands on the listing
 // instead of a 404.
-const REMOVED = ["tibeb", "potentia", "pana-web", "fastpay"];
+const REMOVED = ["tibeb", "potentia", "pana-web", "fastpay", "threatmatrix-ai"];
 
 const OTHER_SECTION = { work: "products", products: "work" } as const;
 

@@ -5,7 +5,6 @@ import obsidianErp from './obsidian-erp';
 import safeframe from './safeframe';
 import printonlineEt from './printonline-et';
 import eventology from './eventology';
-import threatmatrixAi from './threatmatrix-ai';
 import panaSport from './pana-sport';
 import pavilion360 from './pavilion-360';
 import oskazEcommerce from './oskaz-ecommerce';
@@ -28,7 +27,6 @@ const ENTRIES: ProjectInput[] = [
   safeframe,
   printonlineEt,
   eventology,
-  threatmatrixAi,
   panaSport,
   pavilion360,
   oskazEcommerce,
