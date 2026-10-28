@@ -82,7 +82,12 @@ function LeadShot({ project, desktop, phone }: { project: Project; desktop?: Gal
     if (project.section !== 'products') return null;
     return (
       <ShotPanel>
-        <ShotPlaceholder title={project.title} status={project.status} line={AVAILABILITY[project.status]} />
+        <ShotPlaceholder
+          title={project.title}
+          status={project.status}
+          line={AVAILABILITY[project.status]}
+          className="mx-auto max-w-[760px]"
+        />
       </ShotPanel>
     );
   }
@@ -141,7 +146,9 @@ function Features({ project }: { project: Project }) {
         </ul>
       )}
       {others.length > 0 && (
-        <ul className={`grid gap-5 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6 ${rows.length > 0 ? 'mt-16 md:mt-24' : ''}`}>
+        <ul
+          className={`grid gap-5 sm:grid-cols-2 lg:gap-6 ${others.length % 2 === 0 && others.length < 6 ? '' : 'lg:grid-cols-3'} ${rows.length > 0 ? 'mt-16 md:mt-24' : ''}`}
+        >
           {others.map((feature) => (
             <li key={feature.title} className={`${CARD} p-7`}>
               <h3 className={`${H3} mb-3`}>{feature.title}</h3>
