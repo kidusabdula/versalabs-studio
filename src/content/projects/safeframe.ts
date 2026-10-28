@@ -1,6 +1,6 @@
 import { defineProject } from '../schema';
 
-// The clip SafeFrame scans in the loops and the results screenshots. Its
+// The clip SafeFrame checks in the recordings and the verdict screenshots. Its
 // licence (CC BY 4.0) requires this credit wherever they appear.
 const TORONTO_SKYLINE = {
   label: "Sample video",
@@ -32,17 +32,17 @@ export default defineProject({
   gallery: [
     { src: "/images/safeframe/screen-home-desktop.webp", alt: "SafeFrame home page: video safety that never leaves the device", kind: "screen", width: 1440, height: 900, reviewed: true },
     { src: "/images/safeframe/screen-detect-desktop.webp", alt: "SafeFrame check screen, ready for a video file or a link", kind: "screen", width: 1440, height: 900, reviewed: true },
-    { src: "/images/safeframe/screen-results-desktop.webp", alt: "SafeFrame result for a sample city clip: no inappropriate content found, with a score for each category, a timeline and speeds measured on the device", kind: "screen", width: 1440, height: 900, credit: TORONTO_SKYLINE, reviewed: true },
+    { src: "/images/safeframe/screen-verdict-desktop.webp", alt: "SafeFrame answer for a sample city clip: a timeline with no flagged moments, and no inappropriate content found", kind: "screen", width: 1440, height: 900, credit: TORONTO_SKYLINE, reviewed: true },
     { src: "/images/safeframe/screen-home-dark-desktop.webp", alt: "SafeFrame home page in the dark theme", kind: "screen", width: 1440, height: 900, reviewed: true },
     { src: "/images/safeframe/screen-home-mobile.webp", alt: "SafeFrame home page on a phone", kind: "screen", width: 780, height: 1688, reviewed: true },
     { src: "/images/safeframe/screen-detect-mobile.webp", alt: "SafeFrame check screen on a phone, ready for a file or a link", kind: "screen", width: 780, height: 1688, reviewed: true },
-    { src: "/images/safeframe/screen-results-mobile.webp", alt: "SafeFrame result for a sample clip on a phone, with the score timeline", kind: "screen", width: 780, height: 1688, credit: TORONTO_SKYLINE, reviewed: true },
+    { src: "/images/safeframe/screen-verdict-mobile.webp", alt: "SafeFrame answer for a sample clip on a phone: no flagged moments, and no inappropriate content found", kind: "screen", width: 780, height: 1688, credit: TORONTO_SKYLINE, reviewed: true },
   ],
   loops: [
     {
-      src: "/media/safeframe/loop-desktop-960.mp4",
+      src: "/media/safeframe/loop-verdict-desktop-960.mp4",
       poster: "/images/safeframe/screen-detect-desktop.webp",
-      caption: "A real check in the browser: a link to a sample clip goes in, SafeFrame scans it on the device, and the result shows no inappropriate content.",
+      caption: "A real check in the browser: a link to a sample clip goes in, SafeFrame checks it on the device, and the answer is plain: no inappropriate content found.",
       view: "desktop",
       width: 960,
       height: 600,
@@ -50,9 +50,9 @@ export default defineProject({
       reviewed: true,
     },
     {
-      src: "/media/safeframe/loop-mobile.mp4",
-      poster: "/images/safeframe/screen-detect-mobile.webp",
-      caption: "The same check on a phone, ending on the scores and the full result.",
+      src: "/media/safeframe/loop-verdict-mobile.mp4",
+      poster: "/images/safeframe/screen-verdict-mobile.webp",
+      caption: "The same check on a phone: the clip is checked on the device, ending on the plain answer.",
       view: "mobile",
       width: 780,
       height: 1688,
