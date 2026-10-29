@@ -5,9 +5,14 @@ import { defineProject } from '../schema';
 // production 85b4783 (rig edf7de6), where every rate and record carries a
 // "Sample rates" or "Sample data" badge and every flagged person is a
 // fictional "<First> Example". The rest are from a22d4fb. Captions say sample
-// data, never live rates or a real person. The desktop loop filmed on 683aab6
-// was withdrawn on 2026-10-28 (a compliance hold beside a real-looking name):
-// do not bring it back until Media re-films it from 85b4783 or later.
+// data, never live rates or a real person.
+//
+// Loops: the desktop loop filmed on 683aab6 was withdrawn on 2026-10-28 (a
+// compliance hold beside a real-looking name), and its file name
+// loop-desktop-960.mp4 stays retired so that URL keeps returning 404. The
+// operations loop is the same flow re-filmed on ae1dcac and passed by Media's
+// frame gate on every frame (tools/gate-loop.mjs): its one held deal sits
+// beside "Dawit Example". Any re-film goes through that gate first.
 export default defineProject({
   slug: "versa-fx",
   title: "Versa FX",
@@ -53,9 +58,9 @@ export default defineProject({
   ],
   loops: [
     {
-      src: "/media/versa-fx/loop-tenants-desktop-960.mp4",
-      poster: "/images/versa-fx/screen-dashboard-acacia-desktop.webp",
-      caption: "One platform, several bureaus: signing in to Acacia Exchange, signing out, signing in to Lumen Currency House, then switching the menus to Amharic. Every bureau, person and figure is fictional demo data.",
+      src: "/media/versa-fx/loop-operations-desktop-960.mp4",
+      poster: "/images/versa-fx/screen-login-desktop.webp",
+      caption: "Signing in to the fictional Kestrel FX bureau as its branch manager, then the dashboard and the transactions list. Every bureau, person and figure is fictional demo data.",
       view: "desktop",
       width: 960,
       height: 600,
@@ -64,10 +69,19 @@ export default defineProject({
     {
       src: "/media/versa-fx/loop-mobile.mp4",
       poster: "/images/versa-fx/screen-login-mobile.webp",
-      caption: "The demo on a phone: choosing the Kestrel FX bureau and a role, then the dashboard.",
+      caption: "The same demo on a phone: choosing the Kestrel FX bureau and a role, then the dashboard.",
       view: "mobile",
       width: 780,
       height: 1688,
+      reviewed: true,
+    },
+    {
+      src: "/media/versa-fx/loop-tenants-desktop-960.mp4",
+      poster: "/images/versa-fx/screen-dashboard-acacia-desktop.webp",
+      caption: "One platform, several bureaus: signing in to Acacia Exchange, signing out, signing in to Lumen Currency House, then switching the menus to Amharic. Every bureau, person and figure is fictional demo data.",
+      view: "desktop",
+      width: 960,
+      height: 600,
       reviewed: true,
     },
   ],
