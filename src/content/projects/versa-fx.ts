@@ -55,7 +55,7 @@ export default defineProject({
     {
       src: "/media/versa-fx/loop-tenants-desktop-960.mp4",
       poster: "/images/versa-fx/screen-dashboard-acacia-desktop.webp",
-      caption: "One platform, several bureaus: signing in to Acacia Exchange, signing out, signing in to Lumen Currency House, then switching the interface to Amharic. Every bureau, person and figure is fictional demo data.",
+      caption: "One platform, several bureaus: signing in to Acacia Exchange, signing out, signing in to Lumen Currency House, then switching the menus to Amharic. Every bureau, person and figure is fictional demo data.",
       view: "desktop",
       width: 960,
       height: 600,
@@ -80,6 +80,6 @@ export default defineProject({
     { title: "No Rate Goes Live Unchecked", image: "/images/versa-fx/screen-rates-desktop.webp", description: "One person proposes a rate sheet and another approves it, and nobody can approve their own." },
     { title: "The Right Screen for Every Role", image: "/images/versa-fx/screen-users-desktop.webp", description: "Cashiers, compliance officers and executives each see their own menu and actions." },
     { title: "Stay Ready for Inspection", image: "/images/versa-fx/screen-compliance-desktop.webp", description: "Customer checks, compliance alerts and a record of every change sit in one place, ready to show the regulator." },
-    { title: "Amharic and the Ethiopian Calendar", image: "/images/versa-fx/screen-settings-desktop.webp", description: "Switch the screens to Amharic, see every date in the Ethiopian calendar first, and get reports on the Ethiopian fiscal year." },
+    { title: "Amharic and the Ethiopian Calendar", image: "/images/versa-fx/screen-settings-desktop.webp", description: "Switch the menus to Amharic, keep the Ethiopian date in view beside the Gregorian one, and get reports on the Ethiopian fiscal year." },
   ],
 });
