@@ -1,33 +1,49 @@
 import Link from 'next/link';
 import { ArrowLeft, ArrowRight, ExternalLink } from 'lucide-react';
-import type { Project } from '@/content/schema';
+import type { Feature, GalleryImage, Project } from '@/content/schema';
 import { projectPath, type ProjectCard } from '@/content/projects';
-import { AVAILABILITY, KIND_LABEL, KIND_BADGE, STATUS_BADGE, callToAction, type CallToAction } from '@/content/labels';
+import { AVAILABILITY, callToAction, type CallToAction } from '@/content/labels';
 import { SITE_NAME, SITE_URL } from '@/lib/site';
+import { galleryRest, isPhoneScreen, leadShots } from '@/lib/shots';
+import { Reveal } from '@/components/ui/motion';
+import ProductShot, { ShotPanel, ShotPlaceholder } from '@/components/ui/ProductShot';
+import { KindBadge, StatusBadge } from '@/components/ui/Badge';
+import {
+  BUTTON_PRIMARY,
+  BUTTON_SECONDARY,
+  CARD,
+  CONTAINER,
+  DISPLAY,
+  EYEBROW,
+  H1_QUIET,
+  H2,
+  H3,
+  LEAD,
+  SECTION,
+  SECTION_RULE,
+} from '@/components/ui/styles';
 import JsonLd from './JsonLd';
 import ProjectCardView from './ProjectCardView';
+import MediaCredit from './MediaCredit';
 import { MockupCarousel, ScreenGallery } from './Galleries';
 import LoopShowcase from './LoopShowcase';
 
-// The page for /products/<slug> and /work/<slug>. It renders on the server with
-// no entrance animation, so the title and the promise paint at once. Only the
-// recordings, the carousel and the gallery need JavaScript.
+// The page for /products/<slug> and /work/<slug>. It renders on the server; the
+// first view (the title, the promise and the lead screenshot) has no entrance
+// animation, so it paints at once. Only the recordings, the carousel and the
+// gallery need JavaScript.
 //
-// A product page is a landing page: the promise → who it's for → what you can
-// do → see it work → status → one call to action.
-// A work page is a short client story: the client → their need → what we
+// A product page is a landing page: the promise and the product, side by side
+// with its call to action → who it's for → what you can do, each feature beside
+// the screen that shows it → see it work → its status and one call to action.
+// A work page is the same system, quieter: the client → their need → what we
 // delivered → see it → start a similar project.
 // Neither says how anything is built (docs/05-CONTENT-TONE-GUIDE.md).
 
 // A live link on client work opens the real site; on anything else it is a demo.
 const LIVE_STATUSES: Project['status'][] = ['Production', 'Beta', 'MVP'];
 
-const SECTION_LABEL = 'mb-4 block text-[11px] font-semibold uppercase tracking-widest text-zinc-400';
-const SECTION_TITLE = 'mb-8 text-3xl font-bold tracking-tight text-white';
-const BUTTON_PRIMARY =
-  'inline-flex h-12 items-center justify-center gap-2 rounded-full bg-white px-7 text-[15px] font-semibold text-black transition-colors hover:bg-zinc-200';
-const BUTTON_SECONDARY =
-  'inline-flex h-12 items-center justify-center gap-2 rounded-full border border-white/[0.08] bg-[#1A1A1A] px-7 text-[15px] font-semibold text-white transition-colors hover:bg-[#222222]';
+const STORY_TITLE = 'mb-5 text-[24px] font-semibold leading-[1.2] tracking-[-0.02em] text-foreground md:text-[28px]';
 
 function CtaButton({ cta, className = BUTTON_PRIMARY }: { cta: CallToAction; className?: string }) {
   if (cta.external) {
@@ -47,35 +63,154 @@ function CtaButton({ cta, className = BUTTON_PRIMARY }: { cta: CallToAction; cla
   );
 }
 
-// Screen recordings first, then the mockups, then the screenshots.
-function Visuals({ project }: { project: Project }) {
-  const mockups = project.gallery.filter((image) => image.kind === 'mockup');
-  const screens = project.gallery.filter((image) => image.kind === 'screen');
+function SectionTitle({ id, eyebrow, title }: { id: string; eyebrow: string; title: string }) {
+  return (
+    <div className="mb-10 md:mb-14">
+      <span className={EYEBROW}>{eyebrow}</span>
+      <h2 id={id} className={H2}>
+        {title}
+      </h2>
+    </div>
+  );
+}
+
+// The screenshot that leads the page, in its frame on a surface panel, with
+// the same page on a phone beside it when there is one. A product shown only
+// on phones leads with three phone screens, its cover in the middle (one on a
+// phone). A product with no screenshots yet shows its name, status and
+// availability in the frame.
+function LeadShot({ project, lead, beside }: { project: Project; lead?: GalleryImage; beside: GalleryImage[] }) {
+  if (!lead) {
+    if (project.section !== 'products') return null;
+    return (
+      <ShotPanel>
+        <ShotPlaceholder
+          title={project.title}
+          status={project.status}
+          line={AVAILABILITY[project.status]}
+          className="mx-auto max-w-[760px]"
+        />
+      </ShotPanel>
+    );
+  }
+  if (isPhoneScreen(lead)) {
+    const [left, right] = beside;
+    const side = 'hidden w-full max-w-[260px] md:block';
+    // A phone lead is never the largest paint (the intro paragraph is), so it
+    // loads eagerly but is not preloaded at high priority: a high-priority
+    // preload only competes with the fonts and CSS that the paragraph waits for.
+    return (
+      <ShotPanel>
+        <div className="flex items-start justify-center gap-10">
+          {left && <ProductShot image={left} sizes="260px" className={side} />}
+          <ProductShot image={lead} sizes="(max-width: 768px) 280px, 260px" eager className="w-full max-w-[280px] md:max-w-[260px]" />
+          {right && <ProductShot image={right} sizes="260px" className={side} />}
+        </div>
+      </ShotPanel>
+    );
+  }
+  const [phone] = beside;
+  if (!phone) {
+    return (
+      <ShotPanel>
+        <ProductShot image={lead} sizes="(max-width: 1248px) calc(100vw - 64px), 1120px" priority />
+      </ShotPanel>
+    );
+  }
+  return (
+    <ShotPanel>
+      <div className="grid items-end gap-6 md:grid-cols-[minmax(0,1fr)_minmax(0,0.3fr)] md:gap-8">
+        <ProductShot image={lead} sizes="(max-width: 768px) calc(100vw - 64px), (max-width: 1248px) 72vw, 860px" priority />
+        <ProductShot image={phone} sizes="260px" className="mx-auto hidden w-full max-w-[260px] md:block" />
+      </div>
+    </ShotPanel>
+  );
+}
+
+// Each feature that has a screenshot gets a row: the screenshot on one side,
+// the feature on the other, alternating. The rest follow as a grid of cards.
+function Features({ project }: { project: Project }) {
+  const image = (feature: Feature) => project.gallery.find((entry) => entry.src === feature.image);
+  const rows = project.features.flatMap((feature) => {
+    const shot = image(feature);
+    return shot ? [{ feature, shot }] : [];
+  });
+  const others = project.features.filter((feature) => !image(feature));
+
+  return (
+    <>
+      {rows.length > 0 && (
+        <ul className="flex flex-col gap-16 md:gap-24">
+          {rows.map(({ feature, shot }, i) => {
+            return (
+              <li key={feature.title} className="grid items-center gap-8 lg:grid-cols-12 lg:gap-12">
+                <figure className={`lg:col-span-7 ${i % 2 === 1 ? 'lg:order-2' : ''}`}>
+                  <ShotPanel tight>
+                    <ProductShot image={shot} sizes="(max-width: 1024px) calc(100vw - 64px), 660px" />
+                  </ShotPanel>
+                  <figcaption className="mt-3 text-[13px] leading-[1.5] text-zinc-400">
+                    {shot.alt}
+                    {shot.credit && <MediaCredit credit={shot.credit} className="mt-1 block" />}
+                  </figcaption>
+                </figure>
+                <div className={`lg:col-span-5 ${i % 2 === 1 ? 'lg:order-1' : ''}`}>
+                  <h3 className="mb-4 text-[24px] font-semibold leading-[1.2] tracking-[-0.02em] text-foreground md:text-[30px]">
+                    {feature.title}
+                  </h3>
+                  <p className={LEAD}>{feature.description}</p>
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+      {others.length > 0 && (
+        <ul
+          className={`grid gap-5 sm:grid-cols-2 lg:gap-6 ${others.length % 2 === 0 && others.length < 6 ? '' : 'lg:grid-cols-3'} ${rows.length > 0 ? 'mt-16 md:mt-24' : ''}`}
+        >
+          {others.map((feature) => (
+            <li key={feature.title} className={`${CARD} p-7`}>
+              <h3 className={`${H3} mb-3`}>{feature.title}</h3>
+              <p className="text-[15px] leading-[1.6] text-zinc-400">{feature.description}</p>
+            </li>
+          ))}
+        </ul>
+      )}
+    </>
+  );
+}
+
+// The recordings, then the mockups, then the screenshots not shown above.
+function Visuals({ project, rest }: { project: Project; rest: GalleryImage[] }) {
+  const mockups = rest.filter((image) => image.kind === 'mockup');
+  const screens = rest.filter((image) => image.kind === 'screen');
   if (project.loops.length === 0 && mockups.length === 0 && screens.length === 0) return null;
 
   return (
-    <section aria-labelledby="see-it" className="mb-24">
-      <span className={SECTION_LABEL}>See It</span>
-      <h2 id="see-it" className={SECTION_TITLE}>
-        {project.section === 'products' ? 'See It Work' : 'What It Looks Like'}
-      </h2>
-      {project.loops.length > 0 && (
-        <div className="mx-auto mb-16 max-w-[1200px]">
-          <LoopShowcase loops={project.loops} />
-        </div>
-      )}
-      {mockups.length > 0 && (
-        <div className="mx-auto mb-16 max-w-[1200px] overflow-hidden rounded-2xl border border-white/[0.04] shadow-2xl">
-          {/* The first slide is fetched early only when it is the first image on the page. */}
-          <MockupCarousel images={mockups} title={project.title} priority={project.loops.length === 0} />
-        </div>
-      )}
-      {screens.length > 0 && (
-        <>
-          <h3 className="mb-6 text-lg font-semibold text-white">Screenshots</h3>
-          <ScreenGallery images={screens} title={project.title} />
-        </>
-      )}
+    <section aria-labelledby="see-it" className={`${SECTION_RULE} ${SECTION}`}>
+      <div className={CONTAINER}>
+        <SectionTitle
+          id="see-it"
+          eyebrow="See It"
+          title={project.section === 'products' ? 'See It Work' : 'What It Looks Like'}
+        />
+        {project.loops.length > 0 && (
+          <div className="mb-16 md:mb-24">
+            <LoopShowcase loops={project.loops} />
+          </div>
+        )}
+        {mockups.length > 0 && (
+          <div className="mb-16 md:mb-24">
+            <MockupCarousel images={mockups} title={project.title} />
+          </div>
+        )}
+        {screens.length > 0 && (
+          <>
+            <h3 className={`${H3} mb-8`}>Screenshots</h3>
+            <ScreenGallery images={screens} title={project.title} />
+          </>
+        )}
+      </div>
     </section>
   );
 }
@@ -83,17 +218,18 @@ function Visuals({ project }: { project: Project }) {
 function Outcomes({ project }: { project: Project }) {
   if (project.metrics.length === 0) return null;
   return (
-    <section aria-labelledby="outcomes" className="mb-24">
-      <span className={SECTION_LABEL}>Outcomes</span>
-      <h2 id="outcomes" className={SECTION_TITLE}>What Changed</h2>
-      <dl className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {project.metrics.map((metric) => (
-          <div key={metric.label} className="flex flex-col-reverse rounded-xl border border-white/[0.06] bg-[#141417] p-6">
-            <dt className="text-sm text-zinc-400">{metric.label}</dt>
-            <dd className="mb-2 text-4xl font-bold tracking-tight text-white">{metric.value}</dd>
-          </div>
-        ))}
-      </dl>
+    <section aria-labelledby="outcomes" className={`${SECTION_RULE} ${SECTION}`}>
+      <Reveal className={CONTAINER}>
+        <SectionTitle id="outcomes" eyebrow="Outcomes" title="What Changed" />
+        <dl className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
+          {project.metrics.map((metric) => (
+            <div key={metric.label} className={`${CARD} flex flex-col-reverse p-7`}>
+              <dt className="text-[14px] text-zinc-400">{metric.label}</dt>
+              <dd className="mb-2 text-[40px] font-semibold tracking-[-0.02em] text-foreground">{metric.value}</dd>
+            </div>
+          ))}
+        </dl>
+      </Reveal>
     </section>
   );
 }
@@ -101,23 +237,27 @@ function Outcomes({ project }: { project: Project }) {
 function Related({ related, isProduct }: { related: ProjectCard[]; isProduct: boolean }) {
   if (related.length === 0) return null;
   return (
-    <section aria-labelledby="related">
-      <span className={SECTION_LABEL}>Related</span>
-      <h2 id="related" className={SECTION_TITLE}>{isProduct ? 'More Products' : 'More Client Work'}</h2>
-      <div className="grid gap-6 md:grid-cols-3">
-        {related.map((card) => (
-          <ProjectCardView key={card.slug} project={card} headingLevel="h3" sizes="(max-width: 768px) 100vw, 33vw" />
-        ))}
-      </div>
+    <section aria-labelledby="related" className={`${SECTION_RULE} ${SECTION}`}>
+      <Reveal className={CONTAINER}>
+        <SectionTitle id="related" eyebrow="Related" title={isProduct ? 'More Products' : 'More Client Work'} />
+        <div className="grid gap-5 md:grid-cols-3 lg:gap-6">
+          {related.map((card) => (
+            <ProjectCardView key={card.slug} project={card} headingLevel="h3" sizes="(max-width: 768px) 100vw, 400px" />
+          ))}
+        </div>
+      </Reveal>
     </section>
   );
 }
 
 export default function CaseStudy({ project, related }: { project: Project; related: ProjectCard[] }) {
   const isProduct = project.section === 'products';
+  const isClient = project.kind === 'client';
   const path = projectPath(project);
   const cta = callToAction(project);
   const cover = project.cover ? project.gallery.find((image) => image.src === project.cover) : undefined;
+  const { lead, beside } = leadShots(project);
+  const rest = galleryRest(project, [lead, ...beside]);
 
   // Client work links to the client's live site; a demo link on a product is
   // the call to action itself, so it isn't repeated here.
@@ -125,10 +265,9 @@ export default function CaseStudy({ project, related }: { project: Project; rela
     !isProduct && project.links.live
       ? { label: LIVE_STATUSES.includes(project.status) ? 'Visit the Live Site' : 'Open the Demo', href: project.links.live }
       : undefined;
-  const isClient = project.kind === 'client';
 
   return (
-    <article className="min-h-screen bg-[#0A0A0C] pb-24">
+    <article>
       <JsonLd
         data={{
           '@context': 'https://schema.org',
@@ -146,11 +285,11 @@ export default function CaseStudy({ project, related }: { project: Project; rela
         }}
       />
 
-      <header className="relative overflow-hidden border-b border-white/[0.04] pt-32 pb-16 md:pb-20">
-        <div className="relative z-10 mx-auto max-w-[1400px] px-6">
+      <header className="pt-8 pb-16 md:pt-12 md:pb-28">
+        <div className={CONTAINER}>
           <Link
             href={isProduct ? '/products' : '/work'}
-            className="mb-10 inline-flex items-center gap-2 text-sm text-zinc-400 transition-colors hover:text-white"
+            className="mb-10 inline-flex items-center gap-2 text-[14px] text-zinc-400 transition-colors hover:text-foreground md:mb-14"
           >
             <ArrowLeft className="h-4 w-4" aria-hidden="true" />
             {isProduct ? 'All Products' : 'All Client Work'}
@@ -158,30 +297,24 @@ export default function CaseStudy({ project, related }: { project: Project; rela
 
           <div className="mb-6 flex flex-wrap items-center gap-3">
             {/* The status stays at the top too, so nothing in development reads as shipped. */}
-            <span className={`rounded-sm px-3 py-1.5 text-xs font-medium ${STATUS_BADGE[project.status]}`}>
-              {project.status}
-            </span>
-            {!isProduct && (
-              <span className={`rounded-sm px-3 py-1.5 text-xs font-medium ${KIND_BADGE[project.kind]}`}>
-                {KIND_LABEL[project.kind]}
-              </span>
-            )}
-            <span className="rounded-sm border border-white/[0.06] bg-[#141417] px-3 py-1.5 text-xs font-medium text-zinc-300">
+            <StatusBadge status={project.status} />
+            {!isProduct && <KindBadge kind={project.kind} />}
+            <span className="font-mono text-[12px] uppercase tracking-[0.08em] text-zinc-400">
               {project.industry.join(' · ')}
             </span>
           </div>
 
-          <h1 className="mb-6 text-5xl font-bold tracking-tighter text-white md:text-7xl">{project.title}</h1>
-          <p className="mb-4 max-w-3xl text-xl leading-relaxed text-zinc-300 md:text-2xl">{project.subtitle}</p>
-          <p className="mb-10 max-w-3xl text-[17px] leading-relaxed text-zinc-400">{project.description}</p>
+          <h1 className={isProduct ? DISPLAY : H1_QUIET}>{project.title}</h1>
+          <p className="mt-5 max-w-[40ch] text-[20px] leading-[1.4] text-zinc-300 md:text-[24px]">{project.subtitle}</p>
+          <p className={`${LEAD} mt-6`}>{project.description}</p>
 
           {!isProduct && project.client && (
-            <p className="mb-10 text-sm text-zinc-400">
-              Client: <span className="text-white">{project.client}</span>
+            <p className="mt-6 text-[15px] text-zinc-400">
+              Client: <span className="text-foreground">{project.client}</span>
             </p>
           )}
 
-          <div className="flex flex-wrap items-center gap-4">
+          <div className="mt-10 flex flex-wrap items-center gap-3">
             <CtaButton cta={cta} />
             {liveLink && (
               <a href={liveLink.href} target="_blank" rel="noopener noreferrer" className={BUTTON_SECONDARY}>
@@ -192,107 +325,112 @@ export default function CaseStudy({ project, related }: { project: Project; rela
             )}
           </div>
         </div>
+
+        {(lead || isProduct) && (
+          <div className={`${CONTAINER} mt-12 md:mt-16`}>
+            <LeadShot project={project} lead={lead} beside={beside} />
+          </div>
+        )}
       </header>
 
-      <div className="mx-auto max-w-[1400px] px-6 pt-16">
-        {isProduct ? (
-          <>
-            <section aria-labelledby="audience" className="mb-24 grid gap-8 md:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
+      {isProduct ? (
+        <>
+          <section aria-labelledby="audience" className={`${SECTION_RULE} ${SECTION}`}>
+            <Reveal className={`${CONTAINER} grid gap-8 md:grid-cols-2 md:gap-12`}>
               <div>
-                <span className={SECTION_LABEL}>Who It&apos;s For</span>
-                <h2 id="audience" className="text-3xl font-bold tracking-tight text-white">Made for Teams Like Yours</h2>
+                <span className={EYEBROW}>Who It&apos;s For</span>
+                <h2 id="audience" className={H2}>
+                  Made for Teams Like Yours
+                </h2>
               </div>
-              <div className="flex flex-col gap-5 text-[17px] leading-[1.8]">
-                <p className="text-zinc-200">{project.audience}</p>
-                <p className="text-zinc-400">{project.need}</p>
+              <div className="flex flex-col gap-5">
+                <p className="max-w-[68ch] text-[17px] leading-[1.6] text-zinc-200 md:text-[18px]">{project.audience}</p>
+                <p className={LEAD}>{project.need}</p>
               </div>
-            </section>
+            </Reveal>
+          </section>
 
-            <section aria-labelledby="features" className="mb-24">
-              <span className={SECTION_LABEL}>What You Can Do</span>
-              <h2 id="features" className={SECTION_TITLE}>What {project.title} Does for You</h2>
-              <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {project.features.map((feature) => (
-                  <li key={feature.title} className="rounded-xl border border-white/[0.06] bg-[#141417] p-6">
-                    <h3 className="mb-3 font-semibold text-white">{feature.title}</h3>
-                    <p className="text-[14px] leading-[1.7] text-zinc-400">{feature.description}</p>
-                  </li>
-                ))}
-              </ul>
-            </section>
+          <section aria-labelledby="features" className={`${SECTION_RULE} ${SECTION}`}>
+            <div className={CONTAINER}>
+              <SectionTitle id="features" eyebrow="What You Can Do" title={`What ${project.title} Does for You`} />
+              <Features project={project} />
+            </div>
+          </section>
 
-            <Visuals project={project} />
-            <Outcomes project={project} />
+          <Visuals project={project} rest={rest} />
+          <Outcomes project={project} />
 
-            <section
-              aria-labelledby="cta"
-              className="mb-24 rounded-2xl border border-white/[0.06] bg-gradient-to-br from-[#141417] to-[#111113] p-10 md:p-14"
-            >
-              <span className={`mb-6 inline-block rounded-sm px-3 py-1.5 text-xs font-medium ${STATUS_BADGE[project.status]}`}>
-                {project.status}
-              </span>
-              <h2 id="cta" className="mb-4 text-2xl font-bold text-white md:text-3xl">
-                {cta.label === 'Get Notified' ? `Hear When ${project.title} Launches` : `See ${project.title} for Yourself`}
-              </h2>
-              <p className="mb-8 max-w-xl text-[16px] text-zinc-400">{AVAILABILITY[project.status]}</p>
-              <div className="flex flex-col gap-4 sm:flex-row">
-                <CtaButton cta={cta} />
-                <Link href="/products" className={BUTTON_SECONDARY}>
-                  See All Products
-                </Link>
+          <section aria-labelledby="cta" className={`${SECTION_RULE} ${SECTION}`}>
+            <Reveal className={CONTAINER}>
+              <div className={`${CARD} px-6 py-12 md:px-12 md:py-16`}>
+                <StatusBadge status={project.status} className="mb-6" />
+                <h2 id="cta" className={H2}>
+                  {cta.label === 'Get Notified' ? `Hear When ${project.title} Launches` : `See ${project.title} for Yourself`}
+                </h2>
+                <p className={`${LEAD} mt-5`}>{AVAILABILITY[project.status]}</p>
+                <div className="mt-10">
+                  <CtaButton cta={cta} />
+                </div>
               </div>
-            </section>
-          </>
-        ) : (
-          <>
-            <div className="mb-24 grid gap-12 md:grid-cols-2">
-              <section aria-labelledby="need">
-                <span className={SECTION_LABEL}>{isClient ? 'The Client' : 'The Need'}</span>
-                <h2 id="need" className="mb-6 text-2xl font-bold text-white">{isClient ? 'What They Needed' : 'Why It Exists'}</h2>
-                <p className="text-[16px] leading-[1.9] text-zinc-400">{project.need}</p>
-              </section>
-              <section aria-labelledby="delivered">
-                <span className={SECTION_LABEL}>{isClient ? 'Our Work' : 'The Result'}</span>
-                <h2 id="delivered" className="mb-6 text-2xl font-bold text-white">{isClient ? 'What We Delivered' : 'What We Made'}</h2>
-                <p className="text-[16px] leading-[1.9] text-zinc-400">{project.delivered}</p>
+            </Reveal>
+          </section>
+        </>
+      ) : (
+        <>
+          <section aria-label="The story" className={`${SECTION_RULE} ${SECTION}`}>
+            <Reveal className={`${CONTAINER} grid gap-12 md:grid-cols-2`}>
+              <div>
+                <span className={EYEBROW}>{isClient ? 'The Client' : 'The Need'}</span>
+                <h2 id="need" className={STORY_TITLE}>
+                  {isClient ? 'What They Needed' : 'Why It Exists'}
+                </h2>
+                <p className={LEAD}>{project.need}</p>
+              </div>
+              <div>
+                <span className={EYEBROW}>{isClient ? 'Our Work' : 'The Result'}</span>
+                <h2 id="delivered" className={STORY_TITLE}>
+                  {isClient ? 'What We Delivered' : 'What We Made'}
+                </h2>
+                <p className={LEAD}>{project.delivered}</p>
                 {project.features.length > 0 && (
                   <ul className="mt-8 flex flex-col gap-4">
                     {project.features.map((feature) => (
-                      <li key={feature.title} className="rounded-xl border border-white/[0.06] bg-[#141417] p-5">
-                        <h3 className="mb-1 text-[15px] font-semibold text-white">{feature.title}</h3>
-                        <p className="text-[14px] leading-[1.7] text-zinc-400">{feature.description}</p>
+                      <li key={feature.title} className={`${CARD} p-5`}>
+                        <h3 className="mb-1 text-[16px] font-semibold text-foreground">{feature.title}</h3>
+                        <p className="text-[15px] leading-[1.6] text-zinc-400">{feature.description}</p>
                       </li>
                     ))}
                   </ul>
                 )}
-              </section>
-            </div>
-
-            <Visuals project={project} />
-            <Outcomes project={project} />
-
-            <section
-              aria-labelledby="cta"
-              className="mb-24 rounded-2xl border border-white/[0.06] bg-gradient-to-br from-[#141417] to-[#111113] p-10 md:p-14"
-            >
-              <h2 id="cta" className="mb-4 text-2xl font-bold text-white md:text-3xl">
-                Need Something Like This?
-              </h2>
-              <p className="mb-8 max-w-xl text-[16px] text-zinc-400">
-                Tell us about your business and what you want to change. We&apos;ll reply with how we would approach it.
-              </p>
-              <div className="flex flex-col gap-4 sm:flex-row">
-                <CtaButton cta={cta} />
-                <Link href="/work" className={BUTTON_SECONDARY}>
-                  See More Client Work
-                </Link>
               </div>
-            </section>
-          </>
-        )}
+            </Reveal>
+          </section>
 
-        <Related related={related} isProduct={isProduct} />
-      </div>
+          <Visuals project={project} rest={rest} />
+          <Outcomes project={project} />
+
+          <section aria-labelledby="cta" className={`${SECTION_RULE} ${SECTION}`}>
+            <Reveal className={CONTAINER}>
+              <div className={`${CARD} px-6 py-12 md:px-12 md:py-16`}>
+                <h2 id="cta" className={H2}>
+                  Need Something Like This?
+                </h2>
+                <p className={`${LEAD} mt-5`}>
+                  Tell us about your business and what you want to change. We&apos;ll reply with how we would approach it.
+                </p>
+                <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+                  <CtaButton cta={cta} />
+                  <Link href="/work" className={BUTTON_SECONDARY}>
+                    See More Client Work
+                  </Link>
+                </div>
+              </div>
+            </Reveal>
+          </section>
+        </>
+      )}
+
+      <Related related={related} isProduct={isProduct} />
     </article>
   );
 }

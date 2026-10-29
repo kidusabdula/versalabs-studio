@@ -2,8 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
-import { FadeIn, GlassCard } from '@/components/ui/motion';
+import { BUTTON_PRIMARY, BUTTON_SECONDARY, CARD, CONTAINER, DISPLAY, LEAD } from '@/components/ui/styles';
 import { Send, CheckCircle, Mail, MapPin, Clock, MessageCircle } from 'lucide-react';
 import { BUDGETS, HONEYPOT_FIELD, PROJECT_TYPES } from '@/lib/contact-schema';
 
@@ -21,6 +20,13 @@ const EMPTY_FORM = {
 
 type FormField = keyof typeof EMPTY_FORM;
 type Status = 'idle' | 'submitting' | 'success' | 'error';
+
+// Form fields sit recessed on the card, on the page background.
+const INPUT =
+  'w-full rounded-lg border border-border bg-background px-4 py-3 text-[15px] text-foreground placeholder:text-zinc-500 transition-colors focus:border-border-hover focus:outline-none aria-[invalid=true]:border-red-400/60';
+const LABEL = 'mb-2 block text-[14px] font-medium text-foreground';
+const INFO_TITLE = 'text-[15px] font-semibold text-foreground';
+const INFO_LINK = 'text-[14px] text-zinc-400 transition-colors hover:text-foreground';
 
 const FALLBACK_ERROR = "We couldn't send your message. Please try again, or email us at contact@versalabs-studio.com.";
 
@@ -113,24 +119,18 @@ export default function ContactClient({ topics = {} }: { topics?: Record<string,
 
   if (status === 'success') {
     return (
-      <div className="min-h-screen px-6 py-24 flex items-center justify-center">
-        <div className="mx-auto max-w-2xl text-center">
-          <FadeIn>
-            <GlassCard className="p-12">
-              <CheckCircle className="mx-auto h-16 w-16 text-emerald-400 mb-6" aria-hidden="true" />
-              <h1 ref={successHeading} tabIndex={-1} className="text-3xl font-bold mb-4 text-white">Message Received!</h1>
-              <p className="text-zinc-400 mb-6">
-                Thank you for reaching out. We&apos;ll review your project details and reply by email.
-              </p>
-              <button
-                type="button"
-                onClick={() => setStatus('idle')}
-                className="inline-flex items-center justify-center h-11 px-6 rounded-full bg-white/[0.06] border border-white/[0.08] text-sm font-medium text-white hover:bg-white/[0.1] transition-colors"
-              >
-                Submit Another Request
-              </button>
-            </GlassCard>
-          </FadeIn>
+      <div className={`${CONTAINER} flex min-h-[70svh] items-center justify-center py-16 md:py-28`}>
+        <div className={`${CARD} max-w-2xl p-10 text-center md:p-12`}>
+          <CheckCircle className="mx-auto mb-6 h-14 w-14 text-emerald-400" aria-hidden="true" />
+          <h1 ref={successHeading} tabIndex={-1} className="mb-4 text-[30px] font-semibold tracking-[-0.02em] text-foreground">
+            Message Received!
+          </h1>
+          <p className="mb-8 text-[16px] leading-[1.6] text-zinc-400">
+            Thank you for reaching out. We&apos;ll review your project details and reply by email.
+          </p>
+          <button type="button" onClick={() => setStatus('idle')} className={BUTTON_SECONDARY}>
+            Submit Another Request
+          </button>
         </div>
       </div>
     );
@@ -139,223 +139,189 @@ export default function ContactClient({ topics = {} }: { topics?: Record<string,
   const isSubmitting = status === 'submitting';
 
   return (
-    <div className="min-h-screen px-6 pt-40 pb-24">
-      <div className="mx-auto max-w-6xl">
+    <div className={`${CONTAINER} pt-14 pb-16 md:pt-20 md:pb-28`}>
+      {/* Header: no entrance fade, so the heading and intro (the LCP) paint
+          with the server HTML instead of after hydration. */}
+      <div className="mb-12 max-w-2xl md:mb-16">
+        <h1 className={DISPLAY}>Let&apos;s Talk.</h1>
+        <p className={`${LEAD} mt-6`}>Tell us about your project and we&apos;ll get back to you with a plan.</p>
+      </div>
 
-        {/* Header: no entrance fade, so the heading and intro (the LCP) paint
-            with the server HTML instead of after hydration. */}
-        <div className="mb-16 max-w-2xl">
-          <h1 className="text-5xl md:text-6xl font-bold tracking-tighter text-white mb-6">
-            Let&apos;s Talk.
-          </h1>
-          <p className="text-xl text-zinc-400 leading-relaxed">
-            Tell us about your project and we&apos;ll get back to you with a plan.
-          </p>
+      <div className="grid gap-8 lg:grid-cols-5 lg:gap-12">
+        {/* Left: the form (3 columns) */}
+        <div className={`${CARD} p-6 md:p-8 lg:col-span-3`}>
+          <form onSubmit={handleSubmit} className="space-y-6" aria-busy={isSubmitting}>
+            <div className="grid gap-6 sm:grid-cols-2">
+              <div>
+                <label htmlFor="name" className={LABEL}>Name *</label>
+                <input type="text" id="name" name="name" value={formData.name} onChange={handleChange} required
+                  maxLength={100} autoComplete="name" {...describe('name')}
+                  className={INPUT}
+                  placeholder="Your full name" />
+                {fieldError('name')}
+              </div>
+              <div>
+                <label htmlFor="email" className={LABEL}>Email *</label>
+                <input type="email" id="email" name="email" value={formData.email} onChange={handleChange} required
+                  maxLength={254} autoComplete="email" {...describe('email')}
+                  className={INPUT}
+                  placeholder="your@email.com" />
+                {fieldError('email')}
+              </div>
+            </div>
+
+            <div className="grid gap-6 sm:grid-cols-2">
+              <div>
+                <label htmlFor="phone" className={LABEL}>Phone</label>
+                <input type="tel" id="phone" name="phone" value={formData.phone} onChange={handleChange}
+                  maxLength={40} autoComplete="tel" {...describe('phone')}
+                  className={INPUT}
+                  placeholder="+251 ..." />
+                {fieldError('phone')}
+              </div>
+              <div>
+                <label htmlFor="enterprise" className={LABEL}>Company</label>
+                <input type="text" id="enterprise" name="enterprise" value={formData.enterprise} onChange={handleChange}
+                  maxLength={120} autoComplete="organization" {...describe('enterprise')}
+                  className={INPUT}
+                  placeholder="Your company name" />
+                {fieldError('enterprise')}
+              </div>
+            </div>
+
+            <div className="grid gap-6 sm:grid-cols-2">
+              <div>
+                <label htmlFor="projectType" className={LABEL}>Project Type</label>
+                <select id="projectType" name="projectType" value={formData.projectType} onChange={handleChange}
+                  {...describe('projectType')}
+                  className={INPUT}>
+                  <option value="" className="bg-background">Select type</option>
+                  {Object.entries(PROJECT_TYPES).map(([value, text]) => (
+                    <option key={value} value={value} className="bg-background">{text}</option>
+                  ))}
+                </select>
+                {fieldError('projectType')}
+              </div>
+              <div>
+                <label htmlFor="budget" className={LABEL}>Budget Range</label>
+                <select id="budget" name="budget" value={formData.budget} onChange={handleChange}
+                  {...describe('budget')}
+                  className={INPUT}>
+                  <option value="" className="bg-background">Select budget</option>
+                  {Object.entries(BUDGETS).map(([value, text]) => (
+                    <option key={value} value={value} className="bg-background">{text}</option>
+                  ))}
+                </select>
+                {fieldError('budget')}
+              </div>
+            </div>
+
+            <div>
+              <label htmlFor="scope" className={LABEL}>Project Description *</label>
+              <textarea id="scope" name="scope" value={formData.scope} onChange={handleChange} required rows={4}
+                minLength={10} maxLength={5000} {...describe('scope')}
+                className={`${INPUT} resize-none`}
+                placeholder="Tell us about what you need built..." />
+              {fieldError('scope')}
+            </div>
+
+            <div>
+              <label htmlFor="referral" className={LABEL}>How did you hear about us?</label>
+              <input type="text" id="referral" name="referral" value={formData.referral} onChange={handleChange}
+                maxLength={200} {...describe('referral')}
+                className={INPUT}
+                placeholder="Referral, Google, social media..." />
+              {fieldError('referral')}
+            </div>
+
+            {/* Honeypot: hidden from people and screen readers, filled in by bots. */}
+            <div className="sr-only" aria-hidden="true">
+              <label htmlFor={HONEYPOT_FIELD}>Leave this field empty</label>
+              <input type="text" id={HONEYPOT_FIELD} name={HONEYPOT_FIELD} value={formData[HONEYPOT_FIELD]}
+                onChange={handleChange} tabIndex={-1} autoComplete="off" />
+            </div>
+
+            <div role="alert">
+              {status === 'error' && errorMessage && (
+                <p className="rounded-lg border border-red-400/30 bg-red-500/10 px-4 py-3 text-[14px] text-red-200">
+                  {errorMessage}
+                </p>
+              )}
+            </div>
+
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className={`${BUTTON_PRIMARY} w-full disabled:cursor-not-allowed disabled:opacity-50`}
+            >
+              <Send className="h-4 w-4" aria-hidden="true" />
+              {isSubmitting ? 'Sending...' : 'Send Message'}
+            </button>
+            <p className="text-center text-[13px] text-zinc-400">
+              We use your details to reply to you. See our{' '}
+              <Link href="/privacy" className="text-zinc-300 underline underline-offset-4 hover:text-foreground">privacy notice</Link>.
+            </p>
+          </form>
         </div>
 
-        <div className="grid lg:grid-cols-5 gap-12">
-
-          {/* LEFT: Form (3 cols) */}
-          <FadeIn delay={0.1} className="lg:col-span-3">
-            <GlassCard className="p-8">
-              <form onSubmit={handleSubmit} className="space-y-6" aria-busy={isSubmitting}>
-                <div className="grid gap-6 sm:grid-cols-2">
-                  <div>
-                    <label htmlFor="name" className="block text-sm font-medium mb-2 text-white">Name *</label>
-                    <input type="text" id="name" name="name" value={formData.name} onChange={handleChange} required
-                      maxLength={100} autoComplete="name" {...describe('name')}
-                      className="w-full rounded-lg border border-white/[0.08] bg-[#1C1C1F] px-4 py-3 text-sm text-white placeholder:text-zinc-600 transition-colors focus:border-white/[0.15] focus:outline-none aria-[invalid=true]:border-red-400/60"
-                      placeholder="Your full name" />
-                    {fieldError('name')}
-                  </div>
-                  <div>
-                    <label htmlFor="email" className="block text-sm font-medium mb-2 text-white">Email *</label>
-                    <input type="email" id="email" name="email" value={formData.email} onChange={handleChange} required
-                      maxLength={254} autoComplete="email" {...describe('email')}
-                      className="w-full rounded-lg border border-white/[0.08] bg-[#1C1C1F] px-4 py-3 text-sm text-white placeholder:text-zinc-600 transition-colors focus:border-white/[0.15] focus:outline-none aria-[invalid=true]:border-red-400/60"
-                      placeholder="your@email.com" />
-                    {fieldError('email')}
-                  </div>
+        {/* Right: how to reach us (2 columns) */}
+        <div className="lg:col-span-2">
+          <ul className="flex flex-col gap-4 lg:sticky lg:top-24">
+            <li className={`${CARD} flex items-start gap-4 p-6`}>
+              <ContactIcon icon={Mail} />
+              <div>
+                <h2 className={INFO_TITLE}>Email</h2>
+                <a href="mailto:contact@versalabs-studio.com" className={INFO_LINK}>
+                  contact@versalabs-studio.com
+                </a>
+              </div>
+            </li>
+            <li className={`${CARD} flex items-start gap-4 p-6`}>
+              <ContactIcon icon={MapPin} />
+              <div>
+                <h2 className={INFO_TITLE}>Location</h2>
+                <p className="text-[14px] text-zinc-400">Addis Ababa, Ethiopia</p>
+              </div>
+            </li>
+            <li className={`${CARD} flex items-start gap-4 p-6`}>
+              <ContactIcon icon={Clock} />
+              <div>
+                <h2 className={INFO_TITLE}>Replies</h2>
+                <p className="text-[14px] text-zinc-400">By email, from the team directly</p>
+              </div>
+            </li>
+            <li className={`${CARD} flex items-start gap-4 p-6`}>
+              <ContactIcon icon={MessageCircle} />
+              <div>
+                <h2 className={INFO_TITLE}>Quick Connect</h2>
+                <div className="mt-1 flex flex-col gap-1">
+                  <a href="https://t.me/kidusabdula" target="_blank" rel="noopener noreferrer" className={`${INFO_LINK} inline-block py-0.5`}>
+                    Telegram →
+                  </a>
+                  <a href="https://linkedin.com/company/versalabs-studio" target="_blank" rel="noopener noreferrer" className={`${INFO_LINK} inline-block py-0.5`}>
+                    LinkedIn →
+                  </a>
                 </div>
-
-                <div className="grid gap-6 sm:grid-cols-2">
-                  <div>
-                    <label htmlFor="phone" className="block text-sm font-medium mb-2 text-white">Phone</label>
-                    <input type="tel" id="phone" name="phone" value={formData.phone} onChange={handleChange}
-                      maxLength={40} autoComplete="tel" {...describe('phone')}
-                      className="w-full rounded-lg border border-white/[0.08] bg-[#1C1C1F] px-4 py-3 text-sm text-white placeholder:text-zinc-600 transition-colors focus:border-white/[0.15] focus:outline-none aria-[invalid=true]:border-red-400/60"
-                      placeholder="+251 ..." />
-                    {fieldError('phone')}
-                  </div>
-                  <div>
-                    <label htmlFor="enterprise" className="block text-sm font-medium mb-2 text-white">Company</label>
-                    <input type="text" id="enterprise" name="enterprise" value={formData.enterprise} onChange={handleChange}
-                      maxLength={120} autoComplete="organization" {...describe('enterprise')}
-                      className="w-full rounded-lg border border-white/[0.08] bg-[#1C1C1F] px-4 py-3 text-sm text-white placeholder:text-zinc-600 transition-colors focus:border-white/[0.15] focus:outline-none aria-[invalid=true]:border-red-400/60"
-                      placeholder="Your company name" />
-                    {fieldError('enterprise')}
-                  </div>
-                </div>
-
-                <div className="grid gap-6 sm:grid-cols-2">
-                  <div>
-                    <label htmlFor="projectType" className="block text-sm font-medium mb-2 text-white">Project Type</label>
-                    <select id="projectType" name="projectType" value={formData.projectType} onChange={handleChange}
-                      {...describe('projectType')}
-                      className="w-full rounded-lg border border-white/[0.08] bg-[#1C1C1F] px-4 py-3 text-sm text-white transition-colors focus:border-white/[0.15] focus:outline-none aria-[invalid=true]:border-red-400/60">
-                      <option value="" className="bg-[#0D0D0F]">Select type</option>
-                      {Object.entries(PROJECT_TYPES).map(([value, label]) => (
-                        <option key={value} value={value} className="bg-[#0D0D0F]">{label}</option>
-                      ))}
-                    </select>
-                    {fieldError('projectType')}
-                  </div>
-                  <div>
-                    <label htmlFor="budget" className="block text-sm font-medium mb-2 text-white">Budget Range</label>
-                    <select id="budget" name="budget" value={formData.budget} onChange={handleChange}
-                      {...describe('budget')}
-                      className="w-full rounded-lg border border-white/[0.08] bg-[#1C1C1F] px-4 py-3 text-sm text-white transition-colors focus:border-white/[0.15] focus:outline-none aria-[invalid=true]:border-red-400/60">
-                      <option value="" className="bg-[#0D0D0F]">Select budget</option>
-                      {Object.entries(BUDGETS).map(([value, label]) => (
-                        <option key={value} value={value} className="bg-[#0D0D0F]">{label}</option>
-                      ))}
-                    </select>
-                    {fieldError('budget')}
-                  </div>
-                </div>
-
-                <div>
-                  <label htmlFor="scope" className="block text-sm font-medium mb-2 text-white">Project Description *</label>
-                  <textarea id="scope" name="scope" value={formData.scope} onChange={handleChange} required rows={4}
-                    minLength={10} maxLength={5000} {...describe('scope')}
-                    className="w-full rounded-lg border border-white/[0.08] bg-[#1C1C1F] px-4 py-3 text-sm text-white placeholder:text-zinc-600 transition-colors focus:border-white/[0.15] focus:outline-none resize-none aria-[invalid=true]:border-red-400/60"
-                    placeholder="Tell us about what you need built..." />
-                  {fieldError('scope')}
-                </div>
-
-                <div>
-                  <label htmlFor="referral" className="block text-sm font-medium mb-2 text-white">How did you hear about us?</label>
-                  <input type="text" id="referral" name="referral" value={formData.referral} onChange={handleChange}
-                    maxLength={200} {...describe('referral')}
-                    className="w-full rounded-lg border border-white/[0.08] bg-[#1C1C1F] px-4 py-3 text-sm text-white placeholder:text-zinc-600 transition-colors focus:border-white/[0.15] focus:outline-none aria-[invalid=true]:border-red-400/60"
-                    placeholder="Referral, Google, social media..." />
-                  {fieldError('referral')}
-                </div>
-
-                {/* Honeypot: hidden from people and screen readers, filled in by bots. */}
-                <div className="sr-only" aria-hidden="true">
-                  <label htmlFor={HONEYPOT_FIELD}>Leave this field empty</label>
-                  <input type="text" id={HONEYPOT_FIELD} name={HONEYPOT_FIELD} value={formData[HONEYPOT_FIELD]}
-                    onChange={handleChange} tabIndex={-1} autoComplete="off" />
-                </div>
-
-                <div role="alert">
-                  {status === 'error' && errorMessage && (
-                    <p className="rounded-lg border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm text-red-200">
-                      {errorMessage}
-                    </p>
-                  )}
-                </div>
-
-                <motion.button
-                  type="submit"
-                  disabled={isSubmitting}
-                  whileHover={{ scale: 1.01 }}
-                  whileTap={{ scale: 0.99 }}
-                  className="w-full flex items-center justify-center gap-2 h-12 rounded-full bg-white text-black text-[15px] font-semibold transition-colors hover:bg-zinc-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {isSubmitting ? (
-                    <>
-                      <div className="h-4 w-4 animate-spin rounded-full border-2 border-black border-t-transparent" aria-hidden="true" />
-                      Sending...
-                    </>
-                  ) : (
-                    <>
-                      <Send className="h-4 w-4" aria-hidden="true" />
-                      Send Message
-                    </>
-                  )}
-                </motion.button>
-                <p className="text-center text-xs text-zinc-500">
-                  We use your details to reply to you. See our{' '}
-                  <Link href="/privacy" className="text-zinc-300 underline underline-offset-4 hover:text-white">privacy notice</Link>.
+              </div>
+            </li>
+            <li>
+              <Link href="/services" className={`${CARD} group block p-6 transition-colors hover:border-border-hover`}>
+                <p className="text-[14px] text-zinc-400 transition-colors group-hover:text-zinc-300">
+                  Not sure what you need? <span className="font-medium text-foreground">Browse our services →</span>
                 </p>
-              </form>
-            </GlassCard>
-          </FadeIn>
-
-          {/* RIGHT: Contact Info (2 cols) */}
-          <FadeIn delay={0.2} className="lg:col-span-2">
-            <div className="flex flex-col gap-6 sticky top-32">
-              <GlassCard className="p-6">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/[0.04] border border-white/[0.06]">
-                    <Mail className="h-5 w-5 text-white" aria-hidden="true" />
-                  </div>
-                  <div>
-                    <h2 className="font-semibold text-white text-sm">Email</h2>
-                    <a href="mailto:contact@versalabs-studio.com" className="text-sm text-zinc-400 hover:text-white transition-colors">
-                      contact@versalabs-studio.com
-                    </a>
-                  </div>
-                </div>
-              </GlassCard>
-
-              <GlassCard className="p-6">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/[0.04] border border-white/[0.06]">
-                    <MapPin className="h-5 w-5 text-white" aria-hidden="true" />
-                  </div>
-                  <div>
-                    <h2 className="font-semibold text-white text-sm">Location</h2>
-                    <p className="text-sm text-zinc-400">Addis Ababa, Ethiopia</p>
-                  </div>
-                </div>
-              </GlassCard>
-
-              <GlassCard className="p-6">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/[0.04] border border-white/[0.06]">
-                    <Clock className="h-5 w-5 text-white" aria-hidden="true" />
-                  </div>
-                  <div>
-                    <h2 className="font-semibold text-white text-sm">Replies</h2>
-                    <p className="text-sm text-zinc-400">By email, from the team directly</p>
-                  </div>
-                </div>
-              </GlassCard>
-
-              <GlassCard className="p-6">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/[0.04] border border-white/[0.06]">
-                    <MessageCircle className="h-5 w-5 text-white" aria-hidden="true" />
-                  </div>
-                  <div>
-                    <h2 className="font-semibold text-white text-sm">Quick Connect</h2>
-                    <div className="flex flex-col gap-1 mt-1">
-                      <a href="https://t.me/kidusabdula" target="_blank" rel="noopener noreferrer" className="inline-block py-0.5 text-sm text-zinc-400 hover:text-white transition-colors">
-                        Telegram →
-                      </a>
-                      <a href="https://linkedin.com/company/versalabs-studio" target="_blank" rel="noopener noreferrer" className="inline-block py-0.5 text-sm text-zinc-400 hover:text-white transition-colors">
-                        LinkedIn →
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </GlassCard>
-
-              {/* Services Quick Link */}
-              <Link href="/services" className="block">
-                <GlassCard className="p-6 hover:border-white/[0.12] transition-colors group">
-                  <p className="text-sm text-zinc-400 group-hover:text-zinc-300 transition-colors">
-                    Not sure what you need? <span className="text-white font-medium">Browse our services →</span>
-                  </p>
-                </GlassCard>
               </Link>
-            </div>
-          </FadeIn>
+            </li>
+          </ul>
         </div>
       </div>
     </div>
+  );
+}
+
+function ContactIcon({ icon: Icon }: { icon: typeof Mail }) {
+  return (
+    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-border bg-surface-elevated">
+      <Icon className="h-5 w-5 text-foreground" aria-hidden="true" />
+    </span>
   );
 }

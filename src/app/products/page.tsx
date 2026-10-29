@@ -1,5 +1,16 @@
 import Link from 'next/link';
-import ProjectCardView from '@/components/case-study/ProjectCardView';
+import ProductBento from '@/components/sections/ProductBento';
+import { Reveal } from '@/components/ui/motion';
+import {
+  BUTTON_PRIMARY,
+  BUTTON_SECONDARY,
+  CONTAINER,
+  DISPLAY,
+  H2,
+  LEAD,
+  SECTION,
+  SECTION_RULE,
+} from '@/components/ui/styles';
 import { getProjectsInSection, toCard } from '@/content/projects';
 import { pageMetadata } from '@/lib/site';
 
@@ -11,55 +22,49 @@ export const metadata = pageMetadata({
   path: '/products',
 });
 
+// The products, flagship first, as the same bento as the home page. The
+// heading and intro render on the server with no entrance animation, and the
+// flagship's screenshot is fetched first: on every screen it is the largest
+// thing in the first view.
 export default function ProductsPage() {
   const products = getProjectsInSection('products').map(toCard);
 
   return (
-    <div className="min-h-screen bg-[#0A0A0C]">
-      <header className="px-6 pt-36 pb-12">
-        <div className="mx-auto max-w-[1400px]">
-          <h1 className="mb-6 text-5xl font-bold tracking-tighter text-white md:text-7xl">Our Products</h1>
-          <p className="max-w-3xl text-lg leading-relaxed text-zinc-400 md:text-xl">
+    <>
+      <header className="pt-14 pb-12 md:pt-20 md:pb-16">
+        <div className={CONTAINER}>
+          <h1 className={DISPLAY}>Our Products</h1>
+          <p className={`${LEAD} mt-6`}>
             Software we build and keep improving, ready to set up for your business. Each one says whether it is
             available now, coming soon or still in development.
           </p>
         </div>
       </header>
 
-      <section aria-label="Products" className="px-6 pb-24">
-        <ul className="mx-auto grid max-w-[1400px] gap-6 md:grid-cols-2 xl:grid-cols-3">
-          {products.map((card, i) => (
-            <li key={card.slug}>
-              <ProjectCardView project={card} eager={i === 0} />
-            </li>
-          ))}
-        </ul>
+      <section aria-label="Products" className="pb-16 md:pb-28">
+        <div className={CONTAINER}>
+          <ProductBento products={products} as="h2" lead="priority" />
+        </div>
       </section>
 
-      <section aria-labelledby="products-cta" className="border-t border-white/[0.04] px-6 py-24">
-        <div className="mx-auto max-w-3xl text-center">
-          <h2 id="products-cta" className="mb-6 text-4xl font-bold tracking-tighter text-white md:text-5xl">
+      <section aria-labelledby="products-cta" className={`${SECTION_RULE} ${SECTION}`}>
+        <Reveal className={`${CONTAINER} text-center`}>
+          <h2 id="products-cta" className={H2}>
             Want to See One Running?
           </h2>
-          <p className="mx-auto mb-10 max-w-xl text-lg text-zinc-400">
+          <p className={`${LEAD} mx-auto mt-5`}>
             Ask for a walkthrough, or tell us what you would change to fit how your business works.
           </p>
-          <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <Link
-              href="/contact"
-              className="flex h-12 items-center justify-center rounded-full bg-white px-8 text-[15px] font-semibold text-black transition-colors hover:bg-zinc-200"
-            >
+          <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <Link href="/contact" className={BUTTON_PRIMARY}>
               Request a Demo
             </Link>
-            <Link
-              href="/work"
-              className="flex h-12 items-center justify-center rounded-full border border-white/[0.08] bg-[#1A1A1A] px-8 text-[15px] font-semibold text-white transition-colors hover:bg-[#222222]"
-            >
+            <Link href="/work" className={BUTTON_SECONDARY}>
               See Client Work
             </Link>
           </div>
-        </div>
+        </Reveal>
       </section>
-    </div>
+    </>
   );
 }

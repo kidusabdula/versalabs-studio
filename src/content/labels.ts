@@ -10,11 +10,15 @@ export const KIND_LABEL: Record<ProjectKind, string> = {
   research: 'Research',
 };
 
+// The kind of work is told in words, not colour: status badges are the only
+// colour on the site.
+const NEUTRAL = 'text-zinc-300 bg-white/[0.04] border border-border';
+
 export const KIND_BADGE: Record<ProjectKind, string> = {
-  product: 'text-blue-400 bg-blue-500/10 border border-blue-500/20',
-  client: 'text-violet-400 bg-violet-500/10 border border-violet-500/20',
-  internal: 'text-cyan-400 bg-cyan-500/10 border border-cyan-500/20',
-  research: 'text-zinc-300 bg-white/[0.04] border border-white/[0.08]',
+  product: NEUTRAL,
+  client: NEUTRAL,
+  internal: NEUTRAL,
+  research: NEUTRAL,
 };
 
 // Emerald: running in production. Amber: early or partial (beta, MVP,

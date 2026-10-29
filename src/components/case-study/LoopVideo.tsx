@@ -4,6 +4,7 @@ import { useEffect, useId, useRef, useState } from 'react';
 import Image from 'next/image';
 import { Pause, Play } from 'lucide-react';
 import type { Loop } from '@/content/schema';
+import { BrowserFrame, PhoneFrame } from '@/components/ui/ProductShot';
 import MediaCredit from './MediaCredit';
 
 // A silent screen recording that never costs the first paint:
@@ -57,15 +58,14 @@ export default function LoopVideo({ loop, sizes, className = '' }: { loop: Loop;
     }
   }, [motionAllowed, inView, userPaused]);
 
-  const isPhone = loop.view === 'mobile';
+  // The same frames as the screenshots: a browser for a desktop recording, a
+  // phone outline for a phone one.
+  const Frame = loop.view === 'mobile' ? PhoneFrame : BrowserFrame;
 
   return (
     <figure className={className}>
-      <div
-        className={`relative w-full overflow-hidden border border-white/[0.06] bg-[#0E0E10] ${isPhone ? 'rounded-[1.75rem]' : 'rounded-xl'}`}
-        style={{ aspectRatio: `${loop.width} / ${loop.height}` }}
-      >
-        <Image src={loop.poster} alt="" fill sizes={sizes} className="object-cover" />
+      <Frame>
+        <Image src={loop.poster} alt="" fill sizes={sizes} className="object-cover object-top" />
         {motionAllowed && (
           <>
             <video
@@ -78,7 +78,7 @@ export default function LoopVideo({ loop, sizes, className = '' }: { loop: Loop;
               width={loop.width}
               height={loop.height}
               onPlaying={() => setStarted(true)}
-              className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-300 ${started ? 'opacity-100' : 'opacity-0'}`}
+              className={`absolute inset-0 h-full w-full object-cover object-top transition-opacity duration-300 ${started ? 'opacity-100' : 'opacity-0'}`}
             >
               <source src={loop.src} type="video/mp4" />
             </video>
@@ -87,14 +87,14 @@ export default function LoopVideo({ loop, sizes, className = '' }: { loop: Loop;
               onClick={() => setUserPaused((paused) => !paused)}
               aria-label={userPaused ? 'Play the recording' : 'Pause the recording'}
               aria-describedby={captionId}
-              className="absolute right-3 bottom-3 z-10 rounded-full bg-black/60 p-2 text-white backdrop-blur-sm transition-colors hover:bg-black/80"
+              className="absolute right-3 bottom-3 z-10 rounded-full border border-border bg-background/80 p-2 text-foreground transition-colors hover:bg-background"
             >
               {userPaused ? <Play className="h-4 w-4" aria-hidden="true" /> : <Pause className="h-4 w-4" aria-hidden="true" />}
             </button>
           </>
         )}
-      </div>
-      <figcaption id={captionId} className="mt-3 text-[13px] leading-relaxed text-zinc-400">
+      </Frame>
+      <figcaption id={captionId} className="mt-3 text-[13px] leading-[1.5] text-zinc-400">
         {loop.caption}
         {loop.credit && <MediaCredit credit={loop.credit} className="mt-1 block" />}
       </figcaption>

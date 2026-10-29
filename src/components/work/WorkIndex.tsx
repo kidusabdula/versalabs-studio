@@ -5,6 +5,7 @@ import { Search, X } from 'lucide-react';
 import ProjectCardView from '@/components/case-study/ProjectCardView';
 import type { ProjectCard } from '@/content/projects';
 import { INDUSTRIES } from '@/content/schema';
+import { CARD, CONTAINER } from '@/components/ui/styles';
 
 // The /work listing: the businesses we've built for, filterable by industry
 // and searchable. The server renders every card, so the page is complete
@@ -74,12 +75,12 @@ export default function WorkIndex({ cards }: { cards: ProjectCard[] }) {
   const active = industry.length + (query.trim() ? 1 : 0);
 
   return (
-    <section aria-label="Client work" className="px-6 pb-24">
-      <div className="mx-auto max-w-[1400px]">
-        <div className="mb-10 flex flex-col gap-6 rounded-2xl border border-white/[0.06] bg-[#111113] p-5 md:p-8">
+    <section aria-label="Client work" className="pb-16 md:pb-28">
+      <div className={CONTAINER}>
+        <div className={`${CARD} mb-10 flex flex-col gap-6 p-5 md:p-8`}>
           <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
             <fieldset className="min-w-0">
-              <legend className="mb-3 text-[11px] font-semibold uppercase tracking-widest text-zinc-400">Industry</legend>
+              <legend className="mb-3 font-mono text-[12px] uppercase tracking-[0.08em] text-zinc-400">Industry</legend>
               <div className="flex flex-wrap gap-2">
                 {options.map((option) => {
                   const pressed = industry.includes(option.value);
@@ -89,10 +90,10 @@ export default function WorkIndex({ cards }: { cards: ProjectCard[] }) {
                       type="button"
                       aria-pressed={pressed}
                       onClick={() => toggle(option.value)}
-                      className={`min-h-9 rounded-full border px-4 py-1.5 text-sm font-medium transition-colors ${
+                      className={`min-h-9 rounded-full border px-4 py-1.5 text-[14px] font-medium transition-colors ${
                         pressed
-                          ? 'border-white bg-white text-black'
-                          : 'border-white/[0.08] bg-[#1C1C1F] text-zinc-300 hover:text-white'
+                          ? 'border-foreground bg-foreground text-background'
+                          : 'border-border bg-surface-elevated text-zinc-300 hover:border-border-hover hover:text-foreground'
                       }`}
                     >
                       {option.label}
@@ -115,13 +116,13 @@ export default function WorkIndex({ cards }: { cards: ProjectCard[] }) {
                   setQuery(e.target.value);
                   writeUrl(industry, e.target.value);
                 }}
-                className="w-full rounded-full border border-white/[0.08] bg-[#141417] py-2.5 pl-10 pr-4 text-sm text-white placeholder:text-zinc-400 focus:border-white/[0.2]"
+                className="w-full rounded-full border border-border bg-background py-2.5 pr-4 pl-10 text-[14px] text-foreground placeholder:text-zinc-400 focus:border-border-hover"
               />
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center justify-between gap-4 border-t border-white/[0.06] pt-5">
-            <p aria-live="polite" className="text-sm text-zinc-400">
+          <div className="flex flex-wrap items-center justify-between gap-4 border-t border-border pt-5">
+            <p aria-live="polite" className="text-[14px] text-zinc-400">
               Showing {filtered.length} of {cards.length}
             </p>
             {active > 0 && (
@@ -132,7 +133,7 @@ export default function WorkIndex({ cards }: { cards: ProjectCard[] }) {
                   setQuery('');
                   writeUrl([], '');
                 }}
-                className="inline-flex min-h-9 items-center gap-2 rounded-full px-3 text-sm font-medium text-zinc-300 hover:text-white"
+                className="inline-flex min-h-9 items-center gap-2 rounded-full px-3 text-[14px] font-medium text-zinc-300 hover:text-foreground"
               >
                 <X className="h-4 w-4" aria-hidden="true" />
                 Clear Filters
@@ -142,7 +143,7 @@ export default function WorkIndex({ cards }: { cards: ProjectCard[] }) {
         </div>
 
         {filtered.length > 0 ? (
-          <ul className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+          <ul className="grid gap-5 md:grid-cols-2 lg:grid-cols-3 lg:gap-6">
             {filtered.map((card, i) => (
               <li key={card.slug}>
                 <ProjectCardView project={card} eager={i === 0 && active === 0} />

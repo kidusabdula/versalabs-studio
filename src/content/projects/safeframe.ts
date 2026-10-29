@@ -64,8 +64,8 @@ export default defineProject({
   need: "Parents and kids' browsers need to catch inappropriate content in videos. Sending a child's screen to an outside server is a privacy and legal risk, costs money for every user and fails offline. Many families also use older phones with little memory.",
   audience: "Parents who want to know what their children watch, and teams building apps and browsers for children that need a private video check on the device itself.",
   features: [
-    { title: "Nothing Leaves the Device", description: "Videos are checked on the phone or laptop itself, with no uploads and no account." },
-    { title: "See Exactly What Was Flagged", description: "A timeline shows where flagged content starts and ends, not just a yes or no." },
+    { title: "Nothing Leaves the Device", image: "/images/safeframe/screen-detect-desktop.webp", description: "Videos are checked on the phone or laptop itself, with no uploads and no account." },
+    { title: "See Exactly What Was Flagged", image: "/images/safeframe/screen-verdict-desktop.webp", description: "A timeline shows where flagged content starts and ends, not just a yes or no." },
     { title: "A Calm Response for Kids", description: "Choose to blur, pause, hide or skip flagged moments. A parent presses and holds to continue." },
     { title: "Works on Old and New Phones", description: "SafeFrame checks what the device can handle first, so older phones get a lighter check instead of a frozen screen." },
     { title: "Keeps Working Offline", description: "After the first visit, the check still works without an internet connection." },

@@ -8,20 +8,29 @@ import { MotionConfigProvider } from "@/components/ui/motion";
 import JsonLd from "@/components/case-study/JsonLd";
 import { SITE_URL, SITE_NAME, DEFAULT_DESCRIPTION, CONTACT_EMAIL } from "@/lib/site";
 
+// display "optional": the fonts are preloaded, and a preloaded optional font is
+// either ready for the first paint or not used on that page view, so it never
+// swaps in afterwards. A swap reflowed the home hero (it sizes to its text) and
+// pushed the products below it: a layout shift Lighthouse traced to "Web font
+// loaded". The fallbacks are metric-matched Arial, so a missed font only looks
+// slightly plainer on a slow first visit; later pages have it cached.
 const outfit = Outfit({
   variable: "--font-outfit",
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
+  display: "optional",
 });
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+  display: "optional",
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  display: "optional",
 });
 
 const DEFAULT_TITLE = `${SITE_NAME} | Business Software Products and Custom Builds`;

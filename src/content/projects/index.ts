@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { projectSchema, type GalleryImage, type Project, type ProjectInput, type ProjectSection } from '../schema';
 import { findBannedTerms } from '../plain-language';
+import { isPhoneScreen, leadShots } from '../../lib/shots';
 import obsidianErp from './obsidian-erp';
 import safeframe from './safeframe';
 import printonlineEt from './printonline-et';
@@ -42,7 +43,7 @@ const ENTRIES: ProjectInput[] = [
 ];
 
 // Fields that hold paths, links, class names or a licence credit, not copy.
-const NOT_COPY = new Set(['slug', 'src', 'poster', 'cover', 'live', 'heroGradient', 'credit', 'evidence']);
+const NOT_COPY = new Set(['slug', 'src', 'poster', 'cover', 'image', 'live', 'heroGradient', 'credit', 'evidence']);
 
 // Every piece of copy in a project, with where it sits, for the plain-language check.
 function copyIn(value: unknown, at: string, out: { at: string; text: string }[] = []) {
@@ -134,6 +135,14 @@ export interface ProjectCard {
   client?: string;
   heroGradient: string;
   cover?: GalleryImage;
+  // A product shown only on phones: the phone screens that stand beside its
+  // phone cover (see src/lib/shots.ts). Empty for every other cover.
+  coverPhones: GalleryImage[];
+}
+
+function leadPhones(project: Project): GalleryImage[] {
+  const { lead, beside } = leadShots(project);
+  return lead && isPhoneScreen(lead) && lead.src === project.cover ? beside : [];
 }
 
 export function toCard(project: Project): ProjectCard {
@@ -153,5 +162,6 @@ export function toCard(project: Project): ProjectCard {
     client: project.client,
     heroGradient: project.heroGradient,
     cover: project.cover ? getImage(project, project.cover) : undefined,
+    coverPhones: leadPhones(project),
   };
 }

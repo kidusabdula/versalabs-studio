@@ -4,6 +4,9 @@ import { ArrowRight } from 'lucide-react';
 import CallToAction from '@/components/sections/CallToAction';
 import { VISIBLE_TEAM } from '@/content/team';
 import { pageMetadata } from '@/lib/site';
+import { SectionHeader } from '@/components/sections/HomeSections';
+import { Reveal } from '@/components/ui/motion';
+import { CARD, CONTAINER, DISPLAY, EYEBROW, H3, LEAD, SECTION, SECTION_RULE, TEXT_LINK } from '@/components/ui/styles';
 
 export const metadata = pageMetadata({
   title: 'About',
@@ -57,18 +60,15 @@ const MILESTONES = [
   { year: '2026', event: 'Obsidian ERP released as a product' },
 ];
 
-const LABEL = 'mb-4 block text-[11px] font-semibold uppercase tracking-widest text-zinc-400';
-const TITLE = 'mb-5 text-[32px] font-bold leading-[1.1] tracking-tighter text-white md:text-[44px]';
-
 function Initials({ name }: { name: string }) {
   const initials = name
     .split(' ')
     .map((part) => part[0])
     .join('');
   return (
-    <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-[#1A1A2E] via-[#16213E] to-[#0F3460]">
+    <div className="flex h-full w-full items-center justify-center bg-surface-elevated">
       <span
-        className="flex h-24 w-24 items-center justify-center rounded-2xl border border-white/[0.1] bg-white/[0.06] text-3xl font-bold tracking-tight text-white/80"
+        className="flex h-24 w-24 items-center justify-center rounded-2xl border border-border bg-surface text-3xl font-semibold tracking-[-0.02em] text-zinc-300"
         aria-hidden="true"
       >
         {initials}
@@ -80,129 +80,104 @@ function Initials({ name }: { name: string }) {
 export default function AboutPage() {
   return (
     <>
-      <section className="relative overflow-hidden px-6 pb-20 pt-40">
-        <div className="pointer-events-none absolute left-1/2 top-1/2 h-[400px] w-[120vw] max-w-[700px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-br from-violet-500/6 via-white/[0.02] to-indigo-500/6 blur-[140px]" />
-        <div className="relative z-10 mx-auto max-w-5xl">
-          <span className="mb-6 block text-[11px] font-semibold uppercase tracking-[0.2em] text-zinc-400">
-            About VersaLabs Studio
-          </span>
-          <h1 className="mb-6 text-5xl font-bold tracking-tighter text-white md:text-7xl">
-            A Software Studio in{' '}
-            <span className="bg-gradient-to-r from-white via-white to-zinc-500 bg-clip-text text-transparent">
-              Addis Ababa
-            </span>
-          </h1>
-          <p className="max-w-2xl text-[17px] leading-relaxed text-zinc-400">
+      <header className="pt-14 pb-12 md:pt-20 md:pb-16">
+        <div className={CONTAINER}>
+          <span className={EYEBROW}>About VersaLabs Studio</span>
+          <h1 className={`${DISPLAY} max-w-[18ch]`}>A Software Studio in Addis Ababa</h1>
+          <p className={`${LEAD} mt-6`}>
             VersaLabs Studio makes business software. We sell products of our own and build custom systems for
             companies, organisations and events in Ethiopia and abroad, then help their teams put it to work.
           </p>
         </div>
-      </section>
+      </header>
 
-      <section aria-labelledby="what-we-do" className="border-t border-white/[0.04] px-6 py-24">
-        <div className="mx-auto max-w-5xl">
-          <span className={LABEL}>What We Do</span>
-          <h2 id="what-we-do" className={`${TITLE} mb-12`}>
-            Products and Custom Builds
-          </h2>
-          <ul className="grid gap-6 md:grid-cols-2">
+      <section aria-labelledby="what-we-do" className={`${SECTION_RULE} ${SECTION}`}>
+        <Reveal className={CONTAINER}>
+          <SectionHeader id="what-we-do" eyebrow="What We Do" title="Products and Custom Builds" />
+          <ul className="grid gap-5 md:grid-cols-2 lg:gap-6">
             {OFFERS.map((offer) => (
-              <li key={offer.title} className="flex flex-col rounded-2xl border border-white/[0.06] bg-[#111113] p-7 md:p-9">
-                <h3 className="mb-3 text-xl font-semibold text-white">{offer.title}</h3>
-                <p className="mb-6 flex-1 text-[15px] leading-relaxed text-zinc-400">{offer.text}</p>
-                <Link
-                  href={offer.href}
-                  className="inline-flex items-center gap-2 text-[15px] font-semibold text-white underline-offset-4 hover:underline"
-                >
+              <li key={offer.title} className={`${CARD} flex flex-col p-7 md:p-9`}>
+                <h3 className={`${H3} mb-3`}>{offer.title}</h3>
+                <p className="mb-6 flex-1 text-[16px] leading-[1.6] text-zinc-400">{offer.text}</p>
+                <Link href={offer.href} className={TEXT_LINK}>
                   {offer.link}
                   <ArrowRight className="h-4 w-4" aria-hidden="true" />
                 </Link>
               </li>
             ))}
           </ul>
-        </div>
+        </Reveal>
       </section>
 
-      <section aria-labelledby="how-we-work-with-you" className="border-t border-white/[0.04] bg-[#0A0A0C] px-6 py-24">
-        <div className="mx-auto max-w-5xl">
-          <span className={LABEL}>Our Approach</span>
-          <h2 id="how-we-work-with-you" className={`${TITLE} mb-12`}>
-            How We Work With You
-          </h2>
-          <ul className="grid gap-6 sm:grid-cols-2">
+      <section aria-labelledby="how-we-work-with-you" className={`${SECTION_RULE} ${SECTION}`}>
+        <Reveal className={CONTAINER}>
+          <SectionHeader id="how-we-work-with-you" eyebrow="Our Approach" title="How We Work With You" />
+          <ul className="grid gap-5 sm:grid-cols-2 lg:gap-6">
             {PRINCIPLES.map((principle) => (
-              <li key={principle.title} className="rounded-2xl border border-white/[0.06] bg-[#111113] p-7">
-                <h3 className="mb-3 text-lg font-semibold text-white">{principle.title}</h3>
-                <p className="text-[14px] leading-[1.7] text-zinc-400">{principle.text}</p>
+              <li key={principle.title} className={`${CARD} p-7`}>
+                <h3 className={`${H3} mb-3`}>{principle.title}</h3>
+                <p className="text-[15px] leading-[1.6] text-zinc-400">{principle.text}</p>
               </li>
             ))}
           </ul>
-        </div>
+        </Reveal>
       </section>
 
-      <section aria-labelledby="team" className="border-t border-white/[0.04] px-6 py-24">
-        <div className="mx-auto max-w-6xl">
-          <span className={LABEL}>People</span>
-          <h2 id="team" className={TITLE}>
-            The People You&apos;ll Work With
-          </h2>
-          <p className="mb-12 max-w-xl text-[16px] text-zinc-400">
-            A small team, so you work directly with the people designing and building your software.
-          </p>
-          <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <section aria-labelledby="team" className={`${SECTION_RULE} ${SECTION}`}>
+        <Reveal className={CONTAINER}>
+          <SectionHeader
+            id="team"
+            eyebrow="People"
+            title="The People You'll Work With"
+            intro="A small team, so you work directly with the people designing and building your software."
+          />
+          <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
             {VISIBLE_TEAM.map((member) => (
-              <li
-                key={member.name}
-                className="flex h-full flex-col overflow-hidden rounded-xl border border-white/[0.06] bg-[#161618]"
-              >
-                <div className="relative aspect-[4/5] w-full overflow-hidden bg-[#0E0E10]">
+              <li key={member.name} className={`${CARD} flex h-full flex-col overflow-hidden`}>
+                <div className="relative aspect-[4/5] w-full overflow-hidden border-b border-border bg-surface-elevated">
                   {member.portrait ? (
                     <Image
                       src={member.portrait}
                       alt={member.name}
                       fill
                       className="object-cover object-top"
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 300px"
                     />
                   ) : (
                     <Initials name={member.name} />
                   )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#161618] via-transparent to-transparent" />
                 </div>
                 <div className="flex flex-1 flex-col p-5">
-                  <h3 className="mb-1 text-[16px] font-bold text-white">{member.name}</h3>
-                  <p className="mb-3 text-[11px] font-medium uppercase tracking-wider text-zinc-300">{member.role}</p>
-                  <p className="text-[13px] leading-relaxed text-zinc-400">{member.bio}</p>
+                  <h3 className="mb-1 text-[16px] font-semibold text-foreground">{member.name}</h3>
+                  <p className="mb-3 font-mono text-[12px] uppercase tracking-[0.06em] text-zinc-300">{member.role}</p>
+                  <p className="text-[14px] leading-[1.6] text-zinc-400">{member.bio}</p>
                 </div>
               </li>
             ))}
           </ul>
-        </div>
+        </Reveal>
       </section>
 
-      <section aria-labelledby="milestones" className="border-t border-white/[0.04] px-6 py-24">
-        <div className="mx-auto max-w-3xl">
-          <span className={LABEL}>Our Journey</span>
-          <h2 id="milestones" className={`${TITLE} mb-12`}>
-            Milestones
-          </h2>
-          <ol className="relative flex flex-col gap-8 before:absolute before:bottom-0 before:left-[18px] before:top-0 before:w-px before:bg-gradient-to-b before:from-white/[0.1] before:to-transparent">
+      <section aria-labelledby="milestones" className={`${SECTION_RULE} ${SECTION}`}>
+        <Reveal className={CONTAINER}>
+          <SectionHeader id="milestones" eyebrow="Our Journey" title="Milestones" />
+          <ol className="relative flex max-w-3xl flex-col gap-8 before:absolute before:top-0 before:bottom-0 before:left-[18px] before:w-px before:bg-border">
             {MILESTONES.map((milestone) => (
               <li key={milestone.event} className="relative flex items-start gap-6">
                 <span
-                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/[0.08] bg-[#161618]"
+                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-border bg-surface"
                   aria-hidden="true"
                 >
-                  <span className="h-2 w-2 rounded-full bg-white/40" />
+                  <span className="h-2 w-2 rounded-full bg-zinc-400" />
                 </span>
                 <div>
-                  <span className="mb-1 block font-mono text-[11px] text-zinc-400">{milestone.year}</span>
-                  <p className="text-[15px] font-medium text-zinc-300">{milestone.event}</p>
+                  <span className="mb-1 block font-mono text-[12px] text-zinc-400">{milestone.year}</span>
+                  <p className="text-[16px] font-medium text-zinc-300">{milestone.event}</p>
                 </div>
               </li>
             ))}
           </ol>
-        </div>
+        </Reveal>
       </section>
 
       <CallToAction secondary={{ href: '/products', label: 'See Our Products' }} />
