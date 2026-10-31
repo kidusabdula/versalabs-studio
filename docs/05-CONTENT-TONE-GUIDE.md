@@ -74,11 +74,14 @@ solution, synergy, world-class, enterprise-grade.
 
 ### Home
 
-1. **Hero:** what we do, in one line, and one primary button.
-2. **Our Products:** each product's name, its value in one line, and its status.
-3. **Services:** the four things we build for clients (custom ERP, online stores, websites, AI tools), each with
-   the clients we built it for.
-4. **Clients:** the businesses we have worked with, as names.
+Products first, then client work as proof, then services.
+
+1. **Hero:** what we do, in one line, "Explore the Products" and "Start a Project", and an index of the products
+   with each one's status.
+2. **Our Products:** each product's name, its value in one line, what it covers, and its status.
+3. **Client Work:** three featured client stories (`src/content/home.ts`), then the rest as a list.
+4. **Services:** the four things we build for clients (custom ERP, online stores, websites, AI tools), each with
+   examples from our work.
 5. **How We Work:** Discover, Design, Build, Launch.
 6. **Contact:** one invitation to talk.
 
@@ -89,9 +92,11 @@ A product page is a landing page, in this order:
 1. **Value proposition:** the name, a one-line promise (`subtitle`) and two or three sentences on what it does for
    you (`description`).
 2. **Who it's for** (`audience`, then the problem it solves, `need`).
-3. **What you can do** (`features`): 3 to 6, each a benefit in the title and one plain sentence under it.
+3. **What you can do** (`features`): 3 to 6, each a benefit in the title and one plain sentence under it. While the
+   product is unreleased the heading is "What <name> Will Do for You" and each feature carries its stage (in
+   development or planned), so nothing reads as shipped.
 4. **See it work:** screen recordings, then screenshots.
-5. **Status:** the badge and one line on availability.
+5. **Status:** the badge, one line on availability, and what it covers, as facts near the top of the page.
 6. **One call to action:**
    - "Try the Live Demo" when there is a public demo (`links.live`);
    - "Get Notified" while it is in development (Development or Coming Soon) and has no public demo;

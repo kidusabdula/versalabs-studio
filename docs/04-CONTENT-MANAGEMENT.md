@@ -23,11 +23,26 @@ sitemap all read from `src/content/projects/index.ts`.
 - There are no fields for technology, engineering detail or diagrams. The loader also checks every text field
   against `src/content/plain-language.ts`, so a technology name or a piece of jargon fails the build. The rules are
   in `docs/05-CONTENT-TONE-GUIDE.md`.
+- A product (section `products`) also has:
+  - `tagline`: what it is in a few words, for the product index ("Forex bureau operations"), at most 44 characters;
+  - `scope`: two to four plain words for what it covers ("Counter", "Rates", "Cash", "Compliance"), shown as chips and
+    on its plate while it has no screenshots;
+  - `availability` (optional): one line on how and when you can get it, in place of the status's default line in
+    `AVAILABILITY` (`src/content/labels.ts`);
+  - a `stage` on a feature (`in-development` or `planned`) while the product is unreleased, so the page can say what
+    it will do without claiming it ships today. The schema rejects all four on client work.
+- Product names that are still being decided live in `src/content/product-names.ts` (`OBSIDIAN`, a working name, and
+  `VERSA_ESTATE`). Every page, card and line of copy reads the name from there, so a rename is one line.
+- A product's own marketing site goes in `src/content/product-sites.ts`, by slug, and nowhere else. The map is empty
+  until Kidus approves each site and its address; an entry adds a "Product Site" button, and the build rejects an
+  unknown slug or a link that isn't https.
 - `section` is optional: products default to `/products`, everything else to `/work`. Set it to move a project
   (SafeFrame sets `section: "products"`). The redirects follow automatically.
-- `client` is optional: the client's name when it differs from the project title (PrintOnline.et is for Pana
-  Promotion). It appears on the card and the client page, and names the client on the home page and in service
+- `client` is optional: the client's name when it differs from the project title, and only when the client has
+  agreed to be named. It appears on the card and the client page, and names the client on the home page and in service
   examples.
+- The home page features three client stories, chosen by slug in `src/content/home.ts` (`FEATURED_WORK`); the rest of
+  the client work follows as a list. The build fails on a featured slug that isn't visible client work.
 - `metrics` (outcome numbers) default to empty. Each one needs a `label`, a `value` and the `evidence` behind it
   (where the number comes from). The Outcomes section appears only when there is at least one.
 - `links.live` is optional. Leave it out until the live site or demo is something we stand behind. A product with a
@@ -40,7 +55,8 @@ sitemap all read from `src/content/projects/index.ts`.
 ### Sections, URLs and the Sitemap
 - `/work` lists client work (section `work`), with an industry filter and a search box. The filters live in the
   URL (`/work?industry=events&q=store`), so a filtered view can be shared.
-- `/products` lists the projects whose section is `products`, with their status badges.
+- `/products` lists the projects whose section is `products`, in `PRODUCT_ORDER` (`src/content/projects/index.ts`),
+  each with its status, scope, availability, and a live demo or product site link only where one exists.
 - Pages live at `/products/[slug]` (a product landing page: value, who it's for, features, visuals, status, one
   call to action) or `/work/[slug]` (a short client story: their need, what we delivered, visuals, "Start a Similar
   Project"), both rendered by `src/components/case-study/CaseStudy.tsx`. `callToAction()` in

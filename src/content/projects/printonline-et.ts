@@ -1,7 +1,7 @@
 import { defineProject } from '../schema';
 
-// The client isn't named on the site until Kidus decides (2026-10-31 brief, open question: "Naming Pana Promotion or
-// German Mall Residence"); the conservative default is a plain description of the business.
+// The client isn't named on the site until Kidus decides (2026-10-31 brief, open question on naming clients); the
+// conservative default is a plain description of the business.
 export default defineProject({
   slug: "printonline-et",
   title: "PrintOnline.et",
