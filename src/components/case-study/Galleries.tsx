@@ -62,7 +62,7 @@ function Shot({ image, sizes, onOpen }: { image: GalleryImage; sizes: string; on
       >
         <ProductShot image={image} alt="" sizes={sizes} />
       </button>
-      <figcaption className="mt-3 text-[13px] leading-[1.5] text-zinc-400">
+      <figcaption className="mt-3 text-[13px] leading-[1.5] text-fg-3">
         {image.alt}
         {image.credit && <MediaCredit credit={image.credit} className="mt-1 block" />}
       </figcaption>
