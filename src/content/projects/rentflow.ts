@@ -29,7 +29,7 @@ export default defineProject({
   audience: "Owners and property managers running 1 to 20 office, commercial or mixed-use buildings in Addis Ababa, who keep rent in Excel, on paper or with a broker today.", // C2, C7
   features: [
     { title: "See Who Owes What", stage: "planned", description: "Every lease's balance, what's overdue, what's due soon, and which payments are waiting for you to verify." }, // C3, C8
-    { title: "Every Payment, With Its Proof", stage: "planned", description: "Tenants pay you directly, by cash, bank transfer, Telebirr, CBE Birr or cheque. Record each payment with a screenshot or a receipt photo, then verify it. RentFlow never collects or holds rent." }, // C5, C10
+    { title: "Every Payment, With Its Proof", stage: "planned", description: "Tenants pay you directly, by cash, bank transfer, Telebirr, CBE Birr or cheque. Record each payment with a screenshot or a photo as proof, then verify it. RentFlow never collects or holds rent." }, // C5, C10
     { title: "Payment Requests and Statements", stage: "planned", description: "Send payment requests and statements of account as PDFs in your own brand, with both calendars and the amount in words." }, // C13
     { title: "Utilities at the Official Tariff", stage: "planned", description: "Turn sub-meter readings into utility charges at the official EEU and AAWSA tariffs, recharged at cost with no markup." }, // C15
     { title: "Reminders Without the Awkward Call", stage: "planned", description: "Tenants get reminders by Telegram and email, in Amharic or English: rent due soon, rent overdue, and a lease ending in 60 and in 30 days." }, // C6
