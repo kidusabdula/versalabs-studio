@@ -58,7 +58,7 @@ const PRINCIPLES = [
 const MILESTONES = [
   { year: '2023', event: 'VersaLabs Studio founded in Addis Ababa' },
   { year: '2025', event: 'Pavilion360 website built for an event production company in Indianapolis' },
-  { year: '2025', event: "OSKAZ online store launched, connected live to the company's business system" },
+  { year: '2025', event: "OSKAZ online store launched, built on the company's business system" },
   { year: '2026', event: `Our own products in development: ${OBSIDIAN}, RentFlow, ${VERSA_ESTATE} and VersaLabs ADE` },
 ];
 

@@ -75,7 +75,10 @@ semantic names, never raw hex or zinc classes. `docs/03-UI-UX-GUIDELINES.md` is 
 - Product sites: `src/content/product-sites.ts`, empty, with no address guessed. A filled entry adds a "Product Site"
   button; the build rejects an entry for a non-product or a non-https URL.
 - OSKAZ: Media's clean cart shots (rig `6401826`) replace `mockup-06`, `mockup-08` and `screen-05`; the copy no longer
-  says customers see prices (the store says the sales team confirms them). Still no live link.
+  says customers see prices (the store says the sales team confirms them). Still no live link. The ERP behind the store
+  was deleted on 10-29 and the store's link to it is broken, so the story describes what we built, in the past tense:
+  a store built on the company's ERP for its catalogue and orders. Nothing says it is connected now; the About
+  milestone says "built on", not "connected live" (coordinator, 2026-10-31). Its status is unchanged.
 - PrintOnline: the client's name is removed (open question below), and it is not featured on the home page.
 - Home features OSKAZ, Pavilion360 and Live Addis (`src/content/home.ts`); the rest of the client work follows as a list.
 - Unchanged from PR #5: ThreatMatrix removed, JARVIS parked, EventEye hidden, no consent or credit lines except
@@ -91,8 +94,8 @@ Each takes the brief's conservative default until Kidus rules.
 4. LiveTrack: still hidden.
 5. ThreatMatrix's school, and PrintOnline as a portfolio entry: no change.
 6. Product names: "Obsidian" is a working name; "Versa Estate" or "VersaLabs CRM"? One constant each.
-7. OSKAZ: the store's ERP was retired on 10-29; the page still says the store is connected live to the company's
-   ERP. Confirm the store still works that way, or the copy needs a past tense.
+7. OSKAZ: answered (coordinator, 2026-10-31). The store is no longer connected to an ERP, so its story is now in the
+   past tense (see "Content Rules Applied").
 8. Privacy page: it names Vercel as the site's host and analytics provider, which is a banned name everywhere else.
    Kept as a processor disclosure (pre-existing, also on production) and allowed by file in the term check. Keep it,
    or say "our hosting provider"?
@@ -117,6 +120,14 @@ Run against the local production build (`pnpm build`, then `next start`), never 
 results are outside the repo, in `C:/Users/kidus/w/studio-v2-checks/` (`tools/`, `summary-final.json`,
 `summary-control.json`, `lighthouse/`, `shots/`). Every server-backed run starts its own server and stops it when it
 ends, through `heavy-fifo.sh` with at least 1.5 GB free.
+
+**Re-run after the OSKAZ fix (2026-10-31, the OSKAZ commit).** Build exit 0 (265 images). Banned terms and truths: 0
+hits in 25 files (the same 1 allowed), with a new rule that no page says "connected live" and the OSKAZ story makes no
+present-tense live claim; controls: the previous build failed the rule with 10 hits on 6 pages (the story, home, the
+work index, About and two related cards), and a planted copy of the new story was caught 6 times. Links: 23 pages, 153
+internal URLs, 0 broken; redirects: 57 cases, each one 308 hop, all 22 production sitemap URLs answer; controls:
+`/pricing`, `#nowhere` and the two-hop `/studio/` caught. Build control: exit 1 at check-images (typecheck and lint
+controls failed again: TS2322, `rules-of-hooks`). Browser checks weren't re-run: the change is copy only.
 
 | Check | Result (2026-10-31, build of `2b3c68e`) | Negative control, seen failing |
 |---|---|---|
