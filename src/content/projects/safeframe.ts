@@ -16,6 +16,7 @@ export default defineProject({
   slug: "safeframe",
   title: "SafeFrame",
   subtitle: "Private Video Safety Checks, Right on the Device",
+  tagline: "Private video safety checks",
   summary: "Checks videos for inappropriate content right on the phone or laptop. Nothing is uploaded, so what a child watches stays private.",
   category: "Online Safety",
   tags: ["Child Safety", "Privacy", "AI", "Mobile"],
@@ -27,7 +28,7 @@ export default defineProject({
   links: {
     live: "https://safeframe-livid.vercel.app",
   },
-  heroGradient: "from-zinc-500/20 via-transparent to-neutral-500/10",
+  scope: ["Check", "Flag", "Respond"],
   cover: "/images/safeframe/screen-home-desktop.webp",
   gallery: [
     { src: "/images/safeframe/screen-home-desktop.webp", alt: "SafeFrame home page: video safety that never leaves the device", kind: "screen", width: 1440, height: 900, reviewed: true },

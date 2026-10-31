@@ -1,6 +1,8 @@
 import { z } from 'zod';
 import { projectSchema, type GalleryImage, type Project, type ProjectInput, type ProjectSection } from '../schema';
 import { findBannedTerms } from '../plain-language';
+import { PRODUCT_SITES } from '../product-sites';
+import { AVAILABILITY } from '../labels';
 import { isPhoneScreen, leadShots } from '../../lib/shots';
 import obsidianErp from './obsidian-erp';
 import safeframe from './safeframe';
@@ -43,7 +45,7 @@ const ENTRIES: ProjectInput[] = [
 ];
 
 // Fields that hold paths, links, class names or a licence credit, not copy.
-const NOT_COPY = new Set(['slug', 'src', 'poster', 'cover', 'image', 'live', 'heroGradient', 'credit', 'evidence']);
+const NOT_COPY = new Set(['slug', 'src', 'poster', 'cover', 'image', 'live', 'credit', 'evidence', 'stage']);
 
 // Every piece of copy in a project, with where it sits, for the plain-language check.
 function copyIn(value: unknown, at: string, out: { at: string; text: string }[] = []) {
@@ -82,6 +84,17 @@ function load(entries: ProjectInput[]): Project[] {
 const LOADED: Project[] = load(ENTRIES);
 const VISIBLE: Project[] = LOADED.filter((project) => project.visibility === 'show');
 
+// Each product site link names a visible product and is an absolute https URL.
+for (const [slug, url] of Object.entries(PRODUCT_SITES)) {
+  const product = VISIBLE.find((project) => project.slug === slug);
+  if (!product || product.section !== 'products') throw new Error(`PRODUCT_SITES lists "${slug}", which is not a visible product`);
+  if (!/^https:\/\/[^\s/]+\.[^\s]+$/.test(url)) throw new Error(`PRODUCT_SITES["${slug}"] must be an https URL, got "${url}"`);
+}
+
+// The order products appear in, everywhere they are listed: the home page, /products, the footer and the product
+// index. A product not named here follows at the end, in listing order.
+const PRODUCT_ORDER = ['obsidian-erp', 'versa-fx', 'rentflow', 'safeframe', 'versa-estate', 'versalabs-ade'];
+
 export function getAllProjects(): Project[] {
   return VISIBLE;
 }
@@ -92,6 +105,20 @@ export function getProjectBySlug(slug: string): Project | undefined {
 
 export function getProjectsInSection(section: ProjectSection): Project[] {
   return VISIBLE.filter((project) => project.section === section);
+}
+
+// The products, in PRODUCT_ORDER.
+export function getProducts(): Project[] {
+  const rank = (slug: string) => (PRODUCT_ORDER.includes(slug) ? PRODUCT_ORDER.indexOf(slug) : PRODUCT_ORDER.length);
+  return getProjectsInSection('products')
+    .map((project, order) => ({ project, order }))
+    .sort((a, b) => rank(a.project.slug) - rank(b.project.slug) || a.order - b.order)
+    .map(({ project }) => project);
+}
+
+// A product's own site, when it has one (src/content/product-sites.ts).
+export function productSite(slug: string): string | undefined {
+  return PRODUCT_SITES[slug];
 }
 
 // The one place a project's URL is built. Links, the sitemap, canonical URLs,
@@ -133,7 +160,15 @@ export interface ProjectCard {
   kind: Project['kind'];
   industry: Project['industry'];
   client?: string;
-  heroGradient: string;
+  tagline?: string;
+  scope?: string[];
+  // One line on whether it can be had today: the product's own line, or the status's.
+  availability: string;
+  // A public demo or live site the visitor can open.
+  live: boolean;
+  liveUrl?: string;
+  // The product's own site, when it has one (src/content/product-sites.ts).
+  site?: string;
   cover?: GalleryImage;
   // A product shown only on phones: the phone screens that stand beside its
   // phone cover (see src/lib/shots.ts). Empty for every other cover.
@@ -160,7 +195,12 @@ export function toCard(project: Project): ProjectCard {
     kind: project.kind,
     industry: project.industry,
     client: project.client,
-    heroGradient: project.heroGradient,
+    tagline: project.tagline,
+    scope: project.scope,
+    availability: project.availability ?? AVAILABILITY[project.status],
+    live: Boolean(project.links.live),
+    liveUrl: project.links.live,
+    site: project.section === 'products' ? PRODUCT_SITES[project.slug] : undefined,
     cover: project.cover ? getImage(project, project.cover) : undefined,
     coverPhones: leadPhones(project),
   };
