@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { CONTACT_EMAIL, pageMetadata } from '@/lib/site';
+import { CONTAINER, EYEBROW, H1, INLINE_LINK, LEAD } from '@/components/ui/styles';
 
 export const metadata = pageMetadata({
   title: 'Privacy',
@@ -9,17 +10,18 @@ export const metadata = pageMetadata({
 });
 
 // This notice describes what the code in this repository actually does: the
-// contact form (src/app/api/contact/route.ts), analytics (src/app/layout.tsx)
-// and hosting. When any of them change, update this page in the same commit.
+// contact form (src/app/api/contact/route.ts), analytics (src/app/layout.tsx),
+// the theme switch (src/components/layout/ThemeToggle.tsx) and hosting. When
+// any of them change, update this page in the same commit.
 // Google Analytics only loads when NEXT_PUBLIC_GA_ID is set at build time, so
 // its paragraph appears only then.
-const LAST_UPDATED = '26 October 2026';
+const LAST_UPDATED = '31 October 2026';
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <section className="mb-12">
-      <h2 className="mb-4 text-[20px] font-semibold tracking-[-0.01em] text-foreground">{title}</h2>
-      <div className="flex flex-col gap-4 text-[16px] leading-[1.7] text-zinc-400">{children}</div>
+    <section className="grid gap-4 border-t border-line py-10 md:grid-cols-12 md:gap-10">
+      <h2 className="font-display text-[20px] font-semibold tracking-[-0.015em] text-foreground md:col-span-4">{title}</h2>
+      <div className="flex flex-col gap-4 text-[16px] leading-[1.7] text-fg-3 md:col-span-8">{children}</div>
     </section>
   );
 }
@@ -28,11 +30,11 @@ export default function PrivacyPage() {
   const googleAnalytics = Boolean(process.env.NEXT_PUBLIC_GA_ID);
 
   return (
-    <div className="px-5 pt-14 pb-16 sm:px-6 md:pt-20 md:pb-28">
-      <article className="mx-auto max-w-3xl">
-        <p className="mb-4 font-mono text-[12px] uppercase tracking-[0.08em] text-zinc-400">Last updated {LAST_UPDATED}</p>
-        <h1 className="mb-6 text-[36px] font-semibold leading-[1.08] tracking-[-0.02em] text-foreground md:text-[48px]">Privacy Notice</h1>
-        <p className="mb-16 text-[18px] leading-[1.6] text-zinc-400">
+    <div className={`${CONTAINER} pt-12 pb-16 md:pt-20 md:pb-28`}>
+      <article className="mx-auto max-w-4xl">
+        <p className={EYEBROW}>Last updated {LAST_UPDATED}</p>
+        <h1 className={`${H1} mt-5`}>Privacy Notice</h1>
+        <p className={`${LEAD} mt-6 mb-14`}>
           This page explains what VersaLabs Studio, a software studio in Addis Ababa, Ethiopia, collects through
           www.versalabs-studio.com, what we do with it and how to reach us about it. We keep it short because the site
           collects very little.
@@ -40,7 +42,7 @@ export default function PrivacyPage() {
 
         <Section title="The Contact Form">
           <p>
-            When you send a message through the <Link href="/contact" className="text-white underline underline-offset-4 hover:text-zinc-300">contact page</Link>,
+            When you send a message through the <Link href="/contact" className={INLINE_LINK}>contact page</Link>,
             we receive what you type: your name, your email address and your project details, plus your phone number,
             company, project type, budget range and how you heard about us if you fill those in.
           </p>
@@ -71,8 +73,14 @@ export default function PrivacyPage() {
         <Section title="Cookies and Storage">
           <p>
             {googleAnalytics
-              ? 'Apart from the Google Analytics cookies above, the site sets no cookies and stores nothing in your browser.'
-              : 'The site sets no cookies and stores nothing in your browser.'}
+              ? 'Apart from the Google Analytics cookies above, the site sets no cookies.'
+              : 'The site sets no cookies.'}
+          </p>
+          <p>
+            If you use the switch at the top of the page to choose the light or dark theme, your browser remembers that
+            choice in its local storage, on your device, so the next page opens the same way. It holds only the word
+            &ldquo;light&rdquo; or &ldquo;dark&rdquo;, it is never sent to us, and clearing your browser&apos;s site data
+            removes it.
           </p>
         </Section>
 
@@ -93,7 +101,7 @@ export default function PrivacyPage() {
         <Section title="Your Questions and Requests">
           <p>
             To ask about a message you sent us, or to have it deleted, email{' '}
-            <a href={`mailto:${CONTACT_EMAIL}`} className="text-white underline underline-offset-4 hover:text-zinc-300">
+            <a href={`mailto:${CONTACT_EMAIL}`} className={INLINE_LINK}>
               {CONTACT_EMAIL}
             </a>
             .

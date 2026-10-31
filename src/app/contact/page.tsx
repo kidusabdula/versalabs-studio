@@ -15,7 +15,7 @@ export const metadata = pageMetadata({
 function projectTypeFor(project: Project): ContactTopic['projectType'] {
   if (project.industry.includes('E-Commerce')) return 'ecommerce';
   if (project.industry.some((industry) => industry === 'Cybersecurity' || industry === 'Online Safety')) return 'ai';
-  if (project.section === 'products' && project.industry.some((i) => ['Manufacturing', 'Finance', 'Real Estate'].includes(i))) {
+  if (project.section === 'products' && project.industry.some((i) => ['Made to Order', 'Import & Trade', 'Finance', 'Real Estate'].includes(i))) {
     return 'erp';
   }
   return 'custom';

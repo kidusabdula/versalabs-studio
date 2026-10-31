@@ -2,8 +2,8 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { BUTTON_PRIMARY, BUTTON_SECONDARY, CARD, CONTAINER, DISPLAY, LEAD } from '@/components/ui/styles';
-import { Send, CheckCircle, Mail, MapPin, Clock, MessageCircle } from 'lucide-react';
+import { BUTTON_PRIMARY, BUTTON_SECONDARY, CARD, CONTAINER, DISPLAY, EYEBROW, INLINE_LINK, INPUT, LEAD } from '@/components/ui/styles';
+import { Send, CheckCircle, ArrowRight } from 'lucide-react';
 import { BUDGETS, HONEYPOT_FIELD, PROJECT_TYPES } from '@/lib/contact-schema';
 
 const EMPTY_FORM = {
@@ -21,12 +21,9 @@ const EMPTY_FORM = {
 type FormField = keyof typeof EMPTY_FORM;
 type Status = 'idle' | 'submitting' | 'success' | 'error';
 
-// Form fields sit recessed on the card, on the page background.
-const INPUT =
-  'w-full rounded-lg border border-border bg-background px-4 py-3 text-[15px] text-foreground placeholder:text-zinc-500 transition-colors focus:border-border-hover focus:outline-none aria-[invalid=true]:border-red-400/60';
 const LABEL = 'mb-2 block text-[14px] font-medium text-foreground';
-const INFO_TITLE = 'text-[15px] font-semibold text-foreground';
-const INFO_LINK = 'text-[14px] text-zinc-400 transition-colors hover:text-foreground';
+const INFO_TERM = 'font-mono text-[12px] uppercase tracking-[0.14em] text-fg-3';
+const INFO_LINK = 'text-[15px] text-fg-2 underline decoration-line-2 underline-offset-4 transition-colors hover:text-foreground hover:decoration-foreground';
 
 const FALLBACK_ERROR = "We couldn't send your message. Please try again, or email us at contact@versalabs-studio.com.";
 
@@ -114,18 +111,18 @@ export default function ContactClient({ topics = {} }: { topics?: Record<string,
 
   const fieldError = (field: FormField) =>
     fieldErrors[field] ? (
-      <p id={`${field}-error`} className="mt-2 text-sm text-red-300">{fieldErrors[field]}</p>
+      <p id={`${field}-error`} className="mt-2 text-[14px] text-err">{fieldErrors[field]}</p>
     ) : null;
 
   if (status === 'success') {
     return (
       <div className={`${CONTAINER} flex min-h-[70svh] items-center justify-center py-16 md:py-28`}>
         <div className={`${CARD} max-w-2xl p-10 text-center md:p-12`}>
-          <CheckCircle className="mx-auto mb-6 h-14 w-14 text-emerald-400" aria-hidden="true" />
-          <h1 ref={successHeading} tabIndex={-1} className="mb-4 text-[30px] font-semibold tracking-[-0.02em] text-foreground">
-            Message Received!
+          <CheckCircle className="mx-auto mb-6 h-12 w-12 text-ok" aria-hidden="true" />
+          <h1 ref={successHeading} tabIndex={-1} className="mb-4 font-display text-[32px] font-semibold tracking-[-0.03em] text-foreground">
+            Message Received
           </h1>
-          <p className="mb-8 text-[16px] leading-[1.6] text-zinc-400">
+          <p className="mb-8 text-[16px] leading-[1.6] text-fg-3">
             Thank you for reaching out. We&apos;ll review your project details and reply by email.
           </p>
           <button type="button" onClick={() => setStatus('idle')} className={BUTTON_SECONDARY}>
@@ -139,17 +136,57 @@ export default function ContactClient({ topics = {} }: { topics?: Record<string,
   const isSubmitting = status === 'submitting';
 
   return (
-    <div className={`${CONTAINER} pt-14 pb-16 md:pt-20 md:pb-28`}>
-      {/* Header: no entrance fade, so the heading and intro (the LCP) paint
-          with the server HTML instead of after hydration. */}
-      <div className="mb-12 max-w-2xl md:mb-16">
-        <h1 className={DISPLAY}>Let&apos;s Talk.</h1>
-        <p className={`${LEAD} mt-6`}>Tell us about your project and we&apos;ll get back to you with a plan.</p>
-      </div>
+    <div className={`${CONTAINER} pt-12 pb-16 md:pt-20 md:pb-28`}>
+      <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
+        {/* Left: the heading and how to reach us. No entrance fade, so the heading and intro (the LCP) paint with
+            the server HTML instead of after hydration. */}
+        <div className="lg:col-span-5">
+          <span className={EYEBROW}>Contact</span>
+          <h1 className={`${DISPLAY} mt-5`}>Let&apos;s Talk</h1>
+          <p className={`${LEAD} mt-6`}>
+            Ask for a demo of a product, or tell us about your project. We&apos;ll reply by email with how we would
+            approach it.
+          </p>
+          <dl className="mt-10 border-t border-line">
+            <div className="grid grid-cols-[7rem_minmax(0,1fr)] gap-4 border-b border-line py-4">
+              <dt className={INFO_TERM}>Email</dt>
+              <dd>
+                <a href="mailto:contact@versalabs-studio.com" className={INFO_LINK}>
+                  contact@versalabs-studio.com
+                </a>
+              </dd>
+            </div>
+            <div className="grid grid-cols-[7rem_minmax(0,1fr)] gap-4 border-b border-line py-4">
+              <dt className={INFO_TERM}>Location</dt>
+              <dd className="text-[15px] text-fg-2">Addis Ababa, Ethiopia</dd>
+            </div>
+            <div className="grid grid-cols-[7rem_minmax(0,1fr)] gap-4 border-b border-line py-4">
+              <dt className={INFO_TERM}>Replies</dt>
+              <dd className="text-[15px] text-fg-2">By email, from the team directly</dd>
+            </div>
+            <div className="grid grid-cols-[7rem_minmax(0,1fr)] gap-4 border-b border-line py-4">
+              <dt className={INFO_TERM}>Elsewhere</dt>
+              <dd className="flex flex-wrap gap-x-5 gap-y-1">
+                <a href="https://t.me/kidusabdula" target="_blank" rel="noopener noreferrer" className={INFO_LINK}>
+                  Telegram<span className="sr-only"> (opens in a new tab)</span>
+                </a>
+                <a href="https://linkedin.com/company/versalabs-studio" target="_blank" rel="noopener noreferrer" className={INFO_LINK}>
+                  LinkedIn<span className="sr-only"> (opens in a new tab)</span>
+                </a>
+              </dd>
+            </div>
+          </dl>
+          <Link
+            href="/services"
+            className="group mt-8 inline-flex items-center gap-2 text-[15px] text-fg-3 transition-colors hover:text-foreground"
+          >
+            Not sure what you need? <span className="font-medium text-foreground">Browse our services</span>
+            <ArrowRight className="h-4 w-4 text-foreground transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+          </Link>
+        </div>
 
-      <div className="grid gap-8 lg:grid-cols-5 lg:gap-12">
-        {/* Left: the form (3 columns) */}
-        <div className={`${CARD} p-6 md:p-8 lg:col-span-3`}>
+        {/* Right: the form */}
+        <div className={`${CARD} p-6 md:p-8 lg:col-span-7`}>
           <form onSubmit={handleSubmit} className="space-y-6" aria-busy={isSubmitting}>
             <div className="grid gap-6 sm:grid-cols-2">
               <div>
@@ -243,7 +280,7 @@ export default function ContactClient({ topics = {} }: { topics?: Record<string,
 
             <div role="alert">
               {status === 'error' && errorMessage && (
-                <p className="rounded-lg border border-red-400/30 bg-red-500/10 px-4 py-3 text-[14px] text-red-200">
+                <p className="rounded-lg border border-err-line bg-err-bg px-4 py-3 text-[14px] text-err">
                   {errorMessage}
                 </p>
               )}
@@ -257,71 +294,15 @@ export default function ContactClient({ topics = {} }: { topics?: Record<string,
               <Send className="h-4 w-4" aria-hidden="true" />
               {isSubmitting ? 'Sending...' : 'Send Message'}
             </button>
-            <p className="text-center text-[13px] text-zinc-400">
+            <p className="text-center text-[13px] text-fg-3">
               We use your details to reply to you. See our{' '}
-              <Link href="/privacy" className="text-zinc-300 underline underline-offset-4 hover:text-foreground">privacy notice</Link>.
+              <Link href="/privacy" className={INLINE_LINK}>privacy notice</Link>.
             </p>
           </form>
         </div>
 
-        {/* Right: how to reach us (2 columns) */}
-        <div className="lg:col-span-2">
-          <ul className="flex flex-col gap-4 lg:sticky lg:top-24">
-            <li className={`${CARD} flex items-start gap-4 p-6`}>
-              <ContactIcon icon={Mail} />
-              <div>
-                <h2 className={INFO_TITLE}>Email</h2>
-                <a href="mailto:contact@versalabs-studio.com" className={INFO_LINK}>
-                  contact@versalabs-studio.com
-                </a>
-              </div>
-            </li>
-            <li className={`${CARD} flex items-start gap-4 p-6`}>
-              <ContactIcon icon={MapPin} />
-              <div>
-                <h2 className={INFO_TITLE}>Location</h2>
-                <p className="text-[14px] text-zinc-400">Addis Ababa, Ethiopia</p>
-              </div>
-            </li>
-            <li className={`${CARD} flex items-start gap-4 p-6`}>
-              <ContactIcon icon={Clock} />
-              <div>
-                <h2 className={INFO_TITLE}>Replies</h2>
-                <p className="text-[14px] text-zinc-400">By email, from the team directly</p>
-              </div>
-            </li>
-            <li className={`${CARD} flex items-start gap-4 p-6`}>
-              <ContactIcon icon={MessageCircle} />
-              <div>
-                <h2 className={INFO_TITLE}>Quick Connect</h2>
-                <div className="mt-1 flex flex-col gap-1">
-                  <a href="https://t.me/kidusabdula" target="_blank" rel="noopener noreferrer" className={`${INFO_LINK} inline-block py-0.5`}>
-                    Telegram →
-                  </a>
-                  <a href="https://linkedin.com/company/versalabs-studio" target="_blank" rel="noopener noreferrer" className={`${INFO_LINK} inline-block py-0.5`}>
-                    LinkedIn →
-                  </a>
-                </div>
-              </div>
-            </li>
-            <li>
-              <Link href="/services" className={`${CARD} group block p-6 transition-colors hover:border-border-hover`}>
-                <p className="text-[14px] text-zinc-400 transition-colors group-hover:text-zinc-300">
-                  Not sure what you need? <span className="font-medium text-foreground">Browse our services →</span>
-                </p>
-              </Link>
-            </li>
-          </ul>
-        </div>
       </div>
     </div>
   );
 }
 
-function ContactIcon({ icon: Icon }: { icon: typeof Mail }) {
-  return (
-    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-border bg-surface-elevated">
-      <Icon className="h-5 w-5 text-foreground" aria-hidden="true" />
-    </span>
-  );
-}

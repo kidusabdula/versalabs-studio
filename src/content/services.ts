@@ -1,4 +1,5 @@
 import { getProjectBySlug, getProjectsInSection, projectPath } from './projects';
+import { OBSIDIAN } from './product-names';
 import type { PROJECT_TYPES } from '@/lib/contact-schema';
 
 // What VersaLabs builds for clients, shown on the home page and on /services.
@@ -33,7 +34,7 @@ export const SERVICES: Service[] = [
     title: 'Custom ERP and Business Systems',
     promise: 'One place to run sales, stock, production and accounts.',
     description:
-      'We set up a business system around the way your company already works, so your team stops juggling spreadsheets, paper and chat threads. You can start from Obsidian ERP or have one made for you.',
+      `We set up a business system around the way your company already works, so your team stops juggling spreadsheets, paper and chat threads. We are also building our own, ${OBSIDIAN}, for companies that make, sell or import goods.`,
     benefits: [
       'Customers, quotes, orders and invoices in one place',
       'Stock you can trust across every store and warehouse',
