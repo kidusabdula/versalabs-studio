@@ -9,8 +9,8 @@ first, then `git log origin/main..feat/redesign-v2`.
 | Item | State |
 |---|---|
 | Branch | `feat/redesign-v2` from `origin/main` `6abd792`, worktree `C:/Users/kidus/w/studio-v2` |
-| PR | see the PR on `kidusabdula/versalabs-studio` (one PR to `main`) |
-| Preview | Vercel builds the branch on push; previews are protected and `noindex` |
+| PR | https://github.com/kidusabdula/versalabs-studio/pull/1 (to `main`) |
+| Preview | https://versalabs-studio-git-feat-redesign-v2-versalabs-projects.vercel.app (branch alias; built by Vercel with Turbopack, protected, `noindex`) |
 | Checks | all pass on the local production build, every negative control seen failing (see "Checks") |
 | Review | waiting for Kidus; no merge without his OK |
 
