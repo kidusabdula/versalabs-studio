@@ -4,6 +4,7 @@ export default defineProject({
   slug: "jarvis",
   title: "JARVIS",
   subtitle: "The AI Assistant That Runs Our Studio's Routine Work",
+  tagline: "Our in-house AI assistant",
   summary: "Our in-house AI assistant, in development. Ask it on Telegram, the web or a phone, and it plans work, reviews code and runs our daily routines.",
   category: "AI Assistant",
   tags: ["AI Assistant", "Automation", "Scheduled Routines", "Productivity"],
@@ -16,7 +17,7 @@ export default defineProject({
   visibility: "hide",
   industry: ["Developer Tools"],
   links: {},
-  heroGradient: "from-cyan-500/20 via-transparent to-teal-500/10",
+  scope: ["Ask", "Plan", "Review", "Report"],
   cover: "/images/jarvis/mockup-02.webp",
   gallery: [
     { src: "/images/jarvis/mockup-01.webp", alt: "JARVIS dashboard with system overview and service health, close-up on an iMac", kind: "mockup", width: 1920, height: 1280, reviewed: true },

@@ -15,7 +15,6 @@ export default defineProject({
   kind: "client",
   industry: ["Events", "Blockchain"],
   links: {},
-  heroGradient: "from-[#AF8F6F]/20 via-transparent to-[#74512D]/10",
   cover: "/images/unlock-ethiopia-potential/mockup-01.webp",
   gallery: [
     { src: "/images/unlock-ethiopia-potential/mockup-01.webp", alt: "Unlock Ethiopia Potential event schedule in a browser window", kind: "mockup", width: 1920, height: 1280, reviewed: true },
