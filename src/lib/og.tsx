@@ -1,6 +1,6 @@
 import { ImageResponse } from 'next/og';
 import type { Project } from '@/content/schema';
-import { KIND_LABEL } from '@/content/labels';
+import { KIND_LABEL, STATUS_LABEL } from '@/content/labels';
 import { SITE_NAME } from '@/lib/site';
 
 export const OG_SIZE = { width: 1200, height: 630 };
@@ -11,7 +11,7 @@ export const OG_SIZE = { width: 1200, height: 630 };
 export function projectOgImage(project: Project | undefined) {
   const title = project?.title ?? SITE_NAME;
   const subtitle = project?.subtitle ?? '';
-  const facts = project ? [KIND_LABEL[project.kind], project.status, project.year].join('  ·  ') : '';
+  const facts = project ? [KIND_LABEL[project.kind], STATUS_LABEL[project.status], project.year].join('  ·  ') : '';
 
   return new ImageResponse(
     (

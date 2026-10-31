@@ -1,16 +1,6 @@
-import Link from 'next/link';
 import WorkIndex from '@/components/work/WorkIndex';
-import { Reveal } from '@/components/ui/motion';
-import {
-  BUTTON_PRIMARY,
-  BUTTON_SECONDARY,
-  CONTAINER,
-  DISPLAY,
-  H2,
-  LEAD,
-  SECTION,
-  SECTION_RULE,
-} from '@/components/ui/styles';
+import CallToAction from '@/components/sections/CallToAction';
+import { CONTAINER, DISPLAY, EYEBROW, LEAD, PAGE_HEAD } from '@/components/ui/styles';
 import { getProjectsInSection, toCard } from '@/content/projects';
 import { pageMetadata } from '@/lib/site';
 
@@ -26,38 +16,25 @@ export default function WorkPage() {
 
   return (
     <>
-      {/* Rendered on the server with no entrance animation: on a phone the
-          heading and intro are the first view, so they paint immediately. */}
-      <header className="pt-14 pb-12 md:pt-20 md:pb-16">
+      {/* Rendered on the server with no entrance animation: on a phone the heading and intro are the first view, so
+          they paint immediately. */}
+      <header className={PAGE_HEAD}>
         <div className={CONTAINER}>
-          <h1 className={DISPLAY}>Client Work</h1>
+          <span className={EYEBROW}>Proof That We Ship</span>
+          <h1 className={`${DISPLAY} mt-5`}>Client Work</h1>
           <p className={`${LEAD} mt-6`}>
-            The businesses we&apos;ve built for, what they needed and what we delivered. Every card says where the work
-            stands today, and which pieces are our own builds rather than a client&apos;s.
+            The businesses we&apos;ve built for, what they needed and what we delivered. Every card says what kind of
+            work it was and where it stands today, so our own builds never read as a client&apos;s.
           </p>
         </div>
       </header>
 
       <WorkIndex cards={cards} />
 
-      <section aria-labelledby="work-cta" className={`${SECTION_RULE} ${SECTION}`}>
-        <Reveal className={`${CONTAINER} text-center`}>
-          <h2 id="work-cta" className={H2}>
-            Have Something Like This in Mind?
-          </h2>
-          <p className={`${LEAD} mx-auto mt-5`}>
-            Tell us about your business and what you want to change. We&apos;ll reply with how we would approach it.
-          </p>
-          <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <Link href="/contact" className={BUTTON_PRIMARY}>
-              Start a Project
-            </Link>
-            <Link href="/products" className={BUTTON_SECONDARY}>
-              See Our Products
-            </Link>
-          </div>
-        </Reveal>
-      </section>
+      <CallToAction
+        title="Have Something Like This in Mind?"
+        text="Tell us about your business and what you want to change. We'll reply with how we would approach it."
+      />
     </>
   );
 }

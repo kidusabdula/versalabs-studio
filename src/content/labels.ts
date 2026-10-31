@@ -1,7 +1,7 @@
-import type { ProjectKind, ProjectStatus } from './schema';
+import type { FeatureStage, ProjectKind, ProjectStatus } from './schema';
 
-// One mapping for project badges on the home page, the work listing and the
-// case study pages, so a status or kind always reads and looks the same.
+// One mapping for project badges on the home page, the listings and the project pages, so a status or kind always
+// reads and looks the same.
 
 export const KIND_LABEL: Record<ProjectKind, string> = {
   product: 'Product',
@@ -10,39 +10,58 @@ export const KIND_LABEL: Record<ProjectKind, string> = {
   research: 'Research',
 };
 
-// The kind of work is told in words, not colour: status badges are the only
-// colour on the site.
-const NEUTRAL = 'text-zinc-300 bg-white/[0.04] border border-border';
-
-export const KIND_BADGE: Record<ProjectKind, string> = {
-  product: NEUTRAL,
-  client: NEUTRAL,
-  internal: NEUTRAL,
-  research: NEUTRAL,
+// What a status badge says. "Development" reads as "In Development" so nothing unfinished reads as shipped.
+export const STATUS_LABEL: Record<ProjectStatus, string> = {
+  Production: 'In Production',
+  Beta: 'Beta',
+  MVP: 'MVP',
+  Prototype: 'Prototype',
+  Demo: 'Demo',
+  Development: 'In Development',
+  'Coming Soon': 'Coming Soon',
 };
 
-// Emerald: running in production. Amber: early or partial (beta, MVP,
-// prototype, demo). Violet: still in development (Development, Coming Soon).
-const EMERALD = 'text-emerald-400 bg-emerald-500/10 border border-emerald-500/20';
-const AMBER = 'text-amber-400 bg-amber-500/10 border border-amber-500/20';
-const VIOLET = 'text-violet-400 bg-violet-500/10 border border-violet-500/20';
+// The status colours are the only colour on the site. Emerald: running in production. Amber: early or partial
+// (beta, MVP, prototype, demo). Violet: still in development (Development, Coming Soon). Each is a token pair from
+// globals.css, tuned for AA in both themes.
+export type StatusTone = 'ok' | 'warn' | 'dev' | 'idle';
 
-export const STATUS_BADGE: Record<ProjectStatus, string> = {
-  Production: EMERALD,
-  Beta: AMBER,
-  MVP: AMBER,
-  Prototype: AMBER,
-  Demo: AMBER,
-  Development: VIOLET,
-  'Coming Soon': VIOLET,
+export const STATUS_TONE: Record<ProjectStatus, StatusTone> = {
+  Production: 'ok',
+  Beta: 'warn',
+  MVP: 'warn',
+  Prototype: 'warn',
+  Demo: 'warn',
+  Development: 'dev',
+  'Coming Soon': 'dev',
 };
 
-// Statuses for software that isn't released yet. A product in one of these
-// with no public demo offers "Get Notified" instead of "Request a Demo".
+export const TONE_CLASS: Record<StatusTone, { badge: string; dot: string; text: string }> = {
+  ok: { badge: 'text-ok bg-ok-bg border-ok-line', dot: 'bg-ok', text: 'text-ok' },
+  warn: { badge: 'text-warn bg-warn-bg border-warn-line', dot: 'bg-warn', text: 'text-warn' },
+  dev: { badge: 'text-dev bg-dev-bg border-dev-line', dot: 'bg-dev', text: 'text-dev' },
+  idle: { badge: 'text-fg-2 bg-wash border-line-2', dot: 'bg-fg-4', text: 'text-fg-3' },
+};
+
+// The key to the status colours, in the footer.
+export const TONE_LEGEND: { tone: StatusTone; label: string }[] = [
+  { tone: 'ok', label: 'In Production' },
+  { tone: 'warn', label: 'Beta, MVP or Demo' },
+  { tone: 'dev', label: 'In Development' },
+];
+
+// A feature's own stage on a product that is still being built: in development now, or planned for later.
+export const FEATURE_STAGE: Record<FeatureStage, { label: string; tone: StatusTone }> = {
+  'in-development': { label: 'In Development', tone: 'dev' },
+  planned: { label: 'Planned', tone: 'idle' },
+};
+
+// Statuses for software that isn't released yet. A product in one of these with no public demo offers "Get
+// Notified" instead of "Request a Demo".
 export const IN_DEVELOPMENT: ProjectStatus[] = ['Development', 'Coming Soon'];
 
-// The one call to action on a page, decided by what the visitor can actually
-// do next (docs/05-CONTENT-TONE-GUIDE.md):
+// The one call to action on a page, decided by what the visitor can actually do next
+// (docs/05-CONTENT-TONE-GUIDE.md):
 // - a product with a public demo: try it;
 // - a product that hasn't shipped and has no demo: hear when it does;
 // - a product in production: ask for a demo;
@@ -70,7 +89,8 @@ export function callToAction(project: {
   return { label: 'Request a Demo', href: `/contact?topic=${project.slug}&interest=demo`, external: false };
 }
 
-// One line under the status badge on a product page.
+// One line on availability, under the status on a product page, unless the product file says it more exactly
+// (`availability`).
 export const AVAILABILITY: Record<ProjectStatus, string> = {
   Production: 'Available now, and running for businesses today.',
   Beta: 'Available now in beta.',

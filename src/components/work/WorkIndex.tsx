@@ -5,7 +5,7 @@ import { Search, X } from 'lucide-react';
 import ProjectCardView from '@/components/case-study/ProjectCardView';
 import type { ProjectCard } from '@/content/projects';
 import { INDUSTRIES } from '@/content/schema';
-import { CARD, CONTAINER } from '@/components/ui/styles';
+import { CONTAINER, INPUT, PILL, PILL_IDLE, PILL_ON } from '@/components/ui/styles';
 
 // The /work listing: the businesses we've built for, filterable by industry
 // and searchable. The server renders every card, so the page is complete
@@ -77,36 +77,32 @@ export default function WorkIndex({ cards }: { cards: ProjectCard[] }) {
   return (
     <section aria-label="Client work" className="pb-16 md:pb-28">
       <div className={CONTAINER}>
-        <div className={`${CARD} mb-10 flex flex-col gap-6 p-5 md:p-8`}>
-          <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-            <fieldset className="min-w-0">
-              <legend className="mb-3 font-mono text-[12px] uppercase tracking-[0.08em] text-zinc-400">Industry</legend>
-              <div className="flex flex-wrap gap-2">
-                {options.map((option) => {
-                  const pressed = industry.includes(option.value);
-                  return (
-                    <button
-                      key={option.value}
-                      type="button"
-                      aria-pressed={pressed}
-                      onClick={() => toggle(option.value)}
-                      className={`min-h-9 rounded-full border px-4 py-1.5 text-[14px] font-medium transition-colors ${
-                        pressed
-                          ? 'border-foreground bg-foreground text-background'
-                          : 'border-border bg-surface-elevated text-zinc-300 hover:border-border-hover hover:text-foreground'
-                      }`}
-                    >
-                      {option.label}
-                    </button>
-                  );
-                })}
-              </div>
-            </fieldset>
-            <div className="relative w-full shrink-0 lg:w-80">
+        <div className="mb-10 flex flex-col gap-6 border-b border-line pb-8 lg:flex-row lg:items-end lg:justify-between">
+          <fieldset className="min-w-0">
+            <legend className="mb-3 font-mono text-[12px] uppercase tracking-[0.14em] text-fg-3">Filter by Industry</legend>
+            <div className="flex flex-wrap gap-2">
+              {options.map((option) => {
+                const pressed = industry.includes(option.value);
+                return (
+                  <button
+                    key={option.value}
+                    type="button"
+                    aria-pressed={pressed}
+                    onClick={() => toggle(option.value)}
+                    className={`${PILL} ${pressed ? PILL_ON : PILL_IDLE}`}
+                  >
+                    {option.label}
+                  </button>
+                );
+              })}
+            </div>
+          </fieldset>
+          <div className="flex w-full shrink-0 flex-col gap-3 lg:w-80">
+            <div className="relative">
               <label htmlFor="work-search" className="sr-only">
                 Search client work
               </label>
-              <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400" aria-hidden="true" />
+              <Search className="pointer-events-none absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-fg-3" aria-hidden="true" />
               <input
                 id="work-search"
                 type="search"
@@ -116,29 +112,28 @@ export default function WorkIndex({ cards }: { cards: ProjectCard[] }) {
                   setQuery(e.target.value);
                   writeUrl(industry, e.target.value);
                 }}
-                className="w-full rounded-full border border-border bg-background py-2.5 pr-4 pl-10 text-[14px] text-foreground placeholder:text-zinc-400 focus:border-border-hover"
+                className={`${INPUT} rounded-full py-2.5 pl-10 text-[14px]`}
               />
             </div>
-          </div>
-
-          <div className="flex flex-wrap items-center justify-between gap-4 border-t border-border pt-5">
-            <p aria-live="polite" className="text-[14px] text-zinc-400">
-              Showing {filtered.length} of {cards.length}
-            </p>
-            {active > 0 && (
-              <button
-                type="button"
-                onClick={() => {
-                  setIndustry([]);
-                  setQuery('');
-                  writeUrl([], '');
-                }}
-                className="inline-flex min-h-9 items-center gap-2 rounded-full px-3 text-[14px] font-medium text-zinc-300 hover:text-foreground"
-              >
-                <X className="h-4 w-4" aria-hidden="true" />
-                Clear Filters
-              </button>
-            )}
+            <div className="flex min-h-9 items-center justify-between gap-4">
+              <p aria-live="polite" className="font-mono text-[12px] uppercase tracking-[0.1em] text-fg-3">
+                Showing {filtered.length} of {cards.length} projects
+              </p>
+              {active > 0 && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIndustry([]);
+                    setQuery('');
+                    writeUrl([], '');
+                  }}
+                  className="inline-flex min-h-9 items-center gap-1.5 rounded-full px-2 text-[14px] font-medium text-fg-2 hover:text-foreground"
+                >
+                  <X className="h-4 w-4" aria-hidden="true" />
+                  Clear Filters
+                </button>
+              )}
+            </div>
           </div>
         </div>
 
@@ -151,7 +146,7 @@ export default function WorkIndex({ cards }: { cards: ProjectCard[] }) {
             ))}
           </ul>
         ) : (
-          <p className="py-24 text-center text-zinc-400">Nothing matches these filters.</p>
+          <p className="py-24 text-center text-fg-3">Nothing matches these filters.</p>
         )}
       </div>
     </section>

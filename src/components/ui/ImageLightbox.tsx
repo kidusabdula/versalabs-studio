@@ -1,8 +1,8 @@
 'use client';
 
-import { useEffect, useCallback } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import Image from 'next/image';
-import { motion, AnimatePresence } from 'framer-motion';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import type { GalleryImage } from '@/content/schema';
 import MediaCredit from '@/components/case-study/MediaCredit';
@@ -16,6 +16,13 @@ interface ImageLightboxProps {
   title?: string;
 }
 
+const CONTROL =
+  'absolute z-20 inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-black/60 text-white transition-colors hover:border-white/40';
+
+// The full-size viewer. It renders in a portal on <body>, so no transformed ancestor (a section settling into view)
+// can trap its fixed position. Escape closes it, the arrow keys step through, focus starts on Close and returns to
+// what opened it. The image cross-fades in with CSS (.fade-in), which reduced motion turns off. The viewer is always
+// dark, whatever the theme: photos read best on black.
 export default function ImageLightbox({
   images,
   currentIndex,
@@ -24,6 +31,14 @@ export default function ImageLightbox({
   onNavigate,
   title = 'Gallery',
 }: ImageLightboxProps) {
+  const [mounted, setMounted] = useState(false);
+  const returnFocus = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- the portal target only exists in the browser
+    setMounted(true);
+  }, []);
+
   const goNext = useCallback(() => {
     onNavigate((currentIndex + 1) % images.length);
   }, [currentIndex, images.length, onNavigate]);
@@ -34,6 +49,7 @@ export default function ImageLightbox({
 
   useEffect(() => {
     if (!isOpen) return;
+    returnFocus.current = document.activeElement as HTMLElement | null;
 
     const handleKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
@@ -49,91 +65,48 @@ export default function ImageLightbox({
     };
   }, [isOpen, goNext, goPrev, onClose]);
 
-  const credit = images[currentIndex]?.credit;
+  useEffect(() => {
+    if (!isOpen) returnFocus.current?.focus();
+  }, [isOpen]);
 
-  return (
-    <AnimatePresence>
-      {isOpen && (
-        <div
-          className="fixed inset-0 z-[100] flex items-center justify-center"
-          role="dialog"
-          aria-modal="true"
-          aria-label={`${title} gallery`}
-        >
-          {/* Backdrop */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={onClose}
-            className="absolute inset-0 bg-black/95"
-          />
+  if (!mounted || !isOpen) return null;
+  const image = images[currentIndex];
+  if (!image) return null;
 
-          {/* Close Button */}
-          <button
-            type="button"
-            autoFocus
-            onClick={onClose}
-            aria-label="Close gallery"
-            className="absolute top-6 right-6 z-20 rounded-full border border-border bg-surface p-3 text-foreground transition-colors hover:border-border-hover"
-          >
-            <X className="h-5 w-5" aria-hidden="true" />
+  return createPortal(
+    <div className="fixed inset-0 z-[100] flex items-center justify-center" role="dialog" aria-modal="true" aria-label={`${title} gallery`}>
+      <div onClick={onClose} className="fade-in absolute inset-0 bg-black/95" aria-hidden="true" />
+
+      <button type="button" autoFocus onClick={onClose} aria-label="Close gallery" className={`${CONTROL} top-5 right-5`}>
+        <X className="h-5 w-5" aria-hidden="true" />
+      </button>
+
+      <p className="absolute top-8 left-6 z-20 font-mono text-[13px] text-white/75 tabular-nums">
+        {currentIndex + 1} / {images.length}
+      </p>
+
+      {images.length > 1 && (
+        <>
+          <button type="button" onClick={goPrev} aria-label="Previous image" className={`${CONTROL} left-3 md:left-8`}>
+            <ChevronLeft className="h-5 w-5" aria-hidden="true" />
           </button>
-
-          {/* Counter */}
-          <div className="absolute top-6 left-6 z-20 text-sm text-zinc-400 font-mono">
-            {currentIndex + 1} / {images.length}
-          </div>
-
-          {/* Navigation Arrows */}
-          {images.length > 1 && (
-            <>
-              <button
-                type="button"
-                onClick={goPrev}
-                aria-label="Previous image"
-                className="absolute left-4 z-20 rounded-full border border-border bg-surface p-3 text-foreground transition-colors hover:border-border-hover md:left-8"
-              >
-                <ChevronLeft className="h-6 w-6" aria-hidden="true" />
-              </button>
-              <button
-                type="button"
-                onClick={goNext}
-                aria-label="Next image"
-                className="absolute right-4 z-20 rounded-full border border-border bg-surface p-3 text-foreground transition-colors hover:border-border-hover md:right-8"
-              >
-                <ChevronRight className="h-6 w-6" aria-hidden="true" />
-              </button>
-            </>
-          )}
-
-          {/* Image */}
-          <motion.div
-            key={currentIndex}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="relative z-10 w-[90vw] h-[80vh] max-w-[1400px]"
-          >
-            <Image
-              src={images[currentIndex].src}
-              alt={images[currentIndex].alt}
-              fill
-              className="object-contain"
-              sizes="90vw"
-              priority
-            />
-          </motion.div>
-
-          {/* A licence credit travels with its image. */}
-          {credit && (
-            <p className="absolute bottom-4 left-1/2 z-20 w-[90vw] max-w-[1400px] -translate-x-1/2 text-center">
-              <MediaCredit credit={credit} />
-            </p>
-          )}
-        </div>
+          <button type="button" onClick={goNext} aria-label="Next image" className={`${CONTROL} right-3 md:right-8`}>
+            <ChevronRight className="h-5 w-5" aria-hidden="true" />
+          </button>
+        </>
       )}
-    </AnimatePresence>
+
+      <div key={currentIndex} className="fade-in relative z-10 h-[80vh] w-[90vw] max-w-[1400px]">
+        <Image src={image.src} alt={image.alt} fill className="object-contain" sizes="90vw" priority />
+      </div>
+
+      {/* A licence credit travels with its image. */}
+      {image.credit && (
+        <p className="absolute bottom-4 left-1/2 z-20 w-[90vw] max-w-[1400px] -translate-x-1/2 text-center">
+          <MediaCredit credit={image.credit} onDark />
+        </p>
+      )}
+    </div>,
+    document.body,
   );
 }

@@ -17,7 +17,8 @@ export const SECTIONS = ['work', 'products'] as const;
 // The filter vocabularies on /work. Each project picks from these lists, so two
 // projects never spell the same filter differently.
 export const INDUSTRIES = [
-  'Manufacturing',
+  'Made to Order',
+  'Import & Trade',
   'E-Commerce',
   'Printing',
   'Events',
@@ -34,12 +35,19 @@ export const INDUSTRIES = [
 
 const text = z.string().trim().min(1);
 
+// A feature's own stage on a product that is still being built: what the
+// current milestone is building (`in-development`) or what comes later
+// (`planned`). Leave it out for anything that exists today. The page shows it
+// as a label beside the feature, so nothing unbuilt reads as shipped.
+export const FEATURE_STAGES = ['in-development', 'planned'] as const;
+
 // `image` (optional) is the screenshot that shows the feature: one of the
 // project's gallery screenshots, shown beside it on the page.
 const feature = z.strictObject({
   title: text,
   description: text,
   image: z.string().optional(),
+  stage: z.enum(FEATURE_STAGES).optional(),
 });
 
 // Credit for third-party material that appears in an image or a loop, such as
@@ -116,7 +124,6 @@ export const projectSchema = z
     links,
     visibility: z.enum(['show', 'hide']).default('show'),
     metrics: z.array(metric).default([]),
-    heroGradient: text,
     cover: z.string().optional(),
     gallery: z.array(galleryImage),
     loops: z.array(loop).default([]),
@@ -138,6 +145,16 @@ export const projectSchema = z
     audience: text.optional(),
     delivered: text.optional(),
     features: z.array(feature).max(6),
+
+    // Products only.
+    // tagline: what it is in a few words, for the product index ("Forex bureau operations").
+    // scope: two to four plain words for what it covers ("Orders", "Jobs" ...), shown on the
+    //   product's plate while it has no screenshots, and in its facts.
+    // availability: one line on how and when you can get it, in place of the
+    //   generic line for its status (src/content/labels.ts, AVAILABILITY).
+    tagline: text.max(44).optional(),
+    scope: z.array(text.max(16)).min(2).max(4).optional(),
+    availability: text.optional(),
   })
   .superRefine((project, ctx) => {
     const srcs = project.gallery.map((image) => image.src);
@@ -184,12 +201,20 @@ export const projectSchema = z
     const isProduct = (project.section ?? (project.kind === 'product' ? 'products' : 'work')) === 'products';
     if (isProduct) {
       if (!project.audience) ctx.addIssue({ code: 'custom', path: ['audience'], message: 'a product says who it is for' });
+      if (!project.tagline) ctx.addIssue({ code: 'custom', path: ['tagline'], message: 'a product has a tagline for the product index' });
+      if (!project.scope) ctx.addIssue({ code: 'custom', path: ['scope'], message: 'a product lists what it covers (scope)' });
       if (project.delivered) ctx.addIssue({ code: 'custom', path: ['delivered'], message: 'only client work has a "delivered" story' });
       if (project.features.length < 3) ctx.addIssue({ code: 'custom', path: ['features'], message: 'a product lists 3 to 6 features' });
     } else {
       if (!project.delivered) ctx.addIssue({ code: 'custom', path: ['delivered'], message: 'client work says what we delivered' });
       if (project.audience) ctx.addIssue({ code: 'custom', path: ['audience'], message: 'only a product has an audience' });
       if (project.features.length > 4) ctx.addIssue({ code: 'custom', path: ['features'], message: 'client work lists up to 4 highlights' });
+      for (const field of ['tagline', 'scope', 'availability'] as const) {
+        if (project[field]) ctx.addIssue({ code: 'custom', path: [field], message: `only a product has a "${field}"` });
+      }
+      project.features.forEach((feature, i) => {
+        if (feature.stage) ctx.addIssue({ code: 'custom', path: ['features', i, 'stage'], message: 'client work describes what was delivered, with no stage' });
+      });
     }
   })
   .transform((project) => ({
@@ -205,6 +230,7 @@ export type ProjectSection = Project['section'];
 export type Industry = (typeof INDUSTRIES)[number];
 export type Metric = Project['metrics'][number];
 export type Feature = Project['features'][number];
+export type FeatureStage = (typeof FEATURE_STAGES)[number];
 export type GalleryImage = Project['gallery'][number];
 export type Loop = Project['loops'][number];
 export type Credit = NonNullable<GalleryImage['credit']>;

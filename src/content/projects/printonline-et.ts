@@ -1,19 +1,19 @@
 import { defineProject } from '../schema';
 
+// The client isn't named on the site until Kidus decides (2026-10-31 brief, open question on naming clients); the
+// conservative default is a plain description of the business.
 export default defineProject({
   slug: "printonline-et",
   title: "PrintOnline.et",
   subtitle: "An Online Print Shop With Instant Prices",
-  summary: "An online print shop for Pana Promotion in Addis Ababa. Customers see the exact price, pay with Chapa and follow their order to delivery.",
+  summary: "An online print shop for a print business in Addis Ababa. Customers see the exact price, pay with Chapa and follow their order to delivery.",
   category: "E-Commerce",
   tags: ["E-Commerce", "Printing", "Online Payments", "Order Tracking"],
   year: "2026",
   status: "Production",
   kind: "client",
-  client: "Pana Promotion",
   industry: ["Printing", "E-Commerce"],
   links: { live: "https://printonline.et" },
-  heroGradient: "from-orange-500/20 via-transparent to-red-500/10",
   cover: "/images/printonline-et/mockup-02.webp",
   gallery: [
     { src: "/images/printonline-et/mockup-01.webp", alt: "PrintOnline.et cart with configured business cards on a phone, orange backdrop", kind: "mockup", width: 1920, height: 1280, reviewed: true },
@@ -41,8 +41,8 @@ export default defineProject({
     { src: "/images/printonline-et/screen-12.webp", alt: "PrintOnline.et mobile cart with business card options and checkout button", kind: "screen", width: 865, height: 1920, reviewed: true },
     { src: "/images/printonline-et/screen-13.webp", alt: "PrintOnline.et mobile checkout payment step with secure transaction note", kind: "screen", width: 865, height: 1920, reviewed: true },
   ],
-  description: "PrintOnline.et is the online print shop we built for Pana Promotion in Addis Ababa. Customers order business cards and other print jobs online, see the price before they pay and follow each order through production. The shop's staff run everything from one dashboard.",
-  need: "Printing businesses in Ethiopia often quote by hand, take cash on delivery and track orders over the phone. That leads to pricing mistakes, late payments and customers who can't see where their order is. Pana Promotion wanted customers to order, pay and follow their print jobs online.",
+  description: "PrintOnline.et is the online print shop we built for a print business in Addis Ababa. Customers order business cards and other print jobs online, see the price before they pay and follow each order through production. The shop's staff run everything from one dashboard.",
+  need: "Printing businesses in Ethiopia often quote by hand, take cash on delivery and track orders over the phone. That leads to pricing mistakes, late payments and customers who can't see where their order is. Our client wanted customers to order, pay and follow their print jobs online.",
   delivered: "We delivered PrintOnline.et, a live online print shop with 15 print products. Customers see the exact price as they choose options, upload their artwork and pay in birr with Chapa. Every order moves through eight production steps, with an email to the customer at each one. Staff manage products, prices, orders, customers and the homepage from one dashboard.",
   features: [
     { title: "Exact Prices, Instantly", description: "Customers see the final price as they choose size, paper and finish, and every price is checked again before payment." },

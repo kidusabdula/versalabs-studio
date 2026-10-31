@@ -16,5 +16,5 @@ We transition beyond basic web development into **mission-critical digital infra
 ## 3. Brand Promise
 - **Architectural Reliability:** We do not build prototypes; we build scalable digital infrastructure governed by strict domain boundaries.
 - **Agile Delivery:** Iterative prototyping ensures transparency, preventing misaligned product expectations and eliminating corporate bloat.
-- **Next-Generation UX:** We deliver a premium operational aesthetic. Glassmorphism, highly responsive micro-interactions, and pristine geometric typography.
+- **Calm, Product-Led UX:** A monochrome, type-led look in dark and light, with colour only where it means something (docs/03-UI-UX-GUIDELINES.md).
 - **AI-Accelerated Engineering:** We harness internal models and agentic workflows to multiply engineering speed without passing tooling dependencies down to the end-client.

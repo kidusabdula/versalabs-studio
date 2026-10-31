@@ -1,28 +1,38 @@
 import { defineProject } from '../schema';
+import { VERSA_ESTATE } from '../product-names';
 
+// The real estate CRM (repo versalabs-crm). Its name is pending (src/content/product-names.ts). Every claim comes
+// from the product's landing page CLAIMS.md, which traces each one to the product repo. Kept off this page on
+// purpose (Kidus's call, 2026-10-31 brief):
+// - the first client's name;
+// - receipts of any kind (the business rule: the software records receipts and never issues them);
+// - a public demo link (the demo signs in with seed accounts).
 export default defineProject({
   slug: "versa-estate",
-  title: "Versa Estate",
+  title: VERSA_ESTATE,
   subtitle: "Sell Homes and Lease Space From One Place",
-  summary: "Track every unit, buyer, contract, instalment and rent payment, from the first call to the final receipt. Coming soon for property developers and managers.",
+  tagline: "Real estate sales and leasing",
+  summary: "A real estate CRM for developers who sell off-plan and lease commercial space, from the first inquiry to the last instalment. Coming soon.",
   category: "Real Estate",
-  tags: ["Real Estate", "Property Sales", "Property Management", "Rent Collection", "CRM"],
+  tags: ["Real Estate", "Property Sales", "Off-Plan Sales", "Leasing", "CRM"],
   year: "2026",
   status: "Coming Soon",
   kind: "product",
   industry: ["Real Estate"],
   links: {},
-  heroGradient: "from-zinc-500/20 via-transparent to-neutral-500/10",
   gallery: [],
-  description: "Versa Estate keeps your units, buyers, contracts, instalments and leases in one place, so you always know what is sold, owed or overdue. Your sales, finance and leasing teams work from the same records, from the first site visit to the final receipt. Each client gets its own workspace in its own colours and logo, and the first one is set up for German Mall Residence.",
-  need: "Many developers track units, buyers and instalments across spreadsheets, chat threads and paper receipts. The same unit gets promised to two buyers, instalments slip, and no one can see what is sold, owed or overdue.",
-  audience: "Property developers and managers in Addis Ababa who sell homes off-plan and lease shops and offices. It is made for sales agents, finance staff and owners alike.",
+  scope: ["Units", "Buyers", "Instalments", "Leases"],
+  availability: "Coming soon. There's no online sign-up: we set up each workspace, and subscriptions are arranged by email.",
+
+  description: `${VERSA_ESTATE} is a real estate CRM for developers who sell off-plan and lease commercial space. It runs the whole path from the first inquiry to the last instalment, and on the commercial side from the lease to the monthly rent bill, meter readings and maintenance.`,
+  need: "A developer selling off-plan has to know which units are free, who has been promised what, and which instalments are due, while its commercial floors need leases, rent bills and repairs kept in order.",
+  audience: "Property developers in Addis Ababa who sell homes off-plan and lease commercial space. It has roles for sales agents and managers, finance, leasing managers, admins and owners, and viewers who can only look.",
   features: [
-    { title: "See Every Unit, Sell It Only Once", description: "A floor-by-floor plan shows what is available, held, reserved, sold or leased, and no unit can be reserved by two buyers." },
-    { title: "Follow Every Buyer to a Signed Deal", description: "Move leads from first call to site visit to contract, with follow-ups and the reason each deal was won or lost." },
-    { title: "Payment Plans That Follow the Build", description: "Instalments fall due on signing, at construction milestones, at handover or when the buyer's bank loan pays out." },
-    { title: "Verified Payments, Proper Receipts", description: "Finance checks each payment, then prints a receipt with the Ethiopian date and the amount in words." },
-    { title: "Lease and Maintain in the Same Place", description: "Bill rent, service charges and metered utilities on schedule, and track every repair and who pays for it." },
-    { title: "Know Where Sales and Collections Stand", description: "Sales, collections, forecast, unit and team reports are ready to print or open in Excel." },
+    { title: "See Every Unit, Sell It Only Once", description: "Projects, buildings and units on a floor-by-floor stacking plan. A unit holds one active reservation at a time, and an expired hold ends on its own." },
+    { title: "Follow Every Buyer to a Signed Deal", description: "Sales and leasing pipelines on a drag-and-drop board, site visits on the team's agenda, and a reason recorded for every lost deal." },
+    { title: "Payment Plans That Follow the Build", description: "Instalments fall due on signing, on a construction milestone, at handover or when the buyer's bank loan pays out." },
+    { title: "Payments Recorded, Then Verified", description: "Agents record payments as pending, finance checks each one against the bank or wallet reference, and verified money pays the earliest open lines first." },
+    { title: "Lease and Maintain in the Same Place", description: "Each lease bills rent and service charge every period, meter readings are billed at the tariff, and repair requests are tracked with who pays for them." },
+    { title: "Reports Ready to Print", description: "Sales, collections, forecast, inventory, team and lead-source reports, each ready to print or open in Excel." },
   ],
 });

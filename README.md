@@ -1,7 +1,7 @@
 # VersaLabs Studio
 
 The studio site at [www.versalabs-studio.com](https://www.versalabs-studio.com): a Next.js 16 App Router site with
-Tailwind CSS v4 and Framer Motion, deployed on Vercel.
+Tailwind CSS v4 (CSS-only motion), deployed on Vercel. Dark by default, with a light theme.
 
 ## Getting Started
 
@@ -27,20 +27,25 @@ pnpm dev          # http://localhost:3000
 | `src/content/projects/index.ts` | Listing order, validation (schema plus the plain-language check), and the helpers: `getAllProjects`, `getProjectBySlug`, `getProjectsInSection`, `projectPath`, `toCard` |
 | `src/content/plain-language.ts` | The words public copy may not use (technology names and engineering jargon); a project that uses one fails the build |
 | `src/content/services.ts` | The four services on `/` and `/services`, their example pages, and the How We Work steps |
-| `src/content/labels.ts` | Status and kind badges, and `callToAction()`: the one button each product or client page ends with |
+| `src/content/labels.ts` | Status labels and tones, the status key, feature stages, availability lines, and `callToAction()`: the one button each product or client page ends with |
+| `src/content/product-names.ts` | Product names still being decided (`OBSIDIAN`, `VERSA_ESTATE`), one constant each |
+| `src/content/product-sites.ts` | Each product's own site, by slug: the only place those links live (empty until approved) |
+| `src/content/home.ts` | The three client stories the home page features |
 | `src/content/team.ts` | The team on `/about`, with a `visibility` flag per person |
 | `public/images/<slug>/` | WebP mockups and screenshots, each listed in its project's `gallery` |
 | `public/media/<slug>/` | Short silent screen recordings (MP4), each listed in its project's `loops` |
 | `src/app/` | Routes: `/`, `/work`, `/work/[slug]`, `/products`, `/products/[slug]`, `/services`, `/about`, `/notes`, `/contact`, `/privacy`, `/api/contact`, plus `sitemap.ts` and `robots.ts` |
 | `src/components/case-study/` | The page template shared by `/products/[slug]` (a product landing page) and `/work/[slug]` (a client story), and the card |
-| `src/components/sections/` | The home page: hero, products, services, clients, how we work, and the closing call to action |
+| `src/components/sections/` | The home page (hero, products, client work, services, how we work, closing call to action) and the product rows on `/products` |
+| `src/components/layout/` | Navigation bar, footer, logo mark and theme switch |
+| `src/components/ui/` | The design system: `styles.ts` (class strings), badges, product frames and plates, the lightbox, the reveal |
 | `src/components/work/WorkIndex.tsx` | The `/work` filters (industry and search), kept in the URL |
 | `src/lib/site.ts` | `SITE_URL`, `CONTACT_EMAIL` and `pageMetadata()`, which sets title, description, canonical, Open Graph and Twitter tags per page |
 | `src/lib/project-page.ts` | Static params, metadata and related projects for the case-study routes |
 | `src/lib/og.tsx` | The per-project Open Graph image, generated at build time by each route's `opengraph-image.tsx` |
 | `src/proxy.ts` | Lowercases mixed-case `/work/*`, `/products/*` and `/projects/*` URLs with a 308 |
 | `next.config.ts` | Permanent redirects, generated from the content (see below) |
-| `docs/` | Content, tone and UI guidelines |
+| `docs/` | Content, tone and UI guidelines; `REDESIGN-HANDOFF.md` records the 2026-10-31 redesign |
 
 How to add or change a project, and the image review rule, are in `docs/04-CONTENT-MANAGEMENT.md`.
 

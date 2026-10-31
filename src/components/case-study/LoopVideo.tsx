@@ -87,14 +87,14 @@ export default function LoopVideo({ loop, sizes, className = '' }: { loop: Loop;
               onClick={() => setUserPaused((paused) => !paused)}
               aria-label={userPaused ? 'Play the recording' : 'Pause the recording'}
               aria-describedby={captionId}
-              className="absolute right-3 bottom-3 z-10 rounded-full border border-border bg-background/80 p-2 text-foreground transition-colors hover:bg-background"
+              className="absolute right-3 bottom-3 z-10 inline-flex h-9 w-9 items-center justify-center rounded-full border border-line-2 bg-background/85 text-foreground transition-colors hover:bg-background"
             >
               {userPaused ? <Play className="h-4 w-4" aria-hidden="true" /> : <Pause className="h-4 w-4" aria-hidden="true" />}
             </button>
           </>
         )}
       </Frame>
-      <figcaption id={captionId} className="mt-3 text-[13px] leading-[1.5] text-zinc-400">
+      <figcaption id={captionId} className="mt-3 text-[13px] leading-[1.5] text-fg-3">
         {loop.caption}
         {loop.credit && <MediaCredit credit={loop.credit} className="mt-1 block" />}
       </figcaption>
