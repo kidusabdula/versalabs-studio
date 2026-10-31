@@ -12,7 +12,6 @@ export default defineProject({
   kind: "client",
   industry: ["Events"],
   links: {},
-  heroGradient: "from-zinc-500/20 via-transparent to-neutral-500/10",
   gallery: [],
   description: "Eventology helps people in Addis Ababa find events, register and get a proper ticket. Organizers run their guest list and door check-in from one place, and every event is reviewed before it goes live. It is an MVP: online payments and the mobile app are built and wait for launch.",
   need: "Many events in Addis are promoted on social media and messaging apps, with sign-ups in spreadsheets and paper lists at the door. Organizers can't see who is coming, guests have no proper ticket, and it is hard to tell a real event from a fake one.",

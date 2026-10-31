@@ -17,6 +17,7 @@ export default defineProject({
   slug: "versa-fx",
   title: "Versa FX",
   subtitle: "Run Your Forex Bureau From One Screen",
+  tagline: "Forex bureau operations",
   summary: "The teller counter, rates, branch cash, compliance and reports for a licensed forex bureau, in one place. In development, with a live demo on sample data.",
   category: "Fintech",
   tags: ["Forex Bureau", "Foreign Exchange", "Compliance", "Branch Management", "Fintech"],
@@ -27,7 +28,7 @@ export default defineProject({
   links: {
     live: "https://versa-fx.vercel.app",
   },
-  heroGradient: "from-zinc-500/20 via-transparent to-neutral-500/10",
+  scope: ["Counter", "Rates", "Cash", "Compliance"],
   cover: "/images/versa-fx/screen-dashboard-kestrel-desktop.webp",
   gallery: [
     { src: "/images/versa-fx/screen-dashboard-kestrel-desktop.webp", alt: "Versa FX dashboard for the fictional Kestrel FX bureau: 30-day volume, commission, transactions, cash held and currency mix", kind: "screen", width: 2880, height: 1800, reviewed: true },

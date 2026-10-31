@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
-import { Outfit, Geist, Geist_Mono } from "next/font/google";
+import { Outfit, Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-import { MotionConfigProvider } from "@/components/ui/motion";
 import JsonLd from "@/components/case-study/JsonLd";
 import { SITE_URL, SITE_NAME, DEFAULT_DESCRIPTION, CONTACT_EMAIL } from "@/lib/site";
 
@@ -14,15 +13,12 @@ import { SITE_URL, SITE_NAME, DEFAULT_DESCRIPTION, CONTACT_EMAIL } from "@/lib/s
 // pushed the products below it: a layout shift Lighthouse traced to "Web font
 // loaded". The fallbacks are metric-matched Arial, so a missed font only looks
 // slightly plainer on a slow first visit; later pages have it cached.
+//
+// Two families, both variable, so each is one file whatever weights the pages use: Outfit (the brand face) for every
+// heading and paragraph, and Geist Mono for labels. Every font file starts before the first paint, so Lighthouse counts
+// it toward the mobile LCP; a third family (Geist for body text) cost 29 KB there and was dropped.
 const outfit = Outfit({
   variable: "--font-outfit",
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  display: "optional",
-});
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
   subsets: ["latin"],
   display: "optional",
 });
@@ -32,6 +28,10 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
   display: "optional",
 });
+
+// Applies a saved light theme before the first paint (src/components/layout/ThemeToggle.tsx). Dark needs nothing: it
+// is the default in globals.css. Wrapped in try because storage can be blocked.
+const THEME_SCRIPT = `try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}`;
 
 const DEFAULT_TITLE = `${SITE_NAME} | Business Software Products and Custom Builds`;
 
@@ -66,10 +66,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+    // suppressHydrationWarning: THEME_SCRIPT sets data-theme on <html> before React hydrates; nothing else differs.
     <html
       lang="en"
-      className={`${outfit.variable} ${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      suppressHydrationWarning
+      className={`${outfit.variable} ${geistMono.variable} h-full antialiased`}
     >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
+      </head>
       <body className="min-h-full flex flex-col bg-background text-foreground font-sans">
         <JsonLd
           data={{
@@ -84,12 +89,18 @@ export default function RootLayout({
             address: { "@type": "PostalAddress", addressLocality: "Addis Ababa", addressCountry: "ET" },
           }}
         />
-        <MotionConfigProvider>
-          <Navbar />
-          <Analytics />
-          <main className="flex-1">{children}</main>
-          <Footer />
-        </MotionConfigProvider>
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[60] focus:rounded-lg focus:bg-foreground focus:px-4 focus:py-2 focus:text-[14px] focus:font-medium focus:text-background"
+        >
+          Skip to content
+        </a>
+        <Navbar />
+        <Analytics />
+        <main id="main" className="flex-1">
+          {children}
+        </main>
+        <Footer />
         {process.env.NEXT_PUBLIC_GA_ID && (
           <>
             <script

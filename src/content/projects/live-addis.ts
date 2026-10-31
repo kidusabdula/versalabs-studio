@@ -13,7 +13,6 @@ export default defineProject({
   client: "LIVE-ADDIS",
   industry: ["Nonprofit"],
   links: {},
-  heroGradient: "from-pink-500/20 via-transparent to-rose-500/10",
   cover: "/images/live-addis/screen-home-desktop.webp",
   gallery: [
     { src: "/images/live-addis/mockup-06.webp", alt: "Live Addis FAQ page with expandable questions in a browser window", kind: "mockup", width: 1920, height: 1280, reviewed: true },

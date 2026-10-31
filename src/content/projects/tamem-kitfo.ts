@@ -13,7 +13,6 @@ export default defineProject({
   industry: ["Hospitality"],
   client: "Tamem Kitfo",
   links: {},
-  heroGradient: "from-zinc-500/20 via-transparent to-neutral-500/10",
   gallery: [],
   description: "Tamem Kitfo is a kitfo restaurant in Bole, Addis Ababa. We built it a website in English and Amharic where customers order, book a table or ask about catering from their phones, even on slow mobile data. The site is in beta ahead of handover to the owners.",
   need: "The restaurant wanted a website it could trust and run itself. Many of its customers browse in Amharic on slow mobile data, where heavy English-only sites let them down.",

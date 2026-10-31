@@ -12,7 +12,6 @@ export default defineProject({
   kind: "client",
   industry: ["Sports & Media"],
   links: { live: "https://panasport.et" },
-  heroGradient: "from-amber-500/20 via-transparent to-yellow-500/10",
   cover: "/images/pana-sport/mockup-03.webp",
   gallery: [
     { src: "/images/pana-sport/mockup-01.webp", alt: "Pana Sports Amharic featured story with athlete photo on a phone, top-down on orange", kind: "mockup", width: 1920, height: 1280, reviewed: true },

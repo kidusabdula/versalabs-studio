@@ -14,7 +14,6 @@ export default defineProject({
   // The live demo dropped its invented facts and carries a "Demo storefront"
   // label since 2026-10-24 (Minab track), so it can be linked.
   links: { live: "https://minab-clothing.vercel.app" },
-  heroGradient: "from-[#8B4513]/20 via-transparent to-[#D2B48C]/10",
   cover: "/images/minab-clothing/screen-home-desktop.webp",
   gallery: [
     { src: "/images/minab-clothing/mockup-02.webp", alt: "Minab Clothing shopping cart with three items in a tilted browser window", kind: "mockup", width: 1920, height: 1280, reviewed: true },
