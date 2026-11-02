@@ -3,394 +3,620 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=1080">
-<title>VersaLabs Studio — Launch Announcement</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<title>VersaLabs Studio — Launch</title>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-  /* ── Reset & Canvas ──────────────────────────────── */
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
   html, body {
     width: 1080px;
     height: 1080px;
     overflow: hidden;
     background: #0D0D0F;
     font-family: 'Outfit', sans-serif;
-    color: #ffffff;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-  body {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    color: #fff;
     position: relative;
   }
 
-  /* ── Ambient Glow Blobs ──────────────────────────── */
-  .glow-wrap {
-    position: absolute;
-    inset: 0;
-    overflow: hidden;
-    pointer-events: none;
-    z-index: 0;
-  }
+  /* ── Ambient Glows ── */
   .glow {
     position: absolute;
     border-radius: 50%;
-    filter: blur(160px);
-    will-change: transform, opacity;
-  }
-  .glow--violet {
-    width: 700px;
-    height: 700px;
-    background: radial-gradient(circle, rgba(139,92,246,0.30), rgba(139,92,246,0) 70%);
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -55%);
-    animation: glowPulse 6s ease-in-out infinite alternate;
-  }
-  .glow--indigo {
-    width: 500px;
-    height: 500px;
-    background: radial-gradient(circle, rgba(99,102,241,0.18), rgba(99,102,241,0) 70%);
-    top: 15%;
-    left: 20%;
-    animation: glowPulse 8s ease-in-out 1s infinite alternate;
-  }
-  .glow--white {
-    width: 400px;
-    height: 400px;
-    background: radial-gradient(circle, rgba(255,255,255,0.06), rgba(255,255,255,0) 70%);
-    bottom: 10%;
-    right: 15%;
-    animation: glowPulse 7s ease-in-out 2s infinite alternate;
-  }
-
-  @keyframes glowPulse {
-    0%   { opacity: 0.6; transform: translate(-50%, -55%) scale(1); }
-    100% { opacity: 1;   transform: translate(-50%, -55%) scale(1.12); }
-  }
-  .glow--indigo { animation-name: glowPulse2; }
-  .glow--white  { animation-name: glowPulse3; }
-  @keyframes glowPulse2 {
-    0%   { opacity: 0.5; transform: scale(1) translate(0,0); }
-    100% { opacity: 0.9; transform: scale(1.10) translate(10px, -10px); }
-  }
-  @keyframes glowPulse3 {
-    0%   { opacity: 0.4; transform: scale(1); }
-    100% { opacity: 0.8; transform: scale(1.08); }
-  }
-
-  /* ── Floating Geometric Shapes ───────────────────── */
-  .geo {
-    position: absolute;
-    border: 1px solid rgba(255,255,255,0.035);
     pointer-events: none;
     z-index: 0;
   }
-  .geo--sq1 {
-    width: 180px; height: 180px;
-    top: 80px; right: 90px;
-    transform: rotate(35deg);
-    border-radius: 6px;
-    animation: floatGeo 12s ease-in-out infinite alternate;
+  .glow-1 {
+    width: 700px; height: 700px;
+    top: -100px; right: -200px;
+    background: radial-gradient(circle, rgba(139,92,246,0.10) 0%, rgba(99,102,241,0.06) 40%, transparent 70%);
+    filter: blur(80px);
+    animation: glowPulse 6s ease-in-out infinite;
   }
-  .geo--sq2 {
-    width: 120px; height: 120px;
-    bottom: 200px; left: 70px;
-    transform: rotate(-20deg);
-    border-radius: 4px;
-    animation: floatGeo 10s ease-in-out 1s infinite alternate;
+  .glow-2 {
+    width: 500px; height: 500px;
+    bottom: 100px; left: -100px;
+    background: radial-gradient(circle, rgba(99,102,241,0.08) 0%, rgba(139,92,246,0.04) 50%, transparent 70%);
+    filter: blur(100px);
+    animation: glowPulse 8s ease-in-out infinite 2s;
   }
-  .geo--circle1 {
-    width: 220px; height: 220px;
-    border-radius: 50%;
-    top: 300px; left: -40px;
-    animation: floatGeo 14s ease-in-out 0.5s infinite alternate;
-  }
-  .geo--circle2 {
-    width: 140px; height: 140px;
-    border-radius: 50%;
-    bottom: 120px; right: 60px;
-    border-color: rgba(255,255,255,0.025);
-    animation: floatGeo 11s ease-in-out 2s infinite alternate;
-  }
-  .geo--sq3 {
-    width: 90px; height: 90px;
-    top: 500px; right: 40px;
-    transform: rotate(55deg);
-    border-radius: 3px;
-    border-color: rgba(255,255,255,0.03);
-    animation: floatGeo 9s ease-in-out 3s infinite alternate;
+  .glow-3 {
+    width: 400px; height: 300px;
+    bottom: -50px; right: 100px;
+    background: radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 70%);
+    filter: blur(60px);
+    animation: glowPulse 7s ease-in-out infinite 1s;
   }
 
-  @keyframes floatGeo {
-    0%   { transform: rotate(var(--r, 35deg)) translateY(0); }
-    100% { transform: rotate(var(--r, 35deg)) translateY(-18px); }
-  }
-  .geo--sq1  { --r: 35deg; }
-  .geo--sq2  { --r: -20deg; }
-  .geo--sq3  { --r: 55deg; }
-  .geo--circle1, .geo--circle2 { --r: 0deg; }
-
-  /* ── Content Stack ───────────────────────────────── */
-  .content {
-    position: relative;
-    z-index: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    padding: 72px 80px 56px;
+  @keyframes glowPulse {
+    0%, 100% { opacity: 0.5; transform: scale(1); }
+    50% { opacity: 0.8; transform: scale(1.08); }
   }
 
-  /* ── Logo ─────────────────────────────────────────── */
-  .logo-area {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    margin-bottom: 44px;
-  }
-  .logo-mark {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .logo-mark svg {
-    width: 44px;
-    height: 44px;
-  }
-  .logo-text {
-    font-size: 26px;
-    font-weight: 700;
-    letter-spacing: -0.03em;
-    color: #fff;
-  }
-
-  /* ── Badge Pill ──────────────────────────────────── */
-  .badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 24px;
-    border-radius: 999px;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.07);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    font-size: 15px;
-    font-weight: 500;
-    color: #a78bfa;
-    letter-spacing: 0.01em;
-    margin-bottom: 48px;
-  }
-  .badge-dot {
-    width: 9px;
-    height: 9px;
-    border-radius: 50%;
-    background: #4ade80;
-    box-shadow: 0 0 8px rgba(74,222,128,0.6);
-    animation: dotPulse 2s ease-in-out infinite;
-  }
-  @keyframes dotPulse {
-    0%, 100% { opacity: 1; box-shadow: 0 0 8px rgba(74,222,128,0.6); }
-    50%      { opacity: 0.5; box-shadow: 0 0 16px rgba(74,222,128,0.9); }
-  }
-
-  /* ── Main Headline ───────────────────────────────── */
-  .headline {
-    font-size: 64px;
-    font-weight: 700;
-    line-height: 1.08;
-    letter-spacing: -0.045em;
-    text-align: center;
-    margin-bottom: 32px;
-    background: linear-gradient(to bottom, #ffffff 20%, rgba(255,255,255,0.40));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    max-width: 820px;
-  }
-
-  /* ── Subtitle ────────────────────────────────────── */
-  .subtitle {
-    font-size: 19.5px;
-    font-weight: 400;
-    line-height: 1.65;
-    color: #a1a1aa;
-    text-align: center;
-    max-width: 680px;
-    margin-bottom: auto;
-    letter-spacing: -0.005em;
-  }
-
-  /* ── Stats Bar ───────────────────────────────────── */
-  .stats-bar {
-    display: flex;
-    align-items: center;
-    gap: 2px;
-    margin-top: auto;
-    margin-bottom: 36px;
-    border-radius: 20px;
-    overflow: hidden;
-    border: 1px solid rgba(255,255,255,0.06);
-    background: rgba(255,255,255,0.03);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-  }
-  .stat {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 28px 52px;
-    position: relative;
-  }
-  .stat + .stat::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 20%;
-    height: 60%;
-    width: 1px;
-    background: rgba(255,255,255,0.07);
-  }
-  .stat-value {
-    font-size: 28px;
-    font-weight: 700;
-    letter-spacing: -0.03em;
-    color: #fff;
-    margin-bottom: 4px;
-  }
-  .stat-label {
-    font-size: 13.5px;
-    font-weight: 400;
-    color: #71717a;
-    letter-spacing: 0.01em;
-  }
-
-  /* ── Footer ──────────────────────────────────────── */
-  .footer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-  }
-  .footer-domain {
-    font-size: 16px;
-    font-weight: 500;
-    color: #a1a1aa;
-    letter-spacing: 0.005em;
-  }
-  .footer-location {
-    font-size: 13.5px;
-    font-weight: 400;
-    color: #52525b;
-    letter-spacing: 0.01em;
-  }
-
-  /* ── Noise texture overlay (premium feel) ────────── */
+  /* ── Noise Texture ── */
   .noise {
     position: absolute;
     inset: 0;
-    z-index: 2;
-    pointer-events: none;
+    z-index: 1;
     opacity: 0.035;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-    background-repeat: repeat;
-    background-size: 180px 180px;
+    pointer-events: none;
   }
 
-  /* ── Top edge gradient line ──────────────────────── */
-  .edge-line {
+  /* ── Grid Background ── */
+  .grid-bg {
     position: absolute;
-    top: 0; left: 50%;
-    transform: translateX(-50%);
-    width: 500px;
+    inset: 0;
+    z-index: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, black 20%, transparent 80%);
+    -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, black 20%, transparent 80%);
+  }
+
+  /* ── Floating Geometrics ── */
+  .geo {
+    position: absolute;
+    pointer-events: none;
+    z-index: 1;
+  }
+  .geo-1 {
+    width: 60px; height: 60px;
+    top: 50px; left: 40px;
+    border: 1px solid rgba(255,255,255,0.035);
+    border-radius: 8px;
+    transform: rotate(15deg);
+    animation: floatGeo 8s ease-in-out infinite;
+  }
+  .geo-2 {
+    width: 40px; height: 40px;
+    top: 120px; right: 60px;
+    border: 1px solid rgba(255,255,255,0.03);
+    border-radius: 50%;
+    animation: floatGeo 6s ease-in-out infinite 1s;
+  }
+  .geo-3 {
+    width: 30px; height: 30px;
+    bottom: 180px; left: 80px;
+    border: 1px solid rgba(255,255,255,0.04);
+    transform: rotate(45deg);
+    animation: floatGeo 7s ease-in-out infinite 0.5s;
+  }
+  .geo-4 {
+    width: 50px; height: 50px;
+    bottom: 80px; right: 50px;
+    border: 1px solid rgba(255,255,255,0.025);
+    border-radius: 12px;
+    transform: rotate(-8deg);
+    animation: floatGeo 9s ease-in-out infinite 2s;
+  }
+
+  @keyframes floatGeo {
+    0%, 100% { transform: translateY(0) rotate(var(--rot, 15deg)); }
+    50% { transform: translateY(-10px) rotate(var(--rot, 15deg)); }
+  }
+
+  /* ── Top Accent Line ── */
+  .top-line {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent 0%, rgba(139,92,246,0.6) 30%, rgba(255,255,255,0.3) 50%, rgba(139,92,246,0.6) 70%, transparent 100%);
+    z-index: 10;
+  }
+
+  /* ── Main Layout ── */
+  .container {
+    position: relative;
+    z-index: 5;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 48px 56px 40px;
+  }
+
+  /* ── Header Row ── */
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 28px;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .brand-logo {
+    width: 32px; height: 32px;
+  }
+  .brand-name {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: #fff;
+  }
+  .brand-name span {
+    font-weight: 400;
+    color: #a1a1aa;
+    margin-left: 4px;
+  }
+  .live-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 16px;
+    border-radius: 999px;
+    border: 1px solid rgba(16,185,129,0.25);
+    background: rgba(16,185,129,0.08);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #34d399;
+  }
+  .live-dot {
+    position: relative;
+    width: 6px; height: 6px;
+  }
+  .live-dot::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: #34d399;
+  }
+  .live-dot::after {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    background: rgba(52,211,153,0.4);
+    animation: livePing 2s ease-in-out infinite;
+  }
+  @keyframes livePing {
+    0%, 100% { opacity: 0.4; transform: scale(1); }
+    50% { opacity: 0; transform: scale(2); }
+  }
+
+  /* ── Hero Text Section ── */
+  .hero-text {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+  .hero-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #a78bfa;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+  }
+  .hero-label-line {
+    width: 32px;
     height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(167,139,250,0.3), rgba(255,255,255,0.15), rgba(167,139,250,0.3), transparent);
-    z-index: 3;
+    background: rgba(167,139,250,0.4);
+  }
+  .hero-headline {
+    font-size: 46px;
+    font-weight: 700;
+    letter-spacing: -0.045em;
+    line-height: 1.1;
+    margin-bottom: 14px;
+  }
+  .hero-headline .gradient {
+    background: linear-gradient(to bottom, #fff, rgba(255,255,255,0.45));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .hero-sub {
+    font-size: 16px;
+    color: #a1a1aa;
+    line-height: 1.5;
+    max-width: 560px;
+    margin: 0 auto;
+  }
+
+  /* ── Product Showcase (Bento Grid) ── */
+  .products-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 28px;
+    flex: 1;
+  }
+  .product-card {
+    position: relative;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.06);
+    background: #161618;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: border-color 0.3s;
+  }
+  .product-card:hover {
+    border-color: rgba(255,255,255,0.12);
+  }
+  .product-card .img-wrap {
+    position: relative;
+    height: 280px;
+    overflow: hidden;
+    background: #111113;
+  }
+  .product-card .img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    display: block;
+  }
+  .product-card .img-wrap::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 80px;
+    background: linear-gradient(to top, #161618, transparent);
+  }
+  .product-card .card-body {
+    padding: 16px 18px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    position: relative;
+    z-index: 1;
+    flex: 1;
+  }
+  .product-card .card-badge {
+    display: inline-flex;
+    align-self: flex-start;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  .badge-saas {
+    color: #34d399;
+    background: rgba(16,185,129,0.1);
+    border: 1px solid rgba(16,185,129,0.2);
+  }
+  .badge-sports {
+    color: #f59e0b;
+    background: rgba(245,158,11,0.1);
+    border: 1px solid rgba(245,158,11,0.2);
+  }
+  .badge-ai {
+    color: #06b6d4;
+    background: rgba(6,182,212,0.1);
+    border: 1px solid rgba(6,182,212,0.2);
+  }
+  .product-card .card-title {
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: #fff;
+  }
+  .product-card .card-desc {
+    font-size: 12px;
+    color: #71717a;
+    line-height: 1.4;
+  }
+
+  /* ── Stats Row ── */
+  .stats-row {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.06);
+    background: rgba(10,10,12,0.5);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    margin-bottom: 24px;
+    overflow: hidden;
+  }
+  .stat-item {
+    flex: 1;
+    text-align: center;
+    padding: 16px 12px;
+    border-right: 1px solid rgba(255,255,255,0.06);
+    background: linear-gradient(to bottom, rgba(255,255,255,0.02), transparent);
+  }
+  .stat-item:last-child { border-right: none; }
+  .stat-value {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    color: #fff;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .stat-label {
+    font-size: 10px;
+    font-weight: 500;
+    color: #71717a;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* ── Domain Bar ── */
+  .domain-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    padding: 14px 0 0;
+  }
+  .domain-url {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: #fff;
+    position: relative;
+  }
+  .domain-url::before {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #a78bfa, #818cf8, #a78bfa);
+    border-radius: 1px;
+    opacity: 0.6;
+  }
+  .domain-sep {
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+  }
+  .domain-location {
+    font-size: 12px;
+    color: #52525b;
+    letter-spacing: 0.02em;
+  }
+
+  /* ── Bottom CTA row ── */
+  .cta-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin-top: 4px;
+  }
+  .cta-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 38px;
+    padding: 0 24px;
+    border-radius: 999px;
+    background: #fff;
+    color: #0D0D0F;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 0 20px rgba(255,255,255,0.08);
+  }
+  .cta-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 38px;
+    padding: 0 24px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.03);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 500;
+    border: 1px solid rgba(255,255,255,0.08);
+    backdrop-filter: blur(8px);
+    cursor: pointer;
+  }
+
+  /* ── Volt accent ── */
+  .volt-accent {
+    position: absolute;
+    bottom: 140px;
+    left: 56px;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #CCFF00;
+    box-shadow: 0 0 12px rgba(204,255,0,0.4), 0 0 30px rgba(204,255,0,0.15);
+    z-index: 2;
+  }
+
+  /* ── Corner accents ── */
+  .corner-tl {
+    position: absolute;
+    top: 56px; left: 56px;
+    z-index: 2;
+  }
+  .corner-tl::before, .corner-tl::after {
+    content: '';
+    position: absolute;
+    background: rgba(255,255,255,0.06);
+  }
+  .corner-tl::before {
+    width: 16px; height: 1px;
+    top: 0; left: 0;
+  }
+  .corner-tl::after {
+    width: 1px; height: 16px;
+    top: 0; left: 0;
+  }
+  .corner-br {
+    position: absolute;
+    bottom: 40px; right: 56px;
+    z-index: 2;
+  }
+  .corner-br::before, .corner-br::after {
+    content: '';
+    position: absolute;
+    background: rgba(255,255,255,0.06);
+  }
+  .corner-br::before {
+    width: 16px; height: 1px;
+    bottom: 0; right: 0;
+  }
+  .corner-br::after {
+    width: 1px; height: 16px;
+    bottom: 0; right: 0;
   }
 </style>
 </head>
 <body>
 
-  <!-- Ambient Glow -->
-  <div class="glow-wrap">
-    <div class="glow glow--violet"></div>
-    <div class="glow glow--indigo"></div>
-    <div class="glow glow--white"></div>
-  </div>
+<!-- Background layers -->
+<div class="glow glow-1"></div>
+<div class="glow glow-2"></div>
+<div class="glow glow-3"></div>
+<div class="grid-bg"></div>
+<div class="top-line"></div>
+<div class="volt-accent"></div>
+<div class="corner-tl"></div>
+<div class="corner-br"></div>
 
-  <!-- Floating Geometric Shapes -->
-  <div class="geo geo--sq1"></div>
-  <div class="geo geo--sq2"></div>
-  <div class="geo geo--circle1"></div>
-  <div class="geo geo--circle2"></div>
-  <div class="geo geo--sq3"></div>
+<!-- Noise -->
+<svg class="noise" width="100%" height="100%">
+  <filter id="noise"><feTurbulence baseFrequency="0.65" numOctaves="4" stitchTiles="stitch"/></filter>
+  <rect width="100%" height="100%" filter="url(#noise)"/>
+</svg>
 
-  <!-- Noise Overlay -->
-  <div class="noise"></div>
+<!-- Floating geometrics -->
+<div class="geo geo-1"></div>
+<div class="geo geo-2"></div>
+<div class="geo geo-3"></div>
+<div class="geo geo-4"></div>
 
-  <!-- Top Edge Accent Line -->
-  <div class="edge-line"></div>
+<!-- Main Content -->
+<div class="container">
 
-  <!-- Content -->
-  <div class="content">
-
-    <!-- Logo -->
-    <div class="logo-area">
-      <div class="logo-mark">
-        <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <!-- V shape with dark/light facets -->
-          <path d="M10 8 L22 38 L26 38 L22 26 Z" fill="rgba(255,255,255,0.85)"/>
-          <path d="M22 26 L26 38 L34 8 Z" fill="rgba(255,255,255,0.4)"/>
-          <!-- Subtle edge highlight -->
-          <path d="M10 8 L22 38 L26 38 L34 8" stroke="rgba(255,255,255,0.12)" stroke-width="0.5" fill="none" stroke-linejoin="round"/>
-        </svg>
-      </div>
-      <span class="logo-text">VersaLabs</span>
+  <!-- Header -->
+  <div class="header">
+    <div class="brand">
+      <svg class="brand-logo" viewBox="0 0 40 40" fill="none">
+        <path d="M8 6L20 34L26 20L32 6H24L20 16L16 6H8Z" fill="#71717a"/>
+        <path d="M20 34L26 20L32 6L20 16Z" fill="#27272a"/>
+        <path d="M8 6L20 16L20 34L14 20Z" fill="#a1a1aa"/>
+      </svg>
+      <div class="brand-name">VersaLabs<span>Studio</span></div>
     </div>
-
-    <!-- Badge -->
-    <div class="badge">
-      <span class="badge-dot"></span>
+    <div class="live-badge">
+      <div class="live-dot"></div>
       Now Live
     </div>
-
-    <!-- Headline -->
-    <h1 class="headline">From a Business Problem<br>To Working Platform</h1>
-
-    <!-- Subtitle -->
-    <p class="subtitle">Bring us the business problem. We shape the product, design the experience, build the system, and help launch software your team can actually use.</p>
-
-    <!-- Stats Bar -->
-    <div class="stats-bar">
-      <div class="stat">
-        <span class="stat-value">15+</span>
-        <span class="stat-label">Products Shipped</span>
-      </div>
-      <div class="stat">
-        <span class="stat-value">8</span>
-        <span class="stat-label">Live Platforms</span>
-      </div>
-      <div class="stat">
-        <span class="stat-value">100%</span>
-        <span class="stat-label">AI-Powered</span>
-      </div>
-    </div>
-
-    <!-- Footer -->
-    <div class="footer">
-      <span class="footer-domain">versalabs-studio.com</span>
-      <span class="footer-location">Addis Ababa, Ethiopia · Building for the world</span>
-    </div>
-
   </div>
+
+  <!-- Hero Text -->
+  <div class="hero-text">
+    <div class="hero-label">
+      <div class="hero-label-line"></div>
+      We Build What You Need
+      <div class="hero-label-line"></div>
+    </div>
+    <h1 class="hero-headline">
+      <span class="gradient">Enterprise Platforms.<br>Shipped & Running.</span>
+    </h1>
+    <p class="hero-sub">Custom software that handles your data, automates your workflows, and grows with your business. No templates. No shortcuts.</p>
+  </div>
+
+  <!-- Product Showcase Grid -->
+  <div class="products-grid">
+    <!-- Card 1: ThreatMatrix AI -->
+    <div class="product-card">
+      <div class="img-wrap">
+        <img src="../public/ThreatMatrix AI/Mockups/threatmatrix-ai-1.png" alt="ThreatMatrix AI" loading="eager">
+      </div>
+      <div class="card-body">
+        <div class="card-badge badge-ai">Cybersecurity</div>
+        <div class="card-title">ThreatMatrix AI</div>
+        <div class="card-desc">AI-powered threat detection that never sleeps</div>
+      </div>
+    </div>
+
+    <!-- Card 2: Obsidian ERP -->
+    <div class="product-card">
+      <div class="img-wrap">
+        <img src="../public/Obsidian ERP/Mockups/627shots_so.png" alt="Obsidian ERP" loading="eager">
+      </div>
+      <div class="card-body">
+        <div class="card-badge badge-saas">ERP Platform</div>
+        <div class="card-title">Obsidian ERP</div>
+        <div class="card-desc">Your entire business in one platform</div>
+      </div>
+    </div>
+
+    <!-- Card 3: Pana Sport -->
+    <div class="product-card">
+      <div class="img-wrap">
+        <img src="../public/Pana Sport/Mockups/654shots_so.png" alt="Pana Sport" loading="eager">
+      </div>
+      <div class="card-body">
+        <div class="card-badge badge-sports">Sports Tech</div>
+        <div class="card-title">Pana Sport</div>
+        <div class="card-desc">Ethiopia's football hub — live scores & more</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats Row -->
+  <div class="stats-row">
+    <div class="stat-item">
+      <div class="stat-value">15+</div>
+      <div class="stat-label">Products Shipped</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">8</div>
+      <div class="stat-label">Live Platforms</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">3x</div>
+      <div class="stat-label">Faster Than Agencies</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">0</div>
+      <div class="stat-label">Templates Used</div>
+    </div>
+  </div>
+
+  <!-- Domain Bar -->
+  <div class="domain-bar">
+    <div class="domain-url">versalabs-studio.com</div>
+    <div class="domain-sep"></div>
+    <div class="domain-location">Addis Ababa, Ethiopia · Building for the world</div>
+  </div>
+
+</div>
 
 </body>
 </html>
