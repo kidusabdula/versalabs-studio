@@ -5,9 +5,9 @@ import { z } from 'zod';
 // site builds, so a missing field or a bad link fails the build instead of
 // shipping.
 
-// `Coming Soon` is a product in development that is close to launch; it shares
-// the in-development badge colour and calls to action with `Development`.
-export const PROJECT_STATUSES = ['Production', 'Beta', 'MVP', 'Prototype', 'Demo', 'Development', 'Coming Soon'] as const;
+// Two statuses only (Kidus, 2026-11-02): `Production` is out and in use;
+// `Coming Soon` has not launched yet. No beta, MVP or demo stages in between.
+export const PROJECT_STATUSES = ['Production', 'Coming Soon'] as const;
 export const PROJECT_KINDS = ['client', 'product', 'internal', 'research'] as const;
 
 // Where a project's page lives: /work/<slug> or /products/<slug>. A product

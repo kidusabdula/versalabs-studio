@@ -8,7 +8,7 @@ export default defineProject({
   category: "E-Commerce",
   tags: ["Online Store", "Fashion", "Retail", "Demo"],
   year: "2024",
-  status: "Demo",
+  status: "Production",
   kind: "internal",
   industry: ["E-Commerce"],
   // The live demo dropped its invented facts and carries a "Demo storefront"

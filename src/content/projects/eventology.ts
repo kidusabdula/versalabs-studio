@@ -8,7 +8,7 @@ export default defineProject({
   category: "Ticketing",
   tags: ["Ticketing", "Event Check-In", "Bilingual", "Mobile"],
   year: "2026",
-  status: "MVP",
+  status: "Production",
   kind: "client",
   industry: ["Events"],
   links: {},

@@ -18,11 +18,11 @@ export default defineProject({
   title: "Versa FX",
   subtitle: "Run Your Forex Bureau From One Screen",
   tagline: "Forex bureau operations",
-  summary: "The teller counter, rates, branch cash, compliance and reports for a licensed forex bureau, in one place. In development, with a live demo on sample data.",
+  summary: "The teller counter, rates, branch cash, compliance and reports for a licensed forex bureau, in one place. Coming soon, with a live demo on sample data.",
   category: "Fintech",
   tags: ["Forex Bureau", "Foreign Exchange", "Compliance", "Branch Management", "Fintech"],
   year: "2026",
-  status: "Development",
+  status: "Coming Soon",
   kind: "product",
   industry: ["Finance"],
   links: {

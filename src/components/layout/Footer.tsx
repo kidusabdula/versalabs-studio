@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { getProducts, projectPath } from '@/content/projects';
-import { STATUS_LABEL, STATUS_TONE, TONE_CLASS, TONE_LEGEND } from '@/content/labels';
+import { STATUS_LABEL, STATUS_TONE, TONE_CLASS } from '@/content/labels';
 import { CONTACT_EMAIL } from '@/lib/site';
 import { BUTTON_PRIMARY_SMALL, CONTAINER } from '@/components/ui/styles';
 import Logo from './Logo';
@@ -106,14 +106,6 @@ export default function Footer() {
 
         <div className="mt-16 flex flex-col gap-3 border-t border-line pt-6 text-[13px] text-fg-3 sm:flex-row sm:items-center sm:justify-between">
           <p>© {new Date().getFullYear()} VersaLabs Studio. Addis Ababa, Ethiopia.</p>
-          <ul aria-label="Status key" className="flex flex-wrap items-center gap-x-4 gap-y-2 font-mono text-[11px] uppercase tracking-[0.1em]">
-            {TONE_LEGEND.map(({ tone, label }) => (
-              <li key={tone} className="inline-flex items-center gap-1.5">
-                <span className={`h-1.5 w-1.5 rounded-full ${TONE_CLASS[tone].dot}`} aria-hidden="true" />
-                {label}
-              </li>
-            ))}
-          </ul>
         </div>
       </div>
     </footer>

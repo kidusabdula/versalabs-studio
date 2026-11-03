@@ -9,7 +9,7 @@ export default defineProject({
   category: "AI Assistant",
   tags: ["AI Assistant", "Automation", "Scheduled Routines", "Productivity"],
   year: "2026",
-  status: "Development",
+  status: "Coming Soon",
   kind: "internal",
   section: "products",
   // Hidden until it is for sale (Kidus, 2026-10-27). Its old URLs go to

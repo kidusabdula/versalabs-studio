@@ -2,7 +2,6 @@ import Link from 'next/link';
 import { ArrowRight, ArrowUpRight } from 'lucide-react';
 import type { ProjectCard } from '@/content/projects';
 import type { ExampleLink, Service, Step } from '@/content/services';
-import { STATUS_LABEL } from '@/content/labels';
 import { Reveal } from '@/components/ui/motion';
 import ProjectCardView from '@/components/case-study/ProjectCardView';
 import { CONTAINER, EYEBROW, H2, H3, LEAD, RULE, SECTION, TEXT_LINK } from '@/components/ui/styles';
@@ -56,7 +55,7 @@ export function ProductsSection({ products }: { products: ProjectCard[] }) {
           id="our-products"
           eyebrow="Our Products"
           title="Software We Make and Keep Improving"
-          intro="Each product says plainly where it stands: in production, open as a demo, or still in development. We set each one up for the business that uses it."
+          intro="Each product says plainly where it stands: in production, or coming soon. We set each one up for the business that uses it."
           more={{ href: '/products', label: 'Compare the Products' }}
         />
         <ProductGrid products={products} />
@@ -92,15 +91,12 @@ export function WorkSection({ featured, more }: { featured: ProjectCard[]; more:
                 <li key={card.slug} className="border-b border-line">
                   <Link
                     href={card.href}
-                    className="group grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-6 gap-y-1 py-5 transition-colors hover:bg-wash md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.4fr)_auto_auto] md:px-3"
+                    className="group grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-6 gap-y-1 py-5 transition-colors hover:bg-wash md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.4fr)_auto] md:px-3"
                   >
                     <span className="font-display text-[18px] font-semibold tracking-[-0.01em] text-foreground">{card.title}</span>
                     <span className="col-start-1 row-start-2 text-[14px] text-fg-3 md:col-start-2 md:row-start-1">{card.subtitle}</span>
-                    <span className="hidden font-mono text-[12px] uppercase tracking-[0.08em] text-fg-3 md:block">
-                      {STATUS_LABEL[card.status]}
-                    </span>
                     <ArrowUpRight
-                      className="col-start-2 row-span-2 h-4 w-4 text-fg-4 transition-colors group-hover:text-foreground md:col-start-4 md:row-span-1"
+                      className="col-start-2 row-span-2 h-4 w-4 text-fg-4 transition-colors group-hover:text-foreground md:col-start-3 md:row-span-1"
                       aria-hidden="true"
                     />
                   </Link>

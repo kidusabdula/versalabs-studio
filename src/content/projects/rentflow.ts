@@ -12,17 +12,17 @@ export default defineProject({
   title: "RentFlow",
   subtitle: "Know Who Owes What, Today", // C3
   tagline: "Rent for office and commercial buildings",
-  summary: "Rent management for owners and property managers of office, commercial and mixed-use buildings in Addis Ababa. In development.", // C1, C2
+  summary: "Rent management for owners and property managers of office, commercial and mixed-use buildings in Addis Ababa. Coming soon.", // C1, C2
   category: "Property Management",
   tags: ["Real Estate", "Property Management", "Rent", "Office Buildings", "Landlords"],
   year: "2026",
-  status: "Development", // C1
+  status: "Coming Soon", // C1
   kind: "product",
   industry: ["Real Estate"],
   links: {},
   gallery: [],
   scope: ["Leases", "Rent", "Utilities", "Statements"], // C4, C13
-  availability: "In development, and nothing has shipped yet. Access is by request, and subscriptions are arranged by email.", // C1, C20
+  availability: "Coming soon, and nothing has shipped yet. Access is by request, and subscriptions are arranged by email.", // C1, C20
 
   description: "RentFlow is rent management for owners and property managers of office, commercial and mixed-use buildings. Bill rent and utilities, record every payment with its proof, and follow up on arrears without awkward phone calls. It is in development, and access is by request.", // C1, C2, C4, C5, C6
   need: "Landlords with a handful of buildings often keep rent in Excel, on paper or with a broker, which makes it hard to see who owes what today.", // C3, C7

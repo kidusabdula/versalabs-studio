@@ -14,17 +14,17 @@ export default defineProject({
   title: OBSIDIAN,
   subtitle: "Orders, Jobs, Stock and Money in One Place", // C2
   tagline: "Orders, jobs, stock and money",
-  summary: "A business system for companies in Addis Ababa. Your team takes orders, runs jobs and records payments, and the books update with every step. In development.", // C1, C3, C4
+  summary: "A business system for companies in Addis Ababa. Your team takes orders, runs jobs and records payments, and the books update with every step. Coming soon.", // C1, C3, C4
   category: "Business System",
   tags: ["Business System", "Orders", "Stock", "Accounting", "Made to Order"],
   year: "2026",
-  status: "Development", // C1
+  status: "Coming Soon", // C1
   kind: "product",
   industry: ["Made to Order", "Import & Trade"], // C5, C6; the old "Manufacturing" was v4.4
   links: {},
   gallery: [],
   scope: ["Orders", "Jobs", "Stock", "Money"], // C2
-  availability: "In development and not on sale yet. When it is ready, we set up your workspace and arrange the subscription with you by email.", // C1, C33, C34
+  availability: "Coming soon, and not on sale yet. When it is ready, we set up your workspace and arrange the subscription with you by email.", // C1, C33, C34
 
   description: `${OBSIDIAN} is a business system for companies in Addis Ababa. Your team takes orders, runs jobs and records payments, and the books update with every step, out of sight until your accountant needs them. The new ${OBSIDIAN} is being built from scratch, and it is not on sale yet.`, // C1, C3, C4
   need: "A business that makes, sells or imports goods needs to know where every order, job, item and birr stands, without asking its team to fill in accounting forms.", // C4

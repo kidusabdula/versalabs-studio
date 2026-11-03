@@ -110,7 +110,6 @@ export default function ProjectCardView({
       <div className="flex flex-1 flex-col p-6">
         <div className="mb-5 flex flex-wrap items-center gap-2">
           <KindBadge kind={project.kind} />
-          <StatusBadge status={project.status} />
         </div>
         <Heading className="flex items-start justify-between gap-3 font-display text-[21px] font-semibold tracking-[-0.02em] text-foreground">
           {project.title}

@@ -13,7 +13,7 @@ import { SITE_NAME, SITE_URL } from '@/lib/site';
 import { galleryRest, isPhoneScreen, leadShots } from '@/lib/shots';
 import { Reveal } from '@/components/ui/motion';
 import ProductShot, { Plate, ShotPanel } from '@/components/ui/ProductShot';
-import { KindBadge, StageBadge, StatusBadge } from '@/components/ui/Badge';
+import { KindBadge, StatusBadge } from '@/components/ui/Badge';
 import {
   BUTTON_PRIMARY,
   BUTTON_SECONDARY,
@@ -45,8 +45,7 @@ import LoopShowcase from './LoopShowcase';
 // delivered → see it → start a similar project.
 // Neither says how anything is built (docs/05-CONTENT-TONE-GUIDE.md).
 
-// A live link on client work opens the real site; on anything else it is a demo.
-const LIVE_STATUSES: Project['status'][] = ['Production', 'Beta', 'MVP'];
+// A live link on client work opens the client's site; on a studio build it opens our demo.
 
 function CtaButton({ cta, className = BUTTON_PRIMARY }: { cta: CallToAction; className?: string }) {
   if (cta.external) {
@@ -174,7 +173,7 @@ function LeadShot({ project, lead, beside }: { project: Project; lead?: GalleryI
 }
 
 // Each feature that has a screenshot gets a row: the screenshot on one side, the feature on the other, alternating.
-// The rest follow as a ruled grid. A feature on a product still being built carries its own stage.
+// The rest follow as a ruled grid. A product carries one status; features carry no stage of their own (Kidus, 2026-11-02).
 function Features({ project }: { project: Project }) {
   const image = (feature: Feature) => project.gallery.find((entry) => entry.src === feature.image);
   const rows = project.features.flatMap((feature) => {
@@ -202,7 +201,6 @@ function Features({ project }: { project: Project }) {
                 <span className="font-mono text-[12px] text-fg-4" aria-hidden="true">
                   {String(i + 1).padStart(2, '0')}
                 </span>
-                {feature.stage && <StageBadge stage={feature.stage} className="ml-3" />}
                 <h3 className="mt-4 font-display text-[26px] font-semibold leading-[1.15] tracking-[-0.02em] text-foreground md:text-[32px]">
                   {feature.title}
                 </h3>
@@ -222,7 +220,6 @@ function Features({ project }: { project: Project }) {
                 <span className="font-mono text-[12px] text-fg-4" aria-hidden="true">
                   {String(rows.length + i + 1).padStart(2, '0')}
                 </span>
-                {feature.stage && <StageBadge stage={feature.stage} />}
               </div>
               <h3 className={`${H3} mt-6`}>{feature.title}</h3>
               <p className="mt-3 text-[15px] leading-[1.65] text-fg-3">{feature.description}</p>
@@ -231,26 +228,6 @@ function Features({ project }: { project: Project }) {
         </ul>
       )}
     </>
-  );
-}
-
-// The key to the feature stages, shown when any feature has one.
-function StageKey() {
-  return (
-    <dl className="flex flex-col gap-2 text-[14px] text-fg-3 md:items-end">
-      <div className="flex items-center gap-3">
-        <dt>
-          <StageBadge stage="in-development" />
-        </dt>
-        <dd>Being built now</dd>
-      </div>
-      <div className="flex items-center gap-3">
-        <dt>
-          <StageBadge stage="planned" />
-        </dt>
-        <dd>Comes after</dd>
-      </div>
-    </dl>
   );
 }
 
@@ -379,13 +356,12 @@ export default function CaseStudy({ project, related }: { project: Project; rela
   const rest = galleryRest(project, [lead, ...beside]);
   const availability = project.availability ?? AVAILABILITY[project.status];
   const unreleased = IN_DEVELOPMENT.includes(project.status);
-  const staged = project.features.some((feature) => feature.stage);
 
   // Client work links to the client's live site; a demo link on a product is the call to action itself, so it isn't
   // repeated here.
   const liveLink =
     !isProduct && project.links.live
-      ? { label: LIVE_STATUSES.includes(project.status) ? 'Visit the Live Site' : 'Open the Demo', href: project.links.live }
+      ? { label: project.kind === 'internal' ? 'Open the Demo' : 'Visit the Live Site', href: project.links.live }
       : undefined;
 
   const facts = isProduct
@@ -414,7 +390,6 @@ export default function CaseStudy({ project, related }: { project: Project; rela
         ...(project.client ? [{ term: 'Client', value: project.client }] : []),
         { term: 'Industry', value: project.industry.join(', ') },
         { term: 'Year', value: project.year },
-        { term: 'Status', value: <StatusBadge status={project.status} /> },
       ];
 
   return (
@@ -495,9 +470,7 @@ export default function CaseStudy({ project, related }: { project: Project; rela
                 id="features"
                 eyebrow={unreleased ? 'What It Will Do' : 'What You Can Do'}
                 title={unreleased ? `What ${project.title} Will Do for You` : `What ${project.title} Does for You`}
-              >
-                {staged && <StageKey />}
-              </SectionTitle>
+              />
               <Features project={project} />
             </div>
           </section>
