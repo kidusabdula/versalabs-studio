@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@source not "../../banners"; /* Marketing banners are standalone HTML; their classes must not reach the site CSS. */
 
 /* `light:` styles apply under the light theme only (for the few things that differ beyond the tokens). */
 @custom-variant light (&:where([data-theme="light"], [data-theme="light"] *));
