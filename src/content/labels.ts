@@ -10,29 +10,18 @@ export const KIND_LABEL: Record<ProjectKind, string> = {
   research: 'Research',
 };
 
-// What a status badge says. "Development" reads as "In Development" so nothing unfinished reads as shipped.
+// What a status badge says. There are two (Kidus, 2026-11-02): it is out, or it is coming soon. Nothing in between.
 export const STATUS_LABEL: Record<ProjectStatus, string> = {
   Production: 'In Production',
-  Beta: 'Beta',
-  MVP: 'MVP',
-  Prototype: 'Prototype',
-  Demo: 'Demo',
-  Development: 'In Development',
   'Coming Soon': 'Coming Soon',
 };
 
-// The status colours are the only colour on the site. Emerald: running in production. Amber: early or partial
-// (beta, MVP, prototype, demo). Violet: still in development (Development, Coming Soon). Each is a token pair from
-// globals.css, tuned for AA in both themes.
+// The status colours are the only colour on the site. Emerald: in production. Violet: coming soon. Each is a token
+// pair from globals.css, tuned for AA in both themes.
 export type StatusTone = 'ok' | 'warn' | 'dev' | 'idle';
 
 export const STATUS_TONE: Record<ProjectStatus, StatusTone> = {
   Production: 'ok',
-  Beta: 'warn',
-  MVP: 'warn',
-  Prototype: 'warn',
-  Demo: 'warn',
-  Development: 'dev',
   'Coming Soon': 'dev',
 };
 
@@ -43,13 +32,6 @@ export const TONE_CLASS: Record<StatusTone, { badge: string; dot: string; text: 
   idle: { badge: 'text-fg-2 bg-wash border-line-2', dot: 'bg-fg-4', text: 'text-fg-3' },
 };
 
-// The key to the status colours, in the footer.
-export const TONE_LEGEND: { tone: StatusTone; label: string }[] = [
-  { tone: 'ok', label: 'In Production' },
-  { tone: 'warn', label: 'Beta, MVP or Demo' },
-  { tone: 'dev', label: 'In Development' },
-];
-
 // A feature's own stage on a product that is still being built: in development now, or planned for later.
 export const FEATURE_STAGE: Record<FeatureStage, { label: string; tone: StatusTone }> = {
   'in-development': { label: 'In Development', tone: 'dev' },
@@ -58,7 +40,7 @@ export const FEATURE_STAGE: Record<FeatureStage, { label: string; tone: StatusTo
 
 // Statuses for software that isn't released yet. A product in one of these with no public demo offers "Get
 // Notified" instead of "Request a Demo".
-export const IN_DEVELOPMENT: ProjectStatus[] = ['Development', 'Coming Soon'];
+export const IN_DEVELOPMENT: ProjectStatus[] = ['Coming Soon'];
 
 // The one call to action on a page, decided by what the visitor can actually do next
 // (docs/05-CONTENT-TONE-GUIDE.md):
@@ -93,10 +75,5 @@ export function callToAction(project: {
 // (`availability`).
 export const AVAILABILITY: Record<ProjectStatus, string> = {
   Production: 'Available now, and running for businesses today.',
-  Beta: 'Available now in beta.',
-  MVP: 'Available now as a first release.',
-  Prototype: 'A working prototype.',
-  Demo: 'A working demo with sample data.',
-  Development: 'In development. It has not launched yet.',
   'Coming Soon': 'Coming soon. It is close to launch.',
 };

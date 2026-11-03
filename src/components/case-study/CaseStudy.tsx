@@ -45,8 +45,7 @@ import LoopShowcase from './LoopShowcase';
 // delivered → see it → start a similar project.
 // Neither says how anything is built (docs/05-CONTENT-TONE-GUIDE.md).
 
-// A live link on client work opens the real site; on anything else it is a demo.
-const LIVE_STATUSES: Project['status'][] = ['Production', 'Beta', 'MVP'];
+// A live link on client work opens the client's site; on a studio build it opens our demo.
 
 function CtaButton({ cta, className = BUTTON_PRIMARY }: { cta: CallToAction; className?: string }) {
   if (cta.external) {
@@ -385,7 +384,7 @@ export default function CaseStudy({ project, related }: { project: Project; rela
   // repeated here.
   const liveLink =
     !isProduct && project.links.live
-      ? { label: LIVE_STATUSES.includes(project.status) ? 'Visit the Live Site' : 'Open the Demo', href: project.links.live }
+      ? { label: project.kind === 'internal' ? 'Open the Demo' : 'Visit the Live Site', href: project.links.live }
       : undefined;
 
   const facts = isProduct
@@ -414,7 +413,6 @@ export default function CaseStudy({ project, related }: { project: Project; rela
         ...(project.client ? [{ term: 'Client', value: project.client }] : []),
         { term: 'Industry', value: project.industry.join(', ') },
         { term: 'Year', value: project.year },
-        { term: 'Status', value: <StatusBadge status={project.status} /> },
       ];
 
   return (

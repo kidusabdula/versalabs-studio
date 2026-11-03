@@ -8,7 +8,7 @@ export default defineProject({
   category: "Hospitality",
   tags: ["Restaurant", "English and Amharic", "Online Ordering", "Table Booking"],
   year: "2026",
-  status: "Beta",
+  status: "Production",
   kind: "client",
   industry: ["Hospitality"],
   client: "Tamem Kitfo",

@@ -21,9 +21,10 @@ export default defineProject({
   category: "Online Safety",
   tags: ["Child Safety", "Privacy", "AI", "Mobile"],
   year: "2026",
-  status: "MVP",
+  status: "Production",
   kind: "internal",
   section: "products",
+  availability: "Available now. Try it in your browser.",
   industry: ["Online Safety"],
   links: {
     live: "https://safeframe-livid.vercel.app",

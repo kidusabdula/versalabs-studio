@@ -9,7 +9,7 @@ const names = products.map((product) => product.title);
 
 export const metadata = pageMetadata({
   title: 'Products',
-  description: `Business software from VersaLabs Studio: ${names.slice(0, -1).join(', ')} and ${names.at(-1)}. Each one says whether it is in production, open as a demo or still in development.`,
+  description: `Business software from VersaLabs Studio: ${names.slice(0, -1).join(', ')} and ${names.at(-1)}. Each one says whether it is in production or coming soon.`,
   path: '/products',
 });
 

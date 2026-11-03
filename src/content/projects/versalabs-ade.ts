@@ -13,13 +13,13 @@ export default defineProject({
   category: "Developer Tools",
   tags: ["Developer Tools", "AI Coding Agents", "Desktop App"],
   year: "2026",
-  status: "Development", // C2
+  status: "Coming Soon", // C2
   kind: "product",
   industry: ["Developer Tools"],
   links: {},
   gallery: [],
   scope: ["Agents", "Terminals", "Chat", "Changes"], // C4, C9, C11
-  availability: "In development, and nothing has shipped yet. It will be free during the beta.", // C2, C31
+  availability: "Coming soon, and nothing has shipped yet. It will be free during the beta.", // C2, C31
 
   description: "VersaLabs ADE is a planned desktop app for developers who run several AI coding agents at once. Your agents sit side by side, each in a full terminal or a simple chat view, and ADE tells you the moment one finishes or needs an answer. It is in development, and nothing has shipped yet.", // C2, C4
   need: "Developers who run several coding agents at once end up watching a wall of terminals, checking each one to see whether it has finished or is waiting on them.", // C5
