@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1080">
+<title>VersaLabs Studio — Launch</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    width: 1080px;
+    height: 1080px;
+    overflow: hidden;
+    background: #0D0D0F;
+    font-family: 'Outfit', sans-serif;
+    color: #fff;
+    position: relative;
+  }
+
+  /* ── Ambient Glows ── */
+  .glow {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .glow-1 {
+    width: 700px; height: 700px;
+    top: -100px; right: -200px;
+    background: radial-gradient(circle, rgba(139,92,246,0.10) 0%, rgba(99,102,241,0.06) 40%, transparent 70%);
+    filter: blur(80px);
+    animation: glowPulse 6s ease-in-out infinite;
+  }
+  .glow-2 {
+    width: 500px; height: 500px;
+    bottom: 100px; left: -100px;
+    background: radial-gradient(circle, rgba(99,102,241,0.08) 0%, rgba(139,92,246,0.04) 50%, transparent 70%);
+    filter: blur(100px);
+    animation: glowPulse 8s ease-in-out infinite 2s;
+  }
+  .glow-3 {
+    width: 400px; height: 300px;
+    bottom: -50px; right: 100px;
+    background: radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 70%);
+    filter: blur(60px);
+    animation: glowPulse 7s ease-in-out infinite 1s;
+  }
+
+  @keyframes glowPulse {
+    0%, 100% { opacity: 0.5; transform: scale(1); }
+    50% { opacity: 0.8; transform: scale(1.08); }
+  }
+
+  /* ── Noise Texture ── */
+  .noise {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    opacity: 0.035;
+    pointer-events: none;
+  }
+
+  /* ── Grid Background ── */
+  .grid-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, black 20%, transparent 80%);
+    -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, black 20%, transparent 80%);
+  }
+
+  /* ── Floating Geometrics ── */
+  .geo {
+    position: absolute;
+    pointer-events: none;
+    z-index: 1;
+  }
+  .geo-1 {
+    width: 60px; height: 60px;
+    top: 50px; left: 40px;
+    border: 1px solid rgba(255,255,255,0.035);
+    border-radius: 8px;
+    transform: rotate(15deg);
+    animation: floatGeo 8s ease-in-out infinite;
+  }
+  .geo-2 {
+    width: 40px; height: 40px;
+    top: 120px; right: 60px;
+    border: 1px solid rgba(255,255,255,0.03);
+    border-radius: 50%;
+    animation: floatGeo 6s ease-in-out infinite 1s;
+  }
+  .geo-3 {
+    width: 30px; height: 30px;
+    bottom: 180px; left: 80px;
+    border: 1px solid rgba(255,255,255,0.04);
+    transform: rotate(45deg);
+    animation: floatGeo 7s ease-in-out infinite 0.5s;
+  }
+  .geo-4 {
+    width: 50px; height: 50px;
+    bottom: 80px; right: 50px;
+    border: 1px solid rgba(255,255,255,0.025);
+    border-radius: 12px;
+    transform: rotate(-8deg);
+    animation: floatGeo 9s ease-in-out infinite 2s;
+  }
+
+  @keyframes floatGeo {
+    0%, 100% { transform: translateY(0) rotate(var(--rot, 15deg)); }
+    50% { transform: translateY(-10px) rotate(var(--rot, 15deg)); }
+  }
+
+  /* ── Top Accent Line ── */
+  .top-line {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent 0%, rgba(139,92,246,0.6) 30%, rgba(255,255,255,0.3) 50%, rgba(139,92,246,0.6) 70%, transparent 100%);
+    z-index: 10;
+  }
+
+  /* ── Main Layout ── */
+  .container {
+    position: relative;
+    z-index: 5;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 48px 56px 40px;
+  }
+
+  /* ── Header Row ── */
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 28px;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .brand-logo {
+    width: 32px; height: 32px;
+  }
+  .brand-name {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: #fff;
+  }
+  .brand-name span {
+    font-weight: 400;
+    color: #a1a1aa;
+    margin-left: 4px;
+  }
+  .live-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 16px;
+    border-radius: 999px;
+    border: 1px solid rgba(16,185,129,0.25);
+    background: rgba(16,185,129,0.08);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #34d399;
+  }
+  .live-dot {
+    position: relative;
+    width: 6px; height: 6px;
+  }
+  .live-dot::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: #34d399;
+  }
+  .live-dot::after {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    background: rgba(52,211,153,0.4);
+    animation: livePing 2s ease-in-out infinite;
+  }
+  @keyframes livePing {
+    0%, 100% { opacity: 0.4; transform: scale(1); }
+    50% { opacity: 0; transform: scale(2); }
+  }
+
+  /* ── Hero Text Section ── */
+  .hero-text {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+  .hero-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #a78bfa;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+  }
+  .hero-label-line {
+    width: 32px;
+    height: 1px;
+    background: rgba(167,139,250,0.4);
+  }
+  .hero-headline {
+    font-size: 46px;
+    font-weight: 700;
+    letter-spacing: -0.045em;
+    line-height: 1.1;
+    margin-bottom: 14px;
+  }
+  .hero-headline .gradient {
+    background: linear-gradient(to bottom, #fff, rgba(255,255,255,0.45));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .hero-sub {
+    font-size: 16px;
+    color: #a1a1aa;
+    line-height: 1.5;
+    max-width: 560px;
+    margin: 0 auto;
+  }
+
+  /* ── Product Showcase (Bento Grid) ── */
+  .products-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 28px;
+    flex: 1;
+  }
+  .product-card {
+    position: relative;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.06);
+    background: #161618;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: border-color 0.3s;
+  }
+  .product-card:hover {
+    border-color: rgba(255,255,255,0.12);
+  }
+  .product-card .img-wrap {
+    position: relative;
+    height: 280px;
+    overflow: hidden;
+    background: #111113;
+  }
+  .product-card .img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    display: block;
+  }
+  .product-card .img-wrap::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 80px;
+    background: linear-gradient(to top, #161618, transparent);
+  }
+  .product-card .card-body {
+    padding: 16px 18px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    position: relative;
+    z-index: 1;
+    flex: 1;
+  }
+  .product-card .card-badge {
+    display: inline-flex;
+    align-self: flex-start;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  .badge-saas {
+    color: #34d399;
+    background: rgba(16,185,129,0.1);
+    border: 1px solid rgba(16,185,129,0.2);
+  }
+  .badge-sports {
+    color: #f59e0b;
+    background: rgba(245,158,11,0.1);
+    border: 1px solid rgba(245,158,11,0.2);
+  }
+  .badge-ai {
+    color: #06b6d4;
+    background: rgba(6,182,212,0.1);
+    border: 1px solid rgba(6,182,212,0.2);
+  }
+  .product-card .card-title {
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: #fff;
+  }
+  .product-card .card-desc {
+    font-size: 12px;
+    color: #71717a;
+    line-height: 1.4;
+  }
+
+  /* ── Stats Row ── */
+  .stats-row {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.06);
+    background: rgba(10,10,12,0.5);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    margin-bottom: 24px;
+    overflow: hidden;
+  }
+  .stat-item {
+    flex: 1;
+    text-align: center;
+    padding: 16px 12px;
+    border-right: 1px solid rgba(255,255,255,0.06);
+    background: linear-gradient(to bottom, rgba(255,255,255,0.02), transparent);
+  }
+  .stat-item:last-child { border-right: none; }
+  .stat-value {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    color: #fff;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .stat-label {
+    font-size: 10px;
+    font-weight: 500;
+    color: #71717a;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* ── Domain Bar ── */
+  .domain-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    padding: 14px 0 0;
+  }
+  .domain-url {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: #fff;
+    position: relative;
+  }
+  .domain-url::before {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #a78bfa, #818cf8, #a78bfa);
+    border-radius: 1px;
+    opacity: 0.6;
+  }
+  .domain-sep {
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+  }
+  .domain-location {
+    font-size: 12px;
+    color: #52525b;
+    letter-spacing: 0.02em;
+  }
+
+  /* ── Bottom CTA row ── */
+  .cta-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin-top: 4px;
+  }
+  .cta-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 38px;
+    padding: 0 24px;
+    border-radius: 999px;
+    background: #fff;
+    color: #0D0D0F;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 0 20px rgba(255,255,255,0.08);
+  }
+  .cta-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 38px;
+    padding: 0 24px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.03);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 500;
+    border: 1px solid rgba(255,255,255,0.08);
+    backdrop-filter: blur(8px);
+    cursor: pointer;
+  }
+
+  /* ── Volt accent ── */
+  .volt-accent {
+    position: absolute;
+    bottom: 140px;
+    left: 56px;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #CCFF00;
+    box-shadow: 0 0 12px rgba(204,255,0,0.4), 0 0 30px rgba(204,255,0,0.15);
+    z-index: 2;
+  }
+
+  /* ── Corner accents ── */
+  .corner-tl {
+    position: absolute;
+    top: 56px; left: 56px;
+    z-index: 2;
+  }
+  .corner-tl::before, .corner-tl::after {
+    content: '';
+    position: absolute;
+    background: rgba(255,255,255,0.06);
+  }
+  .corner-tl::before {
+    width: 16px; height: 1px;
+    top: 0; left: 0;
+  }
+  .corner-tl::after {
+    width: 1px; height: 16px;
+    top: 0; left: 0;
+  }
+  .corner-br {
+    position: absolute;
+    bottom: 40px; right: 56px;
+    z-index: 2;
+  }
+  .corner-br::before, .corner-br::after {
+    content: '';
+    position: absolute;
+    background: rgba(255,255,255,0.06);
+  }
+  .corner-br::before {
+    width: 16px; height: 1px;
+    bottom: 0; right: 0;
+  }
+  .corner-br::after {
+    width: 1px; height: 16px;
+    bottom: 0; right: 0;
+  }
+</style>
+</head>
+<body>
+
+<!-- Background layers -->
+<div class="glow glow-1"></div>
+<div class="glow glow-2"></div>
+<div class="glow glow-3"></div>
+<div class="grid-bg"></div>
+<div class="top-line"></div>
+<div class="volt-accent"></div>
+<div class="corner-tl"></div>
+<div class="corner-br"></div>
+
+<!-- Noise -->
+<svg class="noise" width="100%" height="100%">
+  <filter id="noise"><feTurbulence baseFrequency="0.65" numOctaves="4" stitchTiles="stitch"/></filter>
+  <rect width="100%" height="100%" filter="url(#noise)"/>
+</svg>
+
+<!-- Floating geometrics -->
+<div class="geo geo-1"></div>
+<div class="geo geo-2"></div>
+<div class="geo geo-3"></div>
+<div class="geo geo-4"></div>
+
+<!-- Main Content -->
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="brand">
+      <svg class="brand-logo" viewBox="0 0 40 40" fill="none">
+        <path d="M8 6L20 34L26 20L32 6H24L20 16L16 6H8Z" fill="#71717a"/>
+        <path d="M20 34L26 20L32 6L20 16Z" fill="#27272a"/>
+        <path d="M8 6L20 16L20 34L14 20Z" fill="#a1a1aa"/>
+      </svg>
+      <div class="brand-name">VersaLabs<span>Studio</span></div>
+    </div>
+    <div class="live-badge">
+      <div class="live-dot"></div>
+      Now Live
+    </div>
+  </div>
+
+  <!-- Hero Text -->
+  <div class="hero-text">
+    <div class="hero-label">
+      <div class="hero-label-line"></div>
+      We Build What You Need
+      <div class="hero-label-line"></div>
+    </div>
+    <h1 class="hero-headline">
+      <span class="gradient">Enterprise Platforms.<br>Shipped & Running.</span>
+    </h1>
+    <p class="hero-sub">Custom software that handles your data, automates your workflows, and grows with your business. No templates. No shortcuts.</p>
+  </div>
+
+  <!-- Product Showcase Grid -->
+  <div class="products-grid">
+    <!-- Card 1: ThreatMatrix AI -->
+    <div class="product-card">
+      <div class="img-wrap">
+        <img src="../public/ThreatMatrix AI/Mockups/threatmatrix-ai-1.png" alt="ThreatMatrix AI" loading="eager">
+      </div>
+      <div class="card-body">
+        <div class="card-badge badge-ai">Cybersecurity</div>
+        <div class="card-title">ThreatMatrix AI</div>
+        <div class="card-desc">AI-powered threat detection that never sleeps</div>
+      </div>
+    </div>
+
+    <!-- Card 2: Obsidian ERP -->
+    <div class="product-card">
+      <div class="img-wrap">
+        <img src="../public/Obsidian ERP/Mockups/627shots_so.png" alt="Obsidian ERP" loading="eager">
+      </div>
+      <div class="card-body">
+        <div class="card-badge badge-saas">ERP Platform</div>
+        <div class="card-title">Obsidian ERP</div>
+        <div class="card-desc">Your entire business in one platform</div>
+      </div>
+    </div>
+
+    <!-- Card 3: Pana Sport -->
+    <div class="product-card">
+      <div class="img-wrap">
+        <img src="../public/Pana Sport/Mockups/654shots_so.png" alt="Pana Sport" loading="eager">
+      </div>
+      <div class="card-body">
+        <div class="card-badge badge-sports">Sports Tech</div>
+        <div class="card-title">Pana Sport</div>
+        <div class="card-desc">Ethiopia's football hub — live scores & more</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats Row -->
+  <div class="stats-row">
+    <div class="stat-item">
+      <div class="stat-value">15+</div>
+      <div class="stat-label">Products Shipped</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">8</div>
+      <div class="stat-label">Live Platforms</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">3x</div>
+      <div class="stat-label">Faster Than Agencies</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">0</div>
+      <div class="stat-label">Templates Used</div>
+    </div>
+  </div>
+
+  <!-- Domain Bar -->
+  <div class="domain-bar">
+    <div class="domain-url">versalabs-studio.com</div>
+    <div class="domain-sep"></div>
+    <div class="domain-location">Addis Ababa, Ethiopia · Building for the world</div>
+  </div>
+
+</div>
+
+</body>
+</html>

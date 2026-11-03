@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1584">
+<title>VersaLabs Studio — LinkedIn Cover Banner</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    width: 1584px;
+    height: 396px;
+    overflow: hidden;
+    background: #0D0D0F;
+    font-family: 'Outfit', sans-serif;
+    position: relative;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* ── Dot Grid Pattern ── */
+  .dot-grid {
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle, rgba(255,255,255,0.045) 1px, transparent 1px);
+    background-size: 24px 24px;
+    z-index: 0;
+  }
+
+  /* ── Ambient Violet Glow ── */
+  .ambient-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 900px;
+    height: 500px;
+    background: radial-gradient(ellipse at center, rgba(167,139,250,0.08) 0%, rgba(167,139,250,0.03) 35%, transparent 70%);
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  /* ── Secondary glow accents ── */
+  .glow-left {
+    position: absolute;
+    top: 40%;
+    left: 15%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    height: 300px;
+    background: radial-gradient(ellipse at center, rgba(167,139,250,0.04) 0%, transparent 70%);
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .glow-right {
+    position: absolute;
+    top: 45%;
+    right: 5%;
+    width: 350px;
+    height: 280px;
+    background: radial-gradient(ellipse at center, rgba(167,139,250,0.035) 0%, transparent 70%);
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  /* ── Wire-frame Geometric Accents ── */
+  .wireframe {
+    position: absolute;
+    border: 1px solid rgba(255,255,255,0.035);
+    border-radius: 4px;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .wireframe-1 {
+    width: 80px;
+    height: 80px;
+    top: 30px;
+    left: 420px;
+    transform: rotate(15deg);
+    border-radius: 12px;
+  }
+
+  .wireframe-2 {
+    width: 50px;
+    height: 50px;
+    bottom: 40px;
+    left: 360px;
+    transform: rotate(-20deg);
+    border-color: rgba(255,255,255,0.025);
+  }
+
+  .wireframe-3 {
+    width: 60px;
+    height: 60px;
+    top: 50px;
+    right: 380px;
+    transform: rotate(35deg);
+    border-radius: 50%;
+    border-color: rgba(255,255,255,0.03);
+  }
+
+  .wireframe-4 {
+    width: 40px;
+    height: 40px;
+    bottom: 55px;
+    right: 350px;
+    transform: rotate(10deg);
+    border-color: rgba(255,255,255,0.025);
+  }
+
+  .wireframe-5 {
+    width: 120px;
+    height: 1px;
+    top: 80px;
+    left: 200px;
+    background: linear-gradient(to right, transparent, rgba(255,255,255,0.03), transparent);
+    border: none;
+  }
+
+  .wireframe-6 {
+    width: 1px;
+    height: 100px;
+    bottom: 30px;
+    right: 420px;
+    background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.03), transparent);
+    border: none;
+  }
+
+  /* ── Main Layout ── */
+  .banner {
+    position: relative;
+    width: 1584px;
+    height: 396px;
+    display: flex;
+    align-items: center;
+    z-index: 10;
+  }
+
+  /* ── LEFT THIRD ── */
+  .left-section {
+    width: 420px;
+    padding-left: 80px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .brand-name {
+    font-size: 38px;
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    color: #fff;
+    line-height: 1.1;
+  }
+
+  .brand-studio {
+    font-size: 36px;
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 1.1;
+    margin-top: 2px;
+    background: linear-gradient(to bottom, #fff, rgba(255,255,255,0.4));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .tagline {
+    margin-top: 14px;
+    font-size: 15px;
+    font-weight: 400;
+    color: #a1a1aa; /* zinc-400 */
+    letter-spacing: -0.01em;
+  }
+
+  /* ── Decorative line below brand ── */
+  .brand-line {
+    margin-top: 18px;
+    width: 48px;
+    height: 1px;
+    background: linear-gradient(to right, rgba(167,139,250,0.5), transparent);
+  }
+
+  /* ── CENTER SECTION ── */
+  .center-section {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    height: 100%;
+  }
+
+  .panels-container {
+    position: relative;
+    width: 520px;
+    height: 300px;
+  }
+
+  .ui-panel {
+    position: absolute;
+    background: #161618;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow:
+      0 0 40px rgba(167,139,250,0.04),
+      0 8px 32px rgba(0,0,0,0.4),
+      inset 0 1px 0 rgba(255,255,255,0.04);
+    backdrop-filter: blur(4px);
+  }
+
+  /* Panel edge-lit violet glow */
+  .ui-panel::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: 13px;
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(167,139,250,0.12), transparent 40%, transparent 60%, rgba(167,139,250,0.06));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  .panel-header {
+    height: 24px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    gap: 5px;
+  }
+
+  .panel-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.12);
+  }
+
+  .panel-dot:first-child { background: rgba(255,100,100,0.25); }
+  .panel-dot:nth-child(2) { background: rgba(255,200,50,0.2); }
+  .panel-dot:nth-child(3) { background: rgba(100,255,100,0.18); }
+
+  .panel-body {
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+
+  .ui-row {
+    height: 3px;
+    border-radius: 2px;
+    background: rgba(255,255,255,0.06);
+  }
+
+  .ui-row-accent {
+    background: rgba(167,139,250,0.15);
+  }
+
+  /* Panel 1 — Main / Back */
+  .panel-1 {
+    width: 220px;
+    height: 160px;
+    top: 70px;
+    left: 40px;
+    transform: rotate(-4deg);
+    z-index: 3;
+  }
+
+  /* Panel 2 — Middle / Front */
+  .panel-2 {
+    width: 240px;
+    height: 180px;
+    top: 40px;
+    left: 150px;
+    transform: rotate(2deg);
+    z-index: 5;
+  }
+
+  /* Panel 3 — Right / Back */
+  .panel-3 {
+    width: 190px;
+    height: 140px;
+    top: 100px;
+    left: 290px;
+    transform: rotate(5deg);
+    z-index: 2;
+  }
+
+  /* Chart bars for panel 2 */
+  .chart-container {
+    display: flex;
+    align-items: flex-end;
+    gap: 6px;
+    height: 44px;
+    padding: 0 4px;
+    margin-top: 4px;
+  }
+
+  .chart-bar {
+    flex: 1;
+    border-radius: 2px 2px 0 0;
+    background: rgba(167,139,250,0.12);
+    min-width: 10px;
+  }
+
+  .chart-bar:nth-child(1) { height: 40%; }
+  .chart-bar:nth-child(2) { height: 65%; background: rgba(167,139,250,0.2); }
+  .chart-bar:nth-child(3) { height: 50%; }
+  .chart-bar:nth-child(4) { height: 85%; background: rgba(167,139,250,0.25); }
+  .chart-bar:nth-child(5) { height: 70%; background: rgba(167,139,250,0.18); }
+  .chart-bar:nth-child(6) { height: 55%; }
+  .chart-bar:nth-child(7) { height: 95%; background: rgba(167,139,250,0.3); }
+  .chart-bar:nth-child(8) { height: 60%; }
+
+  /* Mini metric in panels */
+  .panel-metric {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    margin-top: 2px;
+  }
+
+  .panel-metric-value {
+    font-size: 14px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: -0.02em;
+  }
+
+  .panel-metric-label {
+    font-size: 8px;
+    color: rgba(255,255,255,0.2);
+    font-weight: 400;
+  }
+
+  /* ── RIGHT THIRD ── */
+  .right-section {
+    width: 380px;
+    flex-shrink: 0;
+    padding-right: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+  }
+
+  .stats-stack {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 16px;
+  }
+
+  .stat-item {
+    text-align: right;
+  }
+
+  .stat-number {
+    font-size: 40px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.04em;
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 12px;
+    font-weight: 400;
+    color: #71717a; /* zinc-500 */
+    margin-top: 2px;
+    letter-spacing: 0.01em;
+  }
+
+  .stat-divider {
+    width: 40px;
+    height: 1px;
+    background: rgba(255,255,255,0.06);
+    align-self: flex-end;
+  }
+
+  .right-meta {
+    margin-top: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+  }
+
+  .meta-url {
+    font-size: 12px;
+    font-weight: 400;
+    color: #71717a; /* zinc-500 */
+    letter-spacing: 0.01em;
+  }
+
+  .meta-location {
+    font-size: 11px;
+    font-weight: 400;
+    color: #52525b; /* zinc-600 */
+    letter-spacing: 0.01em;
+  }
+
+  /* ── Accent cross-hairs ── */
+  .crosshair {
+    position: absolute;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .crosshair::before,
+  .crosshair::after {
+    content: '';
+    position: absolute;
+    background: rgba(255,255,255,0.04);
+  }
+
+  .crosshair::before {
+    width: 16px;
+    height: 1px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .crosshair::after {
+    width: 1px;
+    height: 16px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .crosshair-1 { top: 45px; left: 510px; }
+  .crosshair-2 { bottom: 35px; right: 440px; }
+  .crosshair-3 { top: 30px; right: 300px; }
+</style>
+</head>
+<body>
+
+  <!-- Background layers -->
+  <div class="dot-grid"></div>
+  <div class="ambient-glow"></div>
+  <div class="glow-left"></div>
+  <div class="glow-right"></div>
+
+  <!-- Wire-frame geometric accents -->
+  <div class="wireframe wireframe-1"></div>
+  <div class="wireframe wireframe-2"></div>
+  <div class="wireframe wireframe-3"></div>
+  <div class="wireframe wireframe-4"></div>
+  <div class="wireframe wireframe-5"></div>
+  <div class="wireframe wireframe-6"></div>
+
+  <!-- Cross-hair accents -->
+  <div class="crosshair crosshair-1"></div>
+  <div class="crosshair crosshair-2"></div>
+  <div class="crosshair crosshair-3"></div>
+
+  <!-- Main Banner Layout -->
+  <div class="banner">
+
+    <!-- LEFT: Brand -->
+    <div class="left-section">
+      <div class="brand-name">VersaLabs</div>
+      <div class="brand-studio">Studio</div>
+      <div class="tagline">Software that actually works.</div>
+      <div class="brand-line"></div>
+    </div>
+
+    <!-- CENTER: Floating UI Panels -->
+    <div class="center-section">
+      <div class="panels-container">
+
+        <!-- Panel 1 — List / Table view -->
+        <div class="ui-panel panel-1">
+          <div class="panel-header">
+            <div class="panel-dot"></div>
+            <div class="panel-dot"></div>
+            <div class="panel-dot"></div>
+          </div>
+          <div class="panel-body">
+            <div class="ui-row" style="width: 80%;"></div>
+            <div class="ui-row" style="width: 60%;"></div>
+            <div class="ui-row ui-row-accent" style="width: 90%;"></div>
+            <div class="ui-row" style="width: 45%;"></div>
+            <div class="ui-row" style="width: 72%;"></div>
+            <div class="ui-row" style="width: 55%;"></div>
+            <div class="ui-row" style="width: 68%;"></div>
+            <div class="ui-row" style="width: 38%;"></div>
+          </div>
+        </div>
+
+        <!-- Panel 2 — Dashboard / Chart view -->
+        <div class="ui-panel panel-2">
+          <div class="panel-header">
+            <div class="panel-dot"></div>
+            <div class="panel-dot"></div>
+            <div class="panel-dot"></div>
+          </div>
+          <div class="panel-body">
+            <div class="panel-metric">
+              <span class="panel-metric-value">2,847</span>
+              <span class="panel-metric-label">sessions</span>
+            </div>
+            <div class="ui-row" style="width: 100%;"></div>
+            <div class="ui-row ui-row-accent" style="width: 75%;"></div>
+            <div class="chart-container">
+              <div class="chart-bar"></div>
+              <div class="chart-bar"></div>
+              <div class="chart-bar"></div>
+              <div class="chart-bar"></div>
+              <div class="chart-bar"></div>
+              <div class="chart-bar"></div>
+              <div class="chart-bar"></div>
+              <div class="chart-bar"></div>
+            </div>
+            <div class="ui-row" style="width: 50%;"></div>
+            <div class="ui-row" style="width: 65%;"></div>
+          </div>
+        </div>
+
+        <!-- Panel 3 — Compact info view -->
+        <div class="ui-panel panel-3">
+          <div class="panel-header">
+            <div class="panel-dot"></div>
+            <div class="panel-dot"></div>
+            <div class="panel-dot"></div>
+          </div>
+          <div class="panel-body">
+            <div class="ui-row" style="width: 70%;"></div>
+            <div class="ui-row ui-row-accent" style="width: 55%;"></div>
+            <div class="ui-row" style="width: 85%;"></div>
+            <div class="ui-row" style="width: 40%;"></div>
+            <div class="ui-row" style="width: 65%;"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- RIGHT: Stats -->
+    <div class="right-section">
+      <div class="stats-stack">
+        <div class="stat-item">
+          <div class="stat-number">15+</div>
+          <div class="stat-label">Products Shipped</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <div class="stat-number">8</div>
+          <div class="stat-label">Live Platforms</div>
+        </div>
+      </div>
+      <div class="right-meta">
+        <div class="meta-url">versalabs-studio.com</div>
+        <div class="meta-location">Addis Ababa · Global</div>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1080">
+<title>VersaLabs — Obsidian ERP Showcase</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    width: 1080px;
+    height: 1080px;
+    overflow: hidden;
+    background: #0D0D0F;
+    font-family: 'Outfit', sans-serif;
+    position: relative;
+  }
+
+  /* ── Particles ── */
+  .particles {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .particle {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  .particle:nth-child(1)  { width:2px; height:2px; top:8%;  left:12%; animation: drift 18s ease-in-out infinite; }
+  .particle:nth-child(2)  { width:1.5px; height:1.5px; top:15%; left:78%; animation: drift 22s ease-in-out infinite 2s; }
+  .particle:nth-child(3)  { width:2px; height:2px; top:32%; left:5%;  animation: drift 20s ease-in-out infinite 1s; }
+  .particle:nth-child(4)  { width:1px; height:1px; top:45%; left:92%; animation: drift 25s ease-in-out infinite 3s; }
+  .particle:nth-child(5)  { width:2.5px; height:2.5px; top:62%; left:18%; animation: drift 19s ease-in-out infinite 4s; }
+  .particle:nth-child(6)  { width:1.5px; height:1.5px; top:78%; left:85%; animation: drift 21s ease-in-out infinite 1.5s; }
+  .particle:nth-child(7)  { width:2px; height:2px; top:88%; left:35%; animation: drift 23s ease-in-out infinite 2.5s; }
+  .particle:nth-child(8)  { width:1px; height:1px; top:22%; left:55%; animation: drift 17s ease-in-out infinite 0.5s; }
+  .particle:nth-child(9)  { width:1.5px; height:1.5px; top:55%; left:42%; animation: drift 24s ease-in-out infinite 3.5s; }
+  .particle:nth-child(10) { width:2px; height:2px; top:72%; left:65%; animation: drift 20s ease-in-out infinite 1s; }
+  .particle:nth-child(11) { width:1px; height:1px; top:10%; left:40%; animation: drift 26s ease-in-out infinite 5s; }
+  .particle:nth-child(12) { width:1.5px; height:1.5px; top:40%; left:25%; animation: drift 18s ease-in-out infinite 2s; }
+  .particle:nth-child(13) { width:2px; height:2px; top:50%; left:70%; animation: drift 22s ease-in-out infinite 4.5s; }
+  .particle:nth-child(14) { width:1px; height:1px; top:85%; left:55%; animation: drift 19s ease-in-out infinite 1.2s; }
+  .particle:nth-child(15) { width:1.5px; height:1.5px; top:95%; left:80%; animation: drift 21s ease-in-out infinite 3.2s; }
+  .particle:nth-child(16) { width:2px; height:2px; top:5%;  left:88%; animation: drift 24s ease-in-out infinite 0.8s; }
+  .particle:nth-child(17) { width:1px; height:1px; top:28%; left:95%; animation: drift 20s ease-in-out infinite 2.8s; }
+  .particle:nth-child(18) { width:1.5px; height:1.5px; top:68%; left:8%;  animation: drift 23s ease-in-out infinite 1.8s; }
+
+  @keyframes drift {
+    0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.3; }
+    25%      { transform: translate(12px, -8px) scale(1.2); opacity: 0.7; }
+    50%      { transform: translate(-6px, 14px) scale(0.8); opacity: 0.4; }
+    75%      { transform: translate(8px, 6px) scale(1.1); opacity: 0.6; }
+  }
+
+  /* ── Ambient Glow ── */
+  .ambient-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -42%);
+    width: 700px;
+    height: 500px;
+    background: radial-gradient(ellipse, rgba(139, 92, 246, 0.10) 0%, rgba(99, 102, 241, 0.06) 35%, transparent 70%);
+    filter: blur(60px);
+    pointer-events: none;
+    z-index: 0;
+    animation: glowPulse 6s ease-in-out infinite;
+  }
+
+  .ambient-glow-2 {
+    position: absolute;
+    top: 48%;
+    left: 52%;
+    transform: translate(-50%, -40%);
+    width: 500px;
+    height: 400px;
+    background: radial-gradient(ellipse, rgba(167, 139, 250, 0.08) 0%, rgba(99, 102, 241, 0.04) 40%, transparent 70%);
+    filter: blur(80px);
+    pointer-events: none;
+    z-index: 0;
+    animation: glowPulse 6s ease-in-out infinite 3s;
+  }
+
+  @keyframes glowPulse {
+    0%, 100% { opacity: 0.7; transform: translate(-50%, -42%) scale(1); }
+    50%      { opacity: 1;   transform: translate(-50%, -42%) scale(1.08); }
+  }
+
+  /* ── Main Layout ── */
+  .banner {
+    width: 1080px;
+    height: 1080px;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* ── Top Bar ── */
+  .top-bar {
+    width: 100%;
+    padding: 36px 44px 0 44px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .brand-text {
+    font-size: 14px;
+    font-weight: 600;
+    color: #ffffff;
+    letter-spacing: 0.02em;
+  }
+
+  /* ── Flagship Label ── */
+  .flagship-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin-top: 32px;
+  }
+
+  .flagship-line {
+    width: 32px;
+    height: 1px;
+    background: rgba(167, 139, 250, 0.4);
+  }
+
+  .flagship-text {
+    font-size: 11px;
+    font-weight: 500;
+    color: #a78bfa;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+  }
+
+  /* ── Center Content ── */
+  .center-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 22px;
+  }
+
+  .available-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 16px;
+    border-radius: 9999px;
+    background: rgba(16, 185, 129, 0.10);
+    border: 1px solid rgba(16, 185, 129, 0.20);
+    margin-bottom: 14px;
+  }
+
+  .available-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #34d399;
+    animation: dotPulse 2s ease-in-out infinite;
+  }
+
+  @keyframes dotPulse {
+    0%, 100% { opacity: 0.6; box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.3); }
+    50%      { opacity: 1;   box-shadow: 0 0 8px 2px rgba(52, 211, 153, 0.2); }
+  }
+
+  .available-text {
+    font-size: 11px;
+    font-weight: 600;
+    color: #34d399;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+  }
+
+  .product-name {
+    font-size: 42px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    background: linear-gradient(to bottom, #ffffff, rgba(255, 255, 255, 0.4));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.15;
+    margin-bottom: 10px;
+  }
+
+  .product-desc {
+    font-size: 15px;
+    font-weight: 400;
+    color: #a1a1aa;
+    text-align: center;
+    max-width: 560px;
+    line-height: 1.55;
+    letter-spacing: 0.005em;
+  }
+
+  /* ── ERP Dashboard Mockup ── */
+  .mockup-wrapper {
+    margin-top: 26px;
+    position: relative;
+  }
+
+  .mockup {
+    width: 740px;
+    height: 410px;
+    background: #161618;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    box-shadow:
+      0 0 60px rgba(139, 92, 246, 0.08),
+      0 0 120px rgba(139, 92, 246, 0.04),
+      0 20px 60px rgba(0, 0, 0, 0.4);
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* Mockup Header */
+  .mockup-header {
+    height: 38px;
+    background: rgba(255, 255, 255, 0.02);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    gap: 10px;
+  }
+
+  .mockup-header-dots {
+    display: flex;
+    gap: 5px;
+    margin-right: 12px;
+  }
+
+  .mockup-header-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+
+  .mockup-header-dot:nth-child(1) { background: #ef4444; opacity: 0.7; }
+  .mockup-header-dot:nth-child(2) { background: #eab308; opacity: 0.7; }
+  .mockup-header-dot:nth-child(3) { background: #22c55e; opacity: 0.7; }
+
+  .mockup-nav {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+  }
+
+  .mockup-nav-item {
+    height: 4px;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  .mockup-nav-item:nth-child(1) { width: 48px; background: rgba(167, 139, 250, 0.5); }
+  .mockup-nav-item:nth-child(2) { width: 36px; }
+  .mockup-nav-item:nth-child(3) { width: 42px; }
+  .mockup-nav-item:nth-child(4) { width: 32px; }
+  .mockup-nav-item:nth-child(5) { width: 38px; }
+
+  .mockup-header-right {
+    margin-left: auto;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .mockup-header-icon {
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.06);
+  }
+
+  .mockup-header-avatar {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(167, 139, 250, 0.4), rgba(99, 102, 241, 0.3));
+  }
+
+  /* Mockup Body */
+  .mockup-body {
+    display: flex;
+    height: calc(100% - 38px);
+  }
+
+  /* Sidebar */
+  .mockup-sidebar {
+    width: 52px;
+    border-right: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 14px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.01);
+  }
+
+  .sidebar-logo {
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    background: linear-gradient(135deg, rgba(167, 139, 250, 0.6), rgba(99, 102, 241, 0.4));
+    margin-bottom: 10px;
+  }
+
+  .sidebar-item {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.04);
+    transition: background 0.2s;
+  }
+
+  .sidebar-item.active {
+    background: rgba(167, 139, 250, 0.15);
+    border: 1px solid rgba(167, 139, 250, 0.2);
+  }
+
+  .sidebar-item:nth-child(3) { margin-top: 4px; }
+
+  .sidebar-spacer {
+    flex: 1;
+  }
+
+  .sidebar-item-bottom {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.03);
+  }
+
+  /* Main Content */
+  .mockup-main {
+    flex: 1;
+    padding: 16px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    overflow: hidden;
+  }
+
+  /* Main Header Row */
+  .main-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .main-title-bar {
+    width: 100px;
+    height: 8px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  .main-header-actions {
+    display: flex;
+    gap: 8px;
+  }
+
+  .main-header-btn {
+    width: 60px;
+    height: 22px;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .main-header-btn.primary {
+    background: rgba(167, 139, 250, 0.2);
+    border-color: rgba(167, 139, 250, 0.3);
+  }
+
+  /* Stats Row */
+  .stats-row {
+    display: flex;
+    gap: 12px;
+  }
+
+  .stat-card {
+    flex: 1;
+    height: 68px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .stat-label {
+    width: 50px;
+    height: 4px;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  .stat-value {
+    width: 70px;
+    height: 8px;
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.25);
+  }
+
+  .stat-change {
+    width: 34px;
+    height: 4px;
+    border-radius: 2px;
+    margin-top: 2px;
+  }
+
+  .stat-card:nth-child(1) .stat-change { background: rgba(52, 211, 153, 0.4); }
+  .stat-card:nth-child(2) .stat-change { background: rgba(52, 211, 153, 0.4); }
+  .stat-card:nth-child(3) .stat-change { background: rgba(239, 68, 68, 0.3); }
+  .stat-card:nth-child(4) .stat-change { background: rgba(52, 211, 153, 0.4); }
+
+  .stat-card:nth-child(1) .stat-value { width: 60px; }
+  .stat-card:nth-child(2) .stat-value { width: 80px; }
+  .stat-card:nth-child(3) .stat-value { width: 55px; }
+  .stat-card:nth-child(4) .stat-value { width: 72px; }
+
+  /* Content Row: Chart + Table */
+  .content-row {
+    display: flex;
+    gap: 12px;
+    flex: 1;
+    min-height: 0;
+  }
+
+  /* Chart Area */
+  .chart-card {
+    flex: 1.2;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+
+  .chart-title {
+    width: 64px;
+    height: 5px;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.12);
+  }
+
+  .chart-legend {
+    display: flex;
+    gap: 10px;
+  }
+
+  .chart-legend-dot {
+    width: 20px;
+    height: 4px;
+    border-radius: 2px;
+  }
+
+  .chart-legend-dot:nth-child(1) { background: rgba(167, 139, 250, 0.5); }
+  .chart-legend-dot:nth-child(2) { background: rgba(52, 211, 153, 0.4); }
+
+  .chart-area {
+    flex: 1;
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    padding-top: 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    padding-bottom: 8px;
+  }
+
+  .chart-bar-group {
+    flex: 1;
+    display: flex;
+    align-items: flex-end;
+    gap: 3px;
+    justify-content: center;
+  }
+
+  .chart-bar {
+    width: 10px;
+    border-radius: 3px 3px 1px 1px;
+    min-height: 6px;
+  }
+
+  .chart-bar.primary {
+    background: linear-gradient(to top, rgba(167, 139, 250, 0.3), rgba(167, 139, 250, 0.6));
+  }
+
+  .chart-bar.secondary {
+    background: linear-gradient(to top, rgba(52, 211, 153, 0.2), rgba(52, 211, 153, 0.45));
+  }
+
+  .chart-bar-group:nth-child(1) .chart-bar.primary { height: 40px; }
+  .chart-bar-group:nth-child(1) .chart-bar.secondary { height: 28px; }
+  .chart-bar-group:nth-child(2) .chart-bar.primary { height: 55px; }
+  .chart-bar-group:nth-child(2) .chart-bar.secondary { height: 38px; }
+  .chart-bar-group:nth-child(3) .chart-bar.primary { height: 35px; }
+  .chart-bar-group:nth-child(3) .chart-bar.secondary { height: 50px; }
+  .chart-bar-group:nth-child(4) .chart-bar.primary { height: 70px; }
+  .chart-bar-group:nth-child(4) .chart-bar.secondary { height: 45px; }
+  .chart-bar-group:nth-child(5) .chart-bar.primary { height: 60px; }
+  .chart-bar-group:nth-child(5) .chart-bar.secondary { height: 55px; }
+  .chart-bar-group:nth-child(6) .chart-bar.primary { height: 85px; }
+  .chart-bar-group:nth-child(6) .chart-bar.secondary { height: 62px; }
+  .chart-bar-group:nth-child(7) .chart-bar.primary { height: 75px; }
+  .chart-bar-group:nth-child(7) .chart-bar.secondary { height: 70px; }
+  .chart-bar-group:nth-child(8) .chart-bar.primary { height: 92px; }
+  .chart-bar-group:nth-child(8) .chart-bar.secondary { height: 68px; }
+
+  .chart-x-labels {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 6px;
+  }
+
+  .chart-x-label {
+    width: 16px;
+    height: 3px;
+    border-radius: 1px;
+    background: rgba(255, 255, 255, 0.06);
+  }
+
+  /* Table Area */
+  .table-card {
+    flex: 1;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .table-title {
+    width: 56px;
+    height: 5px;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.12);
+    margin-bottom: 12px;
+  }
+
+  .table-header-row {
+    display: flex;
+    gap: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    margin-bottom: 4px;
+  }
+
+  .table-header-cell {
+    height: 3px;
+    border-radius: 1px;
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  .table-header-cell:nth-child(1) { width: 50px; }
+  .table-header-cell:nth-child(2) { width: 40px; }
+  .table-header-cell:nth-child(3) { width: 35px; }
+  .table-header-cell:nth-child(4) { width: 30px; }
+
+  .table-row {
+    display: flex;
+    gap: 12px;
+    padding: 7px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    align-items: center;
+  }
+
+  .table-row:nth-child(odd) {
+    background: rgba(255, 255, 255, 0.01);
+    border-radius: 4px;
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+
+  .table-cell {
+    height: 4px;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.10);
+  }
+
+  .table-cell:nth-child(1) { width: 52px; background: rgba(255, 255, 255, 0.14); }
+  .table-cell:nth-child(2) { width: 36px; }
+  .table-cell:nth-child(3) { width: 32px; }
+  .table-cell:nth-child(4) { width: 26px; }
+
+  .table-cell.status {
+    width: 18px;
+    height: 4px;
+    border-radius: 2px;
+  }
+
+  .table-row:nth-child(1) .table-cell.status { background: rgba(52, 211, 153, 0.4); }
+  .table-row:nth-child(2) .table-cell.status { background: rgba(234, 179, 8, 0.35); }
+  .table-row:nth-child(3) .table-cell.status { background: rgba(52, 211, 153, 0.4); }
+  .table-row:nth-child(4) .table-cell.status { background: rgba(167, 139, 250, 0.4); }
+  .table-row:nth-child(5) .table-cell.status { background: rgba(52, 211, 153, 0.4); }
+
+  /* ── Feature Pills ── */
+  .feature-pills {
+    display: flex;
+    gap: 10px;
+    margin-top: 28px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .feature-pill {
+    padding: 6px 14px;
+    border-radius: 9999px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.03);
+    color: #d4d4d8;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+  }
+
+  .feature-pill.ai {
+    border-color: rgba(167, 139, 250, 0.2);
+    background: rgba(167, 139, 250, 0.06);
+    color: #c4b5fd;
+  }
+
+  /* ── Bottom ── */
+  .bottom-bar {
+    margin-top: auto;
+    padding-bottom: 32px;
+  }
+
+  .bottom-url {
+    font-size: 13px;
+    font-weight: 400;
+    color: #71717a;
+    letter-spacing: 0.01em;
+  }
+
+  /* ── Subtle top-edge accent ── */
+  .top-accent {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 320px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(167, 139, 250, 0.3), transparent);
+  }
+
+  /* ── Mockup reflection/glow ── */
+  .mockup-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 800px;
+    height: 460px;
+    background: radial-gradient(ellipse, rgba(139, 92, 246, 0.06) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  /* ── Corner decorations ── */
+  .corner-decor {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    pointer-events: none;
+    opacity: 0.12;
+  }
+
+  .corner-decor.tl {
+    top: 28px; left: 28px;
+    border-top: 1px solid rgba(255,255,255,0.3);
+    border-left: 1px solid rgba(255,255,255,0.3);
+  }
+
+  .corner-decor.br {
+    bottom: 28px; right: 28px;
+    border-bottom: 1px solid rgba(255,255,255,0.3);
+    border-right: 1px solid rgba(255,255,255,0.3);
+  }
+
+  /* ── Subtle grid texture ── */
+  .grid-texture {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.012) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.012) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+    mask-image: radial-gradient(ellipse 50% 50% at center, black, transparent);
+    -webkit-mask-image: radial-gradient(ellipse 50% 50% at center, black, transparent);
+  }
+</style>
+</head>
+<body>
+  <!-- Grid texture -->
+  <div class="grid-texture"></div>
+
+  <!-- Particles -->
+  <div class="particles">
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+  </div>
+
+  <!-- Ambient Glow -->
+  <div class="ambient-glow"></div>
+  <div class="ambient-glow-2"></div>
+
+  <!-- Corner Decorations -->
+  <div class="corner-decor tl"></div>
+  <div class="corner-decor br"></div>
+
+  <!-- Top Accent Line -->
+  <div class="top-accent"></div>
+
+  <!-- Main Banner -->
+  <div class="banner">
+
+    <!-- Top Bar -->
+    <div class="top-bar">
+      <span class="brand-text">VersaLabs</span>
+    </div>
+
+    <!-- Flagship Label -->
+    <div class="flagship-label">
+      <div class="flagship-line"></div>
+      <span class="flagship-text">Flagship Product</span>
+      <div class="flagship-line"></div>
+    </div>
+
+    <!-- Center Content -->
+    <div class="center-content">
+      <div class="available-badge">
+        <div class="available-dot"></div>
+        <span class="available-text">Available Now</span>
+      </div>
+      <h1 class="product-name">Obsidian ERP</h1>
+      <p class="product-desc">Run your entire business from one place. Sales, inventory, manufacturing, and accounting — connected in a single, unbloated platform.</p>
+    </div>
+
+    <!-- ERP Dashboard Mockup -->
+    <div class="mockup-wrapper">
+      <div class="mockup-glow"></div>
+      <div class="mockup">
+        <!-- Header -->
+        <div class="mockup-header">
+          <div class="mockup-header-dots">
+            <div class="mockup-header-dot"></div>
+            <div class="mockup-header-dot"></div>
+            <div class="mockup-header-dot"></div>
+          </div>
+          <div class="mockup-nav">
+            <div class="mockup-nav-item"></div>
+            <div class="mockup-nav-item"></div>
+            <div class="mockup-nav-item"></div>
+            <div class="mockup-nav-item"></div>
+            <div class="mockup-nav-item"></div>
+          </div>
+          <div class="mockup-header-right">
+            <div class="mockup-header-icon"></div>
+            <div class="mockup-header-icon"></div>
+            <div class="mockup-header-avatar"></div>
+          </div>
+        </div>
+
+        <!-- Body -->
+        <div class="mockup-body">
+          <!-- Sidebar -->
+          <div class="mockup-sidebar">
+            <div class="sidebar-logo"></div>
+            <div class="sidebar-item active"></div>
+            <div class="sidebar-item"></div>
+            <div class="sidebar-item"></div>
+            <div class="sidebar-item"></div>
+            <div class="sidebar-item"></div>
+            <div class="sidebar-item"></div>
+            <div class="sidebar-spacer"></div>
+            <div class="sidebar-item-bottom"></div>
+          </div>
+
+          <!-- Main Content -->
+          <div class="mockup-main">
+            <!-- Header Row -->
+            <div class="main-header-row">
+              <div class="main-title-bar"></div>
+              <div class="main-header-actions">
+                <div class="main-header-btn"></div>
+                <div class="main-header-btn primary"></div>
+              </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats-row">
+              <div class="stat-card">
+                <div class="stat-label"></div>
+                <div>
+                  <div class="stat-value"></div>
+                  <div class="stat-change"></div>
+                </div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-label"></div>
+                <div>
+                  <div class="stat-value"></div>
+                  <div class="stat-change"></div>
+                </div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-label"></div>
+                <div>
+                  <div class="stat-value"></div>
+                  <div class="stat-change"></div>
+                </div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-label"></div>
+                <div>
+                  <div class="stat-value"></div>
+                  <div class="stat-change"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Chart + Table -->
+            <div class="content-row">
+              <!-- Chart -->
+              <div class="chart-card">
+                <div class="chart-header">
+                  <div class="chart-title"></div>
+                  <div class="chart-legend">
+                    <div class="chart-legend-dot"></div>
+                    <div class="chart-legend-dot"></div>
+                  </div>
+                </div>
+                <div class="chart-area">
+                  <div class="chart-bar-group">
+                    <div class="chart-bar primary"></div>
+                    <div class="chart-bar secondary"></div>
+                  </div>
+                  <div class="chart-bar-group">
+                    <div class="chart-bar primary"></div>
+                    <div class="chart-bar secondary"></div>
+                  </div>
+                  <div class="chart-bar-group">
+                    <div class="chart-bar primary"></div>
+                    <div class="chart-bar secondary"></div>
+                  </div>
+                  <div class="chart-bar-group">
+                    <div class="chart-bar primary"></div>
+                    <div class="chart-bar secondary"></div>
+                  </div>
+                  <div class="chart-bar-group">
+                    <div class="chart-bar primary"></div>
+                    <div class="chart-bar secondary"></div>
+                  </div>
+                  <div class="chart-bar-group">
+                    <div class="chart-bar primary"></div>
+                    <div class="chart-bar secondary"></div>
+                  </div>
+                  <div class="chart-bar-group">
+                    <div class="chart-bar primary"></div>
+                    <div class="chart-bar secondary"></div>
+                  </div>
+                  <div class="chart-bar-group">
+                    <div class="chart-bar primary"></div>
+                    <div class="chart-bar secondary"></div>
+                  </div>
+                </div>
+                <div class="chart-x-labels">
+                  <div class="chart-x-label"></div>
+                  <div class="chart-x-label"></div>
+                  <div class="chart-x-label"></div>
+                  <div class="chart-x-label"></div>
+                  <div class="chart-x-label"></div>
+                  <div class="chart-x-label"></div>
+                  <div class="chart-x-label"></div>
+                  <div class="chart-x-label"></div>
+                </div>
+              </div>
+
+              <!-- Table -->
+              <div class="table-card">
+                <div class="table-title"></div>
+                <div class="table-header-row">
+                  <div class="table-header-cell"></div>
+                  <div class="table-header-cell"></div>
+                  <div class="table-header-cell"></div>
+                  <div class="table-header-cell"></div>
+                </div>
+                <div class="table-row">
+                  <div class="table-cell"></div>
+                  <div class="table-cell"></div>
+                  <div class="table-cell status"></div>
+                  <div class="table-cell"></div>
+                </div>
+                <div class="table-row">
+                  <div class="table-cell"></div>
+                  <div class="table-cell"></div>
+                  <div class="table-cell status"></div>
+                  <div class="table-cell"></div>
+                </div>
+                <div class="table-row">
+                  <div class="table-cell"></div>
+                  <div class="table-cell"></div>
+                  <div class="table-cell status"></div>
+                  <div class="table-cell"></div>
+                </div>
+                <div class="table-row">
+                  <div class="table-cell"></div>
+                  <div class="table-cell"></div>
+                  <div class="table-cell status"></div>
+                  <div class="table-cell"></div>
+                </div>
+                <div class="table-row">
+                  <div class="table-cell"></div>
+                  <div class="table-cell"></div>
+                  <div class="table-cell status"></div>
+                  <div class="table-cell"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feature Pills -->
+    <div class="feature-pills">
+      <div class="feature-pill">CRM &amp; Sales</div>
+      <div class="feature-pill">Manufacturing</div>
+      <div class="feature-pill">Inventory</div>
+      <div class="feature-pill">Accounting</div>
+      <div class="feature-pill ai">AI-Powered</div>
+    </div>
+
+    <!-- Bottom -->
+    <div class="bottom-bar">
+      <span class="bottom-url">versalabs-studio.com</span>
+    </div>
+
+  </div>
+</body>
+</html>
