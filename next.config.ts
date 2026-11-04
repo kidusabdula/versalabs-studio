@@ -4,8 +4,11 @@ import { getHiddenSlugs, getProjectRoutes } from "./src/content/projects";
 // Slugs that were renamed, mapped to the current slug.
 const RENAMED: Record<string, string> = {
   "pavillion-360": "pavilion-360",
-  "oskaz-erp": "obsidian-erp",
-  "obsidian-erp-v3.0": "obsidian-erp",
+  "oskaz-erp": "versa-ops",
+  "obsidian-erp-v3.0": "versa-ops",
+  // 2026-11-03: Obsidian became Versa Ops and RentFlow became Versa Rent.
+  "obsidian-erp": "versa-ops",
+  rentflow: "versa-rent",
 };
 
 // Projects taken off the site. Their old URLs (case study, other section and

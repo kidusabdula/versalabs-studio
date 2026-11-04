@@ -1,17 +1,17 @@
 import { defineProject } from '../schema';
-import { OBSIDIAN } from '../product-names';
+import { VERSA_OPS } from '../product-names';
 
-// The new Obsidian (v5), being built from scratch. The old v4.4 copy and its screenshots are gone: v4.4 ran on a
-// backend that was discarded on 2026-10-29. Every claim below comes from the Obsidian landing page's CLAIMS.md
+// Versa Ops (v5, formerly Obsidian), being built from scratch. The old v4.4 copy and its screenshots are gone: v4.4 ran on a
+// backend that was discarded on 2026-10-29. Every claim below comes from the Versa Ops landing page's CLAIMS.md
 // (its C-ids are in the comments), which traces each one to the product repo. Rules from the product session
 // (obsidian-v5-3d, 2026-10-31):
-// - the TIN line uses the safe wording and never says Obsidian prints tax invoices;
+// - the TIN line uses the safe wording and never says Versa Ops prints tax invoices;
 // - dates are "side by side", never "by Ethiopian fiscal year";
 // - the first client's trade isn't named, so the setups are "made-to-order work" and "importers and traders".
-// No screenshots until v5 reaches M2, so the page shows the neutral product plate. The slug keeps the old URL.
+// No screenshots until v5 reaches M2, so the page shows the neutral product plate. /products/obsidian-erp redirects here.
 export default defineProject({
-  slug: "obsidian-erp",
-  title: OBSIDIAN,
+  slug: "versa-ops",
+  title: VERSA_OPS,
   subtitle: "Orders, Jobs, Stock and Money in One Place", // C2
   tagline: "Orders, jobs, stock and money",
   summary: "A business system for companies in Addis Ababa. Your team takes orders, runs jobs and records payments, and the books update with every step. Coming soon.", // C1, C3, C4
@@ -26,7 +26,7 @@ export default defineProject({
   scope: ["Orders", "Jobs", "Stock", "Money"], // C2
   availability: "Coming soon, and not on sale yet. When it is ready, we set up your workspace and arrange the subscription with you by email.", // C1, C33, C34
 
-  description: `${OBSIDIAN} is a business system for companies in Addis Ababa. Your team takes orders, runs jobs and records payments, and the books update with every step, out of sight until your accountant needs them. The new ${OBSIDIAN} is being built from scratch, and it is not on sale yet.`, // C1, C3, C4
+  description: `${VERSA_OPS} is a business system for companies in Addis Ababa. Your team takes orders, runs jobs and records payments, and the books update with every step, out of sight until your accountant needs them. The new ${VERSA_OPS} is being built from scratch, and it is not on sale yet.`, // C1, C3, C4
   need: "A business that makes, sells or imports goods needs to know where every order, job, item and birr stands, without asking its team to fill in accounting forms.", // C4
   audience: "Small and medium businesses in Addis Ababa that make, sell or import goods. It comes with setups for made-to-order work and for importers and traders: the made-to-order setup comes first, the importers' setup after it. You start from the setup for your kind of business and change it in settings as you grow.", // C5, C6
   features: [
