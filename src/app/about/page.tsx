@@ -5,7 +5,7 @@ import CallToAction from '@/components/sections/CallToAction';
 import { SectionHeader } from '@/components/sections/HomeSections';
 import { Reveal } from '@/components/ui/motion';
 import { CARD, CONTAINER, DISPLAY, EYEBROW, H2, H3, LEAD, PAGE_HEAD, RULE, SECTION, TEXT_LINK } from '@/components/ui/styles';
-import { OBSIDIAN, VERSA_ESTATE } from '@/content/product-names';
+import { VERSA_OPS, VERSA_RENT, VERSA_ESTATE } from '@/content/product-names';
 import { VISIBLE_TEAM } from '@/content/team';
 import { pageMetadata } from '@/lib/site';
 
@@ -23,7 +23,7 @@ export const metadata = pageMetadata({
 const OFFERS = [
   {
     title: 'Our Products',
-    text: `Business software of our own. Versa FX, for forex bureaus, is open as a live demo, and ${OBSIDIAN}, RentFlow and ${VERSA_ESTATE} are coming soon. We set each one up for the business that uses it.`,
+    text: `Business software of our own. Versa FX, for forex bureaus, is open as a live demo, and ${VERSA_OPS}, ${VERSA_RENT} and ${VERSA_ESTATE} are coming soon. We set each one up for the business that uses it.`,
     href: '/products',
     link: 'See Our Products',
   },
@@ -59,7 +59,7 @@ const MILESTONES = [
   { year: '2023', event: 'VersaLabs Studio founded in Addis Ababa' },
   { year: '2025', event: 'Pavilion360 website built for an event production company in Indianapolis' },
   { year: '2025', event: "OSKAZ online store launched, built on the company's business system" },
-  { year: '2026', event: `Our own products, coming soon: ${OBSIDIAN}, RentFlow, ${VERSA_ESTATE} and VersaLabs ADE` },
+  { year: '2026', event: `Our own products, coming soon: ${VERSA_OPS}, ${VERSA_RENT}, ${VERSA_ESTATE} and VersaLabs ADE` },
 ];
 
 function Initials({ name }: { name: string }) {

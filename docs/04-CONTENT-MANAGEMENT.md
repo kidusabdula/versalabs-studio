@@ -31,10 +31,10 @@ sitemap all read from `src/content/projects/index.ts`.
     `AVAILABILITY` (`src/content/labels.ts`);
   - a `stage` on a feature (`in-development` or `planned`) while the product is unreleased, so the page can say what
     it will do without claiming it ships today. The schema rejects all four on client work.
-- Product names that are still being decided live in `src/content/product-names.ts` (`OBSIDIAN`, a working name, and
-  `VERSA_ESTATE`). Every page, card and line of copy reads the name from there, so a rename is one line.
-- A product's own marketing site goes in `src/content/product-sites.ts`, by slug, and nowhere else. The map is empty
-  until Kidus approves each site and its address; an entry adds a "Product Site" button, and the build rejects an
+- Product names live in `src/content/product-names.ts` (`VERSA_OPS`, `VERSA_RENT`, `VERSA_ESTATE`). Every page,
+  card and line of copy reads the name from there, so a rename is one line.
+- A product's own marketing site goes in `src/content/product-sites.ts`, by slug, and nowhere else. Only addresses
+  Kidus has approved go in it; an entry adds a "Product Site" button, and the build rejects an
   unknown slug or a link that isn't https.
 - `section` is optional: products default to `/products`, everything else to `/work`. Set it to move a project
   (SafeFrame sets `section: "products"`). The redirects follow automatically.

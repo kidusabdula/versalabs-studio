@@ -4,7 +4,7 @@ import { findBannedTerms } from '../plain-language';
 import { PRODUCT_SITES } from '../product-sites';
 import { AVAILABILITY } from '../labels';
 import { isPhoneScreen, leadShots } from '../../lib/shots';
-import obsidianErp from './obsidian-erp';
+import versaOps from './versa-ops';
 import safeframe from './safeframe';
 import printonlineEt from './printonline-et';
 import eventology from './eventology';
@@ -14,7 +14,7 @@ import oskazEcommerce from './oskaz-ecommerce';
 import tamemKitfo from './tamem-kitfo';
 import versaFx from './versa-fx';
 import versaEstate from './versa-estate';
-import rentflow from './rentflow';
+import versaRent from './versa-rent';
 import versalabsAde from './versalabs-ade';
 import jarvis from './jarvis';
 import unlockEthiopiaPotential from './unlock-ethiopia-potential';
@@ -26,7 +26,7 @@ import minabClothing from './minab-clothing';
 // all read from here. Hidden entries (visibility: 'hide') never leave this file,
 // so they get no card, no route and no sitemap URL.
 const ENTRIES: ProjectInput[] = [
-  obsidianErp,
+  versaOps,
   safeframe,
   printonlineEt,
   eventology,
@@ -36,7 +36,7 @@ const ENTRIES: ProjectInput[] = [
   tamemKitfo,
   versaFx,
   versaEstate,
-  rentflow,
+  versaRent,
   versalabsAde,
   jarvis,
   unlockEthiopiaPotential,
@@ -93,7 +93,7 @@ for (const [slug, url] of Object.entries(PRODUCT_SITES)) {
 
 // The order products appear in, everywhere they are listed: the home page, /products, the footer and the product
 // index. A product not named here follows at the end, in listing order.
-const PRODUCT_ORDER = ['obsidian-erp', 'versa-fx', 'rentflow', 'safeframe', 'versa-estate', 'versalabs-ade'];
+const PRODUCT_ORDER = ['versa-ops', 'versa-fx', 'versa-rent', 'safeframe', 'versa-estate', 'versalabs-ade'];
 
 export function getAllProjects(): Project[] {
   return VISIBLE;

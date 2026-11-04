@@ -28,7 +28,7 @@ pnpm dev          # http://localhost:3000
 | `src/content/plain-language.ts` | The words public copy may not use (technology names and engineering jargon); a project that uses one fails the build |
 | `src/content/services.ts` | The four services on `/` and `/services`, their example pages, and the How We Work steps |
 | `src/content/labels.ts` | Status labels and tones, the status key, feature stages, availability lines, and `callToAction()`: the one button each product or client page ends with |
-| `src/content/product-names.ts` | Product names still being decided (`OBSIDIAN`, `VERSA_ESTATE`), one constant each |
+| `src/content/product-names.ts` | Product names (`VERSA_OPS`, `VERSA_RENT`, `VERSA_ESTATE`), one constant each |
 | `src/content/product-sites.ts` | Each product's own site, by slug: the only place those links live (empty until approved) |
 | `src/content/home.ts` | The three client stories the home page features |
 | `src/content/team.ts` | The team on `/about`, with a `visibility` flag per person |
