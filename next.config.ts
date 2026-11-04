@@ -55,7 +55,10 @@ const nextConfig: NextConfig = {
       { source: "/blog", destination: "/notes", permanent: true },
       ...Object.entries(RENAMED).flatMap(([oldSlug, slug]) => {
         const section = sectionOf.get(slug);
-        return section ? [{ source: `/projects/${oldSlug}`, destination: `/${section}/${slug}`, permanent: true }] : [];
+        // Every prefix an old slug was ever served under, so /products/obsidian-erp still lands on its page.
+        return section
+          ? ["projects", "work", "products"].map((prefix) => ({ source: `/${prefix}/${oldSlug}`, destination: `/${section}/${slug}`, permanent: true }))
+          : [];
       }),
       // Old case study URLs, and a slug asked for under the other section.
       ...routes.flatMap(({ slug, section }) => [
