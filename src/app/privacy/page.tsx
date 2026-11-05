@@ -59,7 +59,7 @@ export default function PrivacyPage() {
 
         <Section title="Analytics">
           <p>
-            We use Vercel Web Analytics to count page views and see which pages people visit. It doesn&apos;t use cookies,
+            We use our hosting provider&apos;s web analytics to count page views and see which pages people visit. It doesn&apos;t use cookies,
             and it doesn&apos;t identify you or follow you across other websites.
           </p>
           {googleAnalytics && (
@@ -86,7 +86,7 @@ export default function PrivacyPage() {
 
         <Section title="Hosting">
           <p>
-            The site runs on Vercel. Like any web host, Vercel processes technical details of each request, such as your
+            The site runs on our hosting provider. Like any web host, it processes technical details of each request, such as your
             IP address and browser type, to deliver the pages and keep the service secure.
           </p>
         </Section>

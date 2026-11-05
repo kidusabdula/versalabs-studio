@@ -76,7 +76,7 @@ export function WorkSection({ featured, more }: { featured: ProjectCard[]; more:
           intro="What our clients needed and what we delivered. Every story says where the work stands today."
           more={{ href: '/work', label: 'See All Client Work' }}
         />
-        <Reveal as="ul" className="grid gap-5 md:grid-cols-3 lg:gap-6">
+        <Reveal as="ul" className="grid gap-5 md:grid-cols-2 lg:grid-cols-4 lg:gap-6">
           {featured.map((card) => (
             <li key={card.slug}>
               <ProjectCardView project={card} headingLevel="h3" sizes="(max-width: 768px) calc(100vw - 32px), 400px" />

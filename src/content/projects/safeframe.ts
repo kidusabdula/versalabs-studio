@@ -27,7 +27,7 @@ export default defineProject({
   availability: "Available now. Try it in your browser.",
   industry: ["Online Safety"],
   links: {
-    live: "https://safeframe-livid.vercel.app",
+    live: "https://safeframe.versalabs-studio.com",
   },
   scope: ["Check", "Flag", "Respond"],
   cover: "/images/safeframe/screen-home-desktop.webp",
