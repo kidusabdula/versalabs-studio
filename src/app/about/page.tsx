@@ -23,7 +23,7 @@ export const metadata = pageMetadata({
 const OFFERS = [
   {
     title: 'Our Products',
-    text: `Business software of our own. Versa FX, for forex bureaus, is open as a live demo, and ${VERSA_OPS}, ${VERSA_RENT} and ${VERSA_ESTATE} are coming soon. We set each one up for the business that uses it.`,
+    text: `Business software of our own. ${VERSA_ESTATE}, for real estate developers, is out now with a free trial. Versa FX, for forex bureaus, is open as a live demo, and ${VERSA_OPS} and ${VERSA_RENT} are coming soon.`,
     href: '/products',
     link: 'See Our Products',
   },
@@ -59,7 +59,8 @@ const MILESTONES = [
   { year: '2023', event: 'VersaLabs Studio founded in Addis Ababa' },
   { year: '2025', event: 'Pavilion360 website built for an event production company in Indianapolis' },
   { year: '2025', event: "OSKAZ online store launched, built on the company's business system" },
-  { year: '2026', event: `Our own products, coming soon: ${VERSA_OPS}, ${VERSA_RENT}, ${VERSA_ESTATE} and VersaLabs ADE` },
+  { year: '2026', event: `${VERSA_ESTATE} launched for real estate developers, with a free trial` },
+  { year: '2026', event: `Our own products, coming soon: ${VERSA_OPS}, ${VERSA_RENT} and VersaLabs ADE` },
 ];
 
 function Initials({ name }: { name: string }) {
