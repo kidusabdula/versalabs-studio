@@ -27,10 +27,13 @@ const PARKED: Record<string, string> = {
 const OTHER_SECTION = { work: "products", products: "work" } as const;
 
 const nextConfig: NextConfig = {
-  // Product screenshots are most of a page's weight. Browsers that take AVIF get
-  // it (smaller than WebP for flat interface screens); the rest get WebP.
+  // Serve every image as it sits in public/, with no resizing on the host. The host's
+  // image service has a monthly quota, and once it ran out (2026-11-13) every image it
+  // had not already cached came back as a 402 and showed as broken. The sources are
+  // already compressed WebP (none over 400 KB, desktop screens at 2x), so the page
+  // weight barely changes. Keep new screens that way: WebP, a few hundred KB at most.
   images: {
-    formats: ["image/avif", "image/webp"],
+    unoptimized: true,
   },
 
   // Every redirect is a single permanent hop to the page's current URL, and the
